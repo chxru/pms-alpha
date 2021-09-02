@@ -1,4 +1,11 @@
 import express from "express";
+import dotenv from "dotenv";
+
+import * as pgverify from "./database/boot";
+import { logger } from "./util/logger";
+
+// dotenv
+dotenv.config({ path: "../.env" });
 
 const app = express();
 
@@ -8,6 +15,16 @@ app.all("/", (_req, res) => {
 });
 
 const PORT = 3448;
-app.listen(PORT, () => {
-  console.log(`Server is listening on ${PORT}`);
-});
+(async () => {
+  try {
+    // mount backend
+    await app.listen(PORT);
+    logger(`Backend listening on port ${PORT}`, "success");
+
+    // check database is up
+    await pgverify.CheckConnection();
+  } catch (error) {
+    logger("Error occured while backend starts", "error");
+    console.log(error);
+  }
+})();
