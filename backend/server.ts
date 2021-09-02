@@ -23,6 +23,9 @@ const PORT = 3448;
 
     // check database is up
     await pgverify.CheckConnection();
+
+    // create tables
+    await pgverify.CreateTables();
   } catch (error) {
     logger("Error occured while backend starts", "error");
     console.log(error);
