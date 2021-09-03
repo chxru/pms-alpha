@@ -6,6 +6,7 @@ const signup_schema: Schema = {
     errorMessage: "Invalid email",
     isEmail: true,
     trim: true,
+    optional: true,
   },
   fname: {
     in: "body",
@@ -42,7 +43,7 @@ const signin_schema: Schema = {
   username: {
     in: "body",
     errorMessage: "Invalid email",
-    isEmail: true,
+    isString: true,
     trim: true,
   },
   password: {

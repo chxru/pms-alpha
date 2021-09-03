@@ -4,7 +4,8 @@ create schema if not exists users;
 -- create users.data
 create table if not exists users.data(
   id integer primary key generated always as identity,
-  email varchar(255) unique not null,
+  username varchar(255) unique not null,
+  email varchar(255),
   fname varchar(255) not null,
   lname varchar(255) not null,
   created_at TIMESTAMPTZ not null default now(),
