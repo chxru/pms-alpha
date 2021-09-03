@@ -98,7 +98,7 @@ const SidebarContent = (props: {
 
         {/* Navigation buttons */}
         <NavItem name="Dashboard" route="/" />
-        <NavItem name="Add Patient" route="/addPatient" />
+        <NavItem name="Add Patient" route="/patient/new" />
         <NavItem name="Browse" route="/dashboard" />
         <NavItem name="Calender" route="/dashboard" />
       </Flex>
