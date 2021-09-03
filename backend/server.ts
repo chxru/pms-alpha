@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 
 import userRoutes from "./routes/auth.route";
+import patientRoutes from "./routes/patient.route";
 
 import * as pgverify from "./database/boot";
 import { logger } from "./util/logger";
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // routes
 app.use("/users", userRoutes);
+app.use("/patients", patientRoutes);
 
 app.all("/", (_req, res) => {
   console.log("hello from server");
