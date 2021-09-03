@@ -149,6 +149,7 @@ const HandleLogin = async (
     [user.id, refresh_token, expires]
   );
 
+  logger(`User ${user.username} logged in`, "success");
   return { user, access_token, refresh_token };
 };
 
