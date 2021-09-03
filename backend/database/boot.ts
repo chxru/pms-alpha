@@ -4,8 +4,9 @@ import pg from "./pg";
 import { logger } from "../util/logger";
 
 const CheckConnection = async (): Promise<void> => {
-  await pg.connect();
+  const client = await pg.connect();
   logger("Connected to postgres established", "success");
+  client.release();
 };
 
 const parseSqlFile = async (file: string): Promise<string[]> => {
