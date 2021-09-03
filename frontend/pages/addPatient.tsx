@@ -7,7 +7,6 @@ import {
   CheckboxGroup,
   Container,
   Divider,
-  Flex,
   FormControl,
   FormLabel,
   Grid,
@@ -54,6 +53,7 @@ const AddPatient: React.FC = ({}) => {
   const { register, handleSubmit } = useForm<patient_registerProps>();
 
   const onSubmit = (values: patient_registerProps) => {
+    // eslint-disable-next-line no-console
     console.log(values);
   };
 
@@ -121,7 +121,7 @@ const AddPatient: React.FC = ({}) => {
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...(register("firstname"))}
+                    {...register("firstname")}
                   />
                 </FormControl>
               </GridItem>
@@ -136,7 +136,7 @@ const AddPatient: React.FC = ({}) => {
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...(register("lastname"))}
+                    {...register("lastname")}
                   />
                 </FormControl>
               </GridItem>
@@ -171,7 +171,7 @@ const AddPatient: React.FC = ({}) => {
                     fontWeight="semibold"
                     type="date"
                     focusBorderColor="gray.300"
-                    {...(register("dob"))}
+                    {...register("dob")}
                   />
                 </FormControl>
               </GridItem>
@@ -216,7 +216,7 @@ const AddPatient: React.FC = ({}) => {
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...(register("address"))}
+                    {...register("address")}
                   />
                 </FormControl>
               </GridItem>
@@ -233,7 +233,7 @@ const AddPatient: React.FC = ({}) => {
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...(register("grama_niladhari"))}
+                    {...register("grama_niladhari")}
                   />
                 </FormControl>
               </GridItem>
@@ -250,7 +250,7 @@ const AddPatient: React.FC = ({}) => {
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...(register("divisional_sector"))}
+                    {...register("divisional_sector")}
                   />
                 </FormControl>
               </GridItem>
@@ -265,7 +265,7 @@ const AddPatient: React.FC = ({}) => {
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...(register("contact_number"))}
+                    {...register("contact_number")}
                   />
                 </FormControl>
               </GridItem>
@@ -280,7 +280,7 @@ const AddPatient: React.FC = ({}) => {
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...(register("phi_tp"))}
+                    {...register("phi_tp")}
                   />
                 </FormControl>
               </GridItem>
@@ -295,7 +295,7 @@ const AddPatient: React.FC = ({}) => {
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...(register("moh_tp"))}
+                    {...register("moh_tp")}
                   />
                 </FormControl>
               </GridItem>
@@ -528,7 +528,7 @@ const AddPatient: React.FC = ({}) => {
                     fontWeight="semibold"
                     type="date"
                     focusBorderColor="gray.300"
-                    {...(register("last_clinic_visit"))}
+                    {...register("last_clinic_visit")}
                   />
                 </FormControl>
               </GridItem>
@@ -545,7 +545,7 @@ const AddPatient: React.FC = ({}) => {
                     fontWeight="semibold"
                     type="date"
                     focusBorderColor="gray.300"
-                    {...(register("informed_over_phone"))}
+                    {...register("informed_over_phone")}
                   />
                 </FormControl>
               </GridItem>
@@ -560,7 +560,7 @@ const AddPatient: React.FC = ({}) => {
                     fontWeight="semibold"
                     type="date"
                     focusBorderColor="gray.300"
-                    {...(register("home_visit"))}
+                    {...register("home_visit")}
                   />
                 </FormControl>
               </GridItem>
@@ -594,21 +594,21 @@ const AddPatient: React.FC = ({}) => {
                     fontWeight="semibold"
                     type="date"
                     focusBorderColor="gray.300"
-                    {...(register("next_clinic_date"))}
+                    {...register("next_clinic_date")}
                   />
                 </FormControl>
               </GridItem>
-              </Grid>
+            </Grid>
 
-              {/* Submit Button Group */}
-              <Center marginTop="14">
-                <Button type="submit" colorScheme="facebook" marginX="3">
-                  Submit
-                </Button>
-                <Button type="reset" marginX="3">
-                  Reset
-                </Button>
-              </Center>
+            {/* Submit Button Group */}
+            <Center marginTop="14">
+              <Button type="submit" colorScheme="facebook" marginX="3">
+                Submit
+              </Button>
+              <Button type="reset" marginX="3">
+                Reset
+              </Button>
+            </Center>
           </form>
         </Container>
       </Container>
@@ -617,4 +617,3 @@ const AddPatient: React.FC = ({}) => {
 };
 
 export default AddPatient;
-
