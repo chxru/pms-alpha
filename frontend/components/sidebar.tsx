@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Box,
   Button,
@@ -14,8 +14,9 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import { FiSearch, FiBell, FiMenu, FiLogOut } from "react-icons/fi";
+import AuthContext from "../contexts/auth-context";
 
 interface sidebarProps {
   name: string;
@@ -108,6 +109,8 @@ const SidebarContent = (props: {
 
 const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const sidebar = useDisclosure();
+  const authContext = useContext(AuthContext);
+
   return (
     <Box as="section" bg="gray.50" minH="100vh" backgroundColor="#f8f8f8">
       <SidebarContent display={{ base: "none", md: "none", lg: "unset" }} />
@@ -186,6 +189,10 @@ const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               mr={5}
               fontSize="2xl"
               role="button"
+              onClick={() => {
+                authContext.onSignOut();
+                router.push("/login");
+              }}
             />
           </Flex>
         </Flex>
