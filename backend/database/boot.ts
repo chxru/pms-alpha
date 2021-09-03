@@ -45,7 +45,7 @@ const CreateTables = async (): Promise<void> => {
         }
       }
 
-      logger("Table creation completed", "success");
+      logger(`Tables ${file} creation completed`, "success");
     }
   } catch (error) {
     logger("Error occured in createtables", "error");
