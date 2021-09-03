@@ -23,15 +23,14 @@ import {
   const NavItem = (props: { name: string; route: string }) => {
     const router = useRouter();
     const { name, route } = props;
-  
     return (
       <Button
         width="150px"
         justifyContent="left"
-        bg="white"
         height="64px"
         mb="15px"
         mx={-10}
+        bg="white"
         _hover={{
           bg: "gray.200",
           borderRadius: "10px",
@@ -97,7 +96,7 @@ import {
   
           {/* Navigation buttons */}
           <NavItem name="Dashboard" route="/" />
-          <NavItem name="Add Patient" route="/dashboard" />
+          <NavItem name="Add Patient" route="/addPatient" />
           <NavItem name="Browse" route="/dashboard" />
           <NavItem name="Calender" route="/dashboard" />
         </Flex>
