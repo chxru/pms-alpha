@@ -3,13 +3,16 @@ import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import Sidebar from "../components/sidebar";
+import Overlay from "../components/overlay";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
-      <Sidebar>
-        <Component {...pageProps} />
-      </Sidebar>
+      <Overlay>
+        <Sidebar>
+          <Component {...pageProps} />
+        </Sidebar>
+      </Overlay>
     </ChakraProvider>
   );
 }
