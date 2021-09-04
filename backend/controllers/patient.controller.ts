@@ -1,26 +1,12 @@
 import db from "../database/pg";
 import { EncryptData } from "../util/crypto";
 
-interface PatientRegistrationData {
-  fname: string;
-  lname: string;
-  gender: string;
-  dob: {
-    d?: number;
-    m?: number;
-    y?: number;
-  };
-  address?: string;
-  email?: string;
-  tp?: string;
-}
-
 /**
- * @param {PatientRegistrationData} data
+ * @param {API.Patient.BasicDetails} data
  * @return {*}  {Promise<number>} patient id
  */
 const HandleNewPatient = async (
-  data: PatientRegistrationData
+  data: API.Patient.BasicDetails
 ): Promise<number> => {
   const encrypted = EncryptData(data);
 
