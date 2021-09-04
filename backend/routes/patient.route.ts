@@ -12,7 +12,6 @@ router.post(
   checkSchema(new_patient_schema),
   async (req: Request, res: Response) => {
     logger("/patient/add");
-    console.log(req.body);
 
     // schema validation
     const errors = validationResult(req);
