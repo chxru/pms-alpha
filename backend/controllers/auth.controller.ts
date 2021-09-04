@@ -1,5 +1,4 @@
 import db from "../database/pg";
-import { PMSDB } from "../database/types/db";
 
 import { ComparePwd, HashPwd } from "../util/bcrypt";
 import { DecodeJWT, GenerateJWT } from "../util/jwt";
@@ -89,7 +88,7 @@ const HandleRegister = async (
  * @param {string} username
  * @param {string} password
  * @return {*}  {(Promise<{
- *   user: Pick<PMSDB.users.data, "id" | "fname" | "lname" | "username">;
+ *   user: Pick<PGDB.User.Data, "id" | "fname" | "lname" | "username">;
  *   access_token: string;
  *   refresh_token: string;
  * }>)}
@@ -98,7 +97,7 @@ const HandleLogin = async (
   username: string,
   password: string
 ): Promise<{
-  user: Pick<PMSDB.users.data, "id" | "fname" | "lname" | "username">;
+  user: Pick<PGDB.User.Data, "id" | "fname" | "lname" | "username">;
   access_token: string;
   refresh_token: string;
 }> => {
@@ -113,7 +112,7 @@ const HandleLogin = async (
     throw new Error("Username not correct");
   }
 
-  const userAuthData: Pick<PMSDB.users.auth, "id" | "pwd"> =
+  const userAuthData: Pick<PGDB.User.Auth, "id" | "pwd"> =
     userAuthQuery.rows[0];
 
   const res = await ComparePwd(password, userAuthData.pwd);
@@ -135,7 +134,7 @@ const HandleLogin = async (
   }
 
   // grab user data from the query result
-  const user: Pick<PMSDB.users.data, "id" | "fname" | "lname" | "username"> =
+  const user: Pick<PGDB.User.Data, "id" | "fname" | "lname" | "username"> =
     userQuery.rows[0];
 
   const access_token = await GenerateJWT(user.id, "access");
@@ -170,7 +169,7 @@ const HandleRefreshToken = async (
 ): Promise<{
   ok: boolean;
   access?: string;
-  user?: Pick<PMSDB.users.data, "id" | "fname" | "lname" | "email">;
+  user?: Pick<PGDB.User.Data, "id" | "fname" | "lname" | "username">;
 }> => {
   try {
     // decode jwt
@@ -210,7 +209,7 @@ const HandleRefreshToken = async (
     }
 
     // grab user data from the query result
-    const user: Pick<PMSDB.users.data, "id" | "fname" | "lname" | "email"> =
+    const user: Pick<PGDB.User.Data, "id" | "fname" | "lname" | "username"> =
       userQuery.rows[0];
 
     return { ok, access, user };

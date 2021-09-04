@@ -1,5 +1,4 @@
 import { createCipheriv, createDecipheriv, createHash } from "crypto";
-import { PMSDB } from "../database/types/db";
 
 /*
   For reference 
@@ -42,7 +41,7 @@ const EncryptData = (data: API.Patient.BasicDetails): string => {
  * @param {string} data
  * @return {*}  {PMSDB.patients.info_decrypted}
  */
-const DecryptData = (data: string): PMSDB.patients.info_decrypted => {
+const DecryptData = <T>(data: string): T => {
   // create buffer from data
   const buffer = Buffer.from(data, "base64");
 
