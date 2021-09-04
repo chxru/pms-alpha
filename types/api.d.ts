@@ -29,4 +29,41 @@ declare namespace API {
       err?: string;
     }
   }
+
+  namespace Patient {
+    /**
+     * Basic data gathered from the patient
+     *
+     * @export
+     * @interface BasicDetails
+     */
+    export interface BasicDetails {
+      firstname: string;
+      lastname: string;
+      dob?: Date;
+      gender: "male" | "female" | "other";
+      marital: "married" | "unmarried";
+      address: string;
+      grama_niladhari?: string;
+      divisional_sector?: string;
+      contact_number: number;
+      phi_tp?: number;
+      moh_tp?: number;
+      living_with: string;
+      lw_name?: string;
+      lw_address?: string;
+      lw_tp?: number;
+      edu_status?: string;
+      has_job: boolean;
+      job?: string;
+      gov_facilities?: string;
+      diseases: string;
+      treatment_his?: string;
+      last_clinic_visit?: Date;
+      informed_over_phone?: Date;
+      home_visit?: Date;
+      next_clinic_date?: Date;
+      hospital_admission: string;
+    }
+  }
 }

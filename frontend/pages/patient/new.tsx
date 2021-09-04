@@ -20,39 +20,10 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
-interface patient_registerProps {
-  firstname: string;
-  lastname: string;
-  dob: Date;
-  gender: "male" | "female" | "other";
-  marital: "married" | "unmarried";
-  address: string;
-  grama_niladhari: string;
-  divisional_sector: string;
-  contact_number: number;
-  phi_tp: number;
-  moh_tp: number;
-  living_with: string;
-  lw_name: string;
-  lw_address: string;
-  lw_tp: number;
-  edu_status: string;
-  has_job: "yes" | "no";
-  job: string;
-  gov_facilities: string;
-  disease: string;
-  treatment_his: string;
-  last_clinic_visit: Date;
-  informed_over_phone: Date;
-  home_visit: Date;
-  next_clinic_date: Date;
-  hospital_admission: string;
-}
-
 const AddPatient: React.FC = ({}) => {
-  const { register, handleSubmit } = useForm<patient_registerProps>();
+  const { register, handleSubmit } = useForm<API.Patient.BasicDetails>();
 
-  const onSubmit = (values: patient_registerProps) => {
+  const onSubmit = (values: API.Patient.BasicDetails) => {
     // eslint-disable-next-line no-console
     console.log(values);
   };
@@ -64,45 +35,25 @@ const AddPatient: React.FC = ({}) => {
         <meta name="description" content="Add Patient Form" />
       </Head>
 
-      <Container
-        overflowY="auto"
-        maxW="6xl"
-        minH="100vh"
-        mt={10}
-        borderWidth="2px"
-        borderColor="white"
-        borderRadius="10px"
-        bg="whitesmoke"
-      >
-        <Heading
-          mt={{ base: "0", md: "35px" }}
-          size="md"
-          fontWeight="semibold"
-          overflowX="auto"
-          overflowY="hidden"
-          zIndex="sticky"
-        >
+      <Container overflowY="auto" maxW="4xl" minH="100vh">
+        <Heading mt={{ base: "0", md: "35px" }} size="md" fontWeight="semibold">
           Add New Patient
         </Heading>
 
         <Container
-          overflowY="auto"
-          maxW="6xl"
-          mt="35px"
+          maxW="4xl"
+          mt="28px"
           mb={10}
           px="35px"
           py="21px"
           shadow="md"
-          borderWidth="2px"
-          borderColor="white"
-          borderRadius="10px"
           bg="white"
         >
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* Patient Details */}
             <Heading fontWeight="semibold" size="md">
               Patient Details
-              <Divider w="80%" shadow="dark-lg" />
+              <Divider mt={2} shadow="dark-lg" />
             </Heading>
 
             <Grid
@@ -153,9 +104,6 @@ const AddPatient: React.FC = ({}) => {
                       <Radio value="female" {...register("gender")}>
                         Female
                       </Radio>
-                      <Radio value="other" {...register("gender")}>
-                        Other
-                      </Radio>
                     </HStack>
                   </RadioGroup>
                 </FormControl>
@@ -163,7 +111,7 @@ const AddPatient: React.FC = ({}) => {
 
               {/* Date of Birth */}
               <GridItem>
-                <FormControl id="dob" isRequired>
+                <FormControl id="dob">
                   <FormLabel htmlFor="dob">Date of Birth</FormLabel>
                   <Input
                     borderRadius="10px"
@@ -197,7 +145,7 @@ const AddPatient: React.FC = ({}) => {
             {/* Contact Informations  */}
             <Heading fontWeight="semibold" size="md" mt="50px">
               Contact Details
-              <Divider w="80%" shadow="dark-lg" />
+              <Divider mt={2} shadow="dark-lg" />
             </Heading>
 
             <Grid
@@ -207,7 +155,7 @@ const AddPatient: React.FC = ({}) => {
               pt="15px"
             >
               {/* Address */}
-              <GridItem>
+              <GridItem colSpan={2}>
                 <FormControl id="address" isRequired>
                   <FormLabel htmlFor="address">Address</FormLabel>
                   <Input
@@ -223,7 +171,7 @@ const AddPatient: React.FC = ({}) => {
 
               {/* Grama Niladari Sector */}
               <GridItem>
-                <FormControl id="grama_niladhari" isRequired>
+                <FormControl id="grama_niladhari">
                   <FormLabel htmlFor="grama_niladhari">
                     Grama Niladari Sector
                   </FormLabel>
@@ -240,7 +188,7 @@ const AddPatient: React.FC = ({}) => {
 
               {/* Divisional Sector */}
               <GridItem>
-                <FormControl id="divisional_sector" isRequired>
+                <FormControl id="divisional_sector">
                   <FormLabel htmlFor="divisional_sector">
                     Divisional Seceratory
                   </FormLabel>
@@ -272,7 +220,7 @@ const AddPatient: React.FC = ({}) => {
 
               {/* PHI Contact Number */}
               <GridItem>
-                <FormControl id="phi_tp" isRequired>
+                <FormControl id="phi_tp">
                   <FormLabel htmlFor="phi_tp">PHI Contact Number</FormLabel>
                   <Input
                     focusBorderColor="gray.300"
@@ -287,7 +235,7 @@ const AddPatient: React.FC = ({}) => {
 
               {/* MOH Contact Number */}
               <GridItem>
-                <FormControl id="moh_tp" isRequired>
+                <FormControl id="moh_tp">
                   <FormLabel htmlFor="moh_tp">MOH Contact Number</FormLabel>
                   <Input
                     focusBorderColor="gray.300"
@@ -304,7 +252,7 @@ const AddPatient: React.FC = ({}) => {
             {/* Living With */}
             <Heading fontWeight="semibold" size="md" mt="50px">
               Relatives Details
-              <Divider w="80%" shadow="dark-lg" />
+              <Divider mt={2} shadow="dark-lg" />
             </Heading>
 
             <Grid
@@ -380,7 +328,7 @@ const AddPatient: React.FC = ({}) => {
             {/*  Other Details */}
             <Heading fontWeight="semibold" size="md" mt="50px">
               Other Details
-              <Divider w="80%" shadow="dark-lg" />
+              <Divider mt={2} shadow="dark-lg" />
             </Heading>
 
             <Grid
@@ -391,7 +339,7 @@ const AddPatient: React.FC = ({}) => {
             >
               {/* Edu Status */}
               <GridItem>
-                <FormControl id="lw_tp" isRequired>
+                <FormControl id="lw_tp">
                   <FormLabel htmlFor="lw_tp">
                     Educational Qualification
                   </FormLabel>
@@ -417,10 +365,10 @@ const AddPatient: React.FC = ({}) => {
                   <FormLabel as="legend"> Is Patient has a job </FormLabel>
                   <RadioGroup name="has_job">
                     <HStack spacing="50px">
-                      <Radio value="yes" {...register("has_job")}>
+                      <Radio value="true" {...register("has_job")}>
                         Yes
                       </Radio>
-                      <Radio value="no" {...register("has_job")}>
+                      <Radio value="false" {...register("has_job")}>
                         No
                       </Radio>
                     </HStack>
@@ -444,7 +392,7 @@ const AddPatient: React.FC = ({}) => {
               </GridItem>
 
               {/* Sahanadara from Gov */}
-              <GridItem>
+              <GridItem colStart={1}>
                 <FormControl id="gov_facilities">
                   <FormLabel htmlFor="gov_facilities">
                     Sahanadara Received From Government
@@ -464,7 +412,7 @@ const AddPatient: React.FC = ({}) => {
             {/* Medical Details */}
             <Heading fontWeight="semibold" size="md" mt="50px">
               Medical Details
-              <Divider w="80%" shadow="dark-lg" />
+              <Divider mt={2} shadow="dark-lg" />
             </Heading>
 
             <Grid
@@ -476,21 +424,22 @@ const AddPatient: React.FC = ({}) => {
               {/* Disease */}
               <GridItem>
                 <FormControl id="disease" isRequired>
-                  <FormLabel htmlFor="disease">Disease</FormLabel>
+                  <FormLabel htmlFor="disease">Diseases</FormLabel>
                   <Input
+                    placeholder="Use comma to separate diseases"
                     focusBorderColor="gray.300"
                     borderRadius="10px"
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...register("disease")}
+                    {...register("diseases")}
                   />
                 </FormControl>
               </GridItem>
 
               {/* Treatment History */}
               <GridItem>
-                <FormControl id="treatment_his" isRequired>
+                <FormControl id="treatment_his">
                   <FormLabel htmlFor="treatment_his">
                     Treatment History
                   </FormLabel>
@@ -518,7 +467,7 @@ const AddPatient: React.FC = ({}) => {
 
               {/* Last Clinic Visit */}
               <GridItem>
-                <FormControl id="last_clinic_visit" isRequired>
+                <FormControl id="last_clinic_visit">
                   <FormLabel htmlFor="last_clinic_visit">
                     Last Clinic Visit
                   </FormLabel>
@@ -535,7 +484,7 @@ const AddPatient: React.FC = ({}) => {
 
               {/* Date of informed Over phone */}
               <GridItem>
-                <FormControl id="informed_over_phone" isRequired>
+                <FormControl id="informed_over_phone">
                   <FormLabel htmlFor="informed_over_phone">
                     Informed Over Phone
                   </FormLabel>
@@ -552,7 +501,7 @@ const AddPatient: React.FC = ({}) => {
 
               {/* Home Visit Date */}
               <GridItem>
-                <FormControl id="home_visit" isRequired>
+                <FormControl id="home_visit">
                   <FormLabel htmlFor="home_visit">Home Visit</FormLabel>
                   <Input
                     borderRadius="10px"
@@ -565,26 +514,9 @@ const AddPatient: React.FC = ({}) => {
                 </FormControl>
               </GridItem>
 
-              {/* Hospital Admission */}
-              <GridItem>
-                <FormControl id="hospital_admission" isRequired>
-                  <FormLabel htmlFor="hospital_admission">
-                    Hospital Admission
-                  </FormLabel>
-                  <Input
-                    focusBorderColor="gray.300"
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="text"
-                    {...register("hospital_admission")}
-                  />
-                </FormControl>
-              </GridItem>
-
               {/* Next Clinc Date */}
               <GridItem>
-                <FormControl id="next_clinic_date" isRequired>
+                <FormControl id="next_clinic_date">
                   <FormLabel htmlFor="next_clinic_date">
                     Next Clinc Date
                   </FormLabel>
@@ -600,9 +532,26 @@ const AddPatient: React.FC = ({}) => {
               </GridItem>
             </Grid>
 
+            {/* Hospital Admission */}
+            <GridItem>
+              <FormControl id="hospital_admission" isRequired>
+                <FormLabel htmlFor="hospital_admission">
+                  Hospital Admission
+                </FormLabel>
+                <Input
+                  focusBorderColor="gray.300"
+                  borderRadius="10px"
+                  background="white"
+                  fontWeight="semibold"
+                  type="text"
+                  {...register("hospital_admission")}
+                />
+              </FormControl>
+            </GridItem>
+
             {/* Submit Button Group */}
             <Center marginTop="14">
-              <Button type="submit" colorScheme="facebook" marginX="3">
+              <Button type="submit" colorScheme="teal" marginX="3">
                 Submit
               </Button>
               <Button type="reset" marginX="3">
