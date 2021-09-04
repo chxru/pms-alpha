@@ -15,13 +15,22 @@ interface PatientRegistrationData {
   tp?: string;
 }
 
+/**
+ * @param {PatientRegistrationData} data
+ * @return {*}  {Promise<number>} patient id
+ */
 const HandleNewPatient = async (
   data: PatientRegistrationData
-): Promise<void> => {
+): Promise<number> => {
   const encrypted = EncryptData(data);
 
   // save data in database
-  await db.query("INSERT INTO patients.info (data) VALUES ($1)", [encrypted]);
+  const query = await db.query(
+    "INSERT INTO patients.info (data) VALUES ($1) RETURNING id",
+    [encrypted]
+  );
+
+  return query.rows[0].id;
 };
 
 export { HandleNewPatient };

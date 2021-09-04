@@ -12,6 +12,7 @@ router.post(
   checkSchema(new_patient_schema),
   async (req: Request, res: Response) => {
     logger("/patient/add");
+    console.log(req.body);
 
     // schema validation
     const errors = validationResult(req);
@@ -21,15 +22,15 @@ router.post(
         .array()
         .map((i) => `${i.param}: ${i.msg}`)
         .join("\n");
-      logger("Login schema validation failed", "info");
+      logger("New patient form schema validation failed", "info");
       return res.status(400).json({ success: false, err });
     }
 
     try {
-      await HandleNewPatient(req.body);
+      const id = await HandleNewPatient(req.body);
 
       logger("New patient info saved", "success");
-      res.sendStatus(200);
+      res.status(200).json({ id });
     } catch (error) {
       logger("Error occured while saving patient info", "error");
       console.error(error);
