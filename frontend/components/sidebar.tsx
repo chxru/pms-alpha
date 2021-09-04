@@ -1,21 +1,21 @@
 import React, { useContext } from "react";
+import { useRouter } from "next/router";
 import {
   Box,
-  Button,
   Drawer,
   DrawerContent,
   DrawerOverlay,
   Flex,
-  Heading,
   Icon,
   IconButton,
-  useDisclosure,
   Input,
   InputGroup,
   InputLeftElement,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
-import router, { useRouter } from "next/router";
-import { FiSearch, FiBell, FiMenu, FiLogOut } from "react-icons/fi";
+import { FiBell, FiLogOut, FiMenu, FiSearch } from "react-icons/fi";
+
 import AuthContext from "../contexts/auth-context";
 
 interface sidebarProps {
@@ -27,31 +27,26 @@ const NavItem: React.FC<sidebarProps> = ({ name, route }) => {
   const router = useRouter();
 
   return (
-    <Button
-      width="150px"
-      justifyContent="left"
-      height="64px"
-      mb="15px"
-      mx={-10}
-      bg="white"
+    <Flex
+      align="center"
+      px="4"
+      pl="4"
+      py="3"
+      cursor="pointer"
+      color="black"
       _hover={{
         bg: "gray.200",
-        borderRadius: "10px",
-        borderLeftRadius: "0px",
+        color: "gray.800",
       }}
-      _active={{
-        bg: "gray.200",
-        borderRadius: "10px",
-        borderLeftRadius: "0px",
-        transform: "scale(0.98)",
-      }}
-      _focus={{ _focus: "none" }}
+      role="group"
+      fontWeight="semibold"
+      transition=".15s ease"
       onClick={() => {
         router.push(route);
       }}
     >
       {name}
-    </Button>
+    </Flex>
   );
 };
 
@@ -61,59 +56,60 @@ const SidebarContent = (props: {
   borderRight?: string;
 }) => {
   return (
-    <Box
+    <Flex
       as="nav"
+      direction="column"
+      justify="space-between"
       pos="fixed"
-      top="10"
+      top="0"
       left="0"
       zIndex="sticky"
       h="full"
-      mt={15}
-      pb="10"
-      px="50px"
+      pb="4"
       overflowX="hidden"
       overflowY="auto"
       bg="white"
-      w={{ base: 50, md: 50, lg: "200px" }}
+      borderColor="gray.200"
+      borderRightWidth="1px"
+      w="60"
+      shadow="sm"
       {...props}
     >
-      <Flex
-        direction="column"
-        as="nav"
-        mt="25px"
-        mr="100px"
-        fontSize="sm"
-        color="gray.600"
-        aria-label="Main Navigation"
-      >
-        <Flex
-          align="center"
-          mt={-5}
-          mb={5}
-          display={{ base: "flex", lg: "none" }}
-        >
-          <Heading size="lg" fontWeight="semibold">
-            Hosp - e
-          </Heading>
+      <Box>
+        <Flex px="4" py="5" align="center">
+          <Text fontSize="2xl" ml="2" color="black" fontWeight="semibold">
+            PMS
+          </Text>
         </Flex>
 
-        {/* Navigation buttons */}
-        <NavItem name="Dashboard" route="/" />
-        <NavItem name="Add Patient" route="/patient/new" />
-        <NavItem name="Browse" route="/dashboard" />
-        <NavItem name="Calender" route="/dashboard" />
-      </Flex>
-    </Box>
+        <Flex
+          direction="column"
+          as="nav"
+          fontSize="sm"
+          color="gray.600"
+          aria-label="Main Navigation"
+        >
+          <NavItem name="Dashboard" route="/" />
+          <NavItem name="Add Patient" route="/patient/new" />
+          <NavItem name="Browse" route="/dashboard" />
+          <NavItem name="Calender" route="/dashboard" />
+        </Flex>
+      </Box>
+      <Box textAlign="center">
+        <Text>pms-alpha-0.1.0</Text>
+      </Box>
+    </Flex>
   );
 };
 
 const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const router = useRouter();
   const sidebar = useDisclosure();
   const authContext = useContext(AuthContext);
 
   return (
     <Box as="section" bg="gray.50" minH="100vh" backgroundColor="#f8f8f8">
-      <SidebarContent display={{ base: "none", md: "none", lg: "unset" }} />
+      <SidebarContent display={{ base: "none", md: "flex" }} />
       <Drawer
         isOpen={sidebar.isOpen}
         onClose={sidebar.onClose}
@@ -125,61 +121,40 @@ const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </DrawerContent>
       </Drawer>
 
-      <Flex
-        display={{ base: "flex", md: "flex" }}
-        as="header"
-        align="center"
-        justify={{ base: "space-between", md: "space-between" }}
-        w="full"
-        px="4"
-        bg="white"
-        h="14"
-        overflowX="auto"
-        overflowY="hidden"
-        pos="fixed"
-        zIndex="sticky"
-      >
-        <Flex align="center">
-          {/* Toggle Button  */}
-          <IconButton
-            aria-label="Menu"
-            display={{ base: "inline-flex", md: "inline-flex", lg: "none" }}
-            onClick={sidebar.onOpen}
-            icon={<Icon color="gray.500" as={FiMenu} cursor="pointer" />}
-            size="lg"
-            mr={5}
-          />
-
-          <Heading size="lg" fontWeight="semibold">
-            Hosp - e
-          </Heading>
-        </Flex>
-
-        <Flex>
-          {/* Search  */}
-          <InputGroup
-            w="50"
-            size="sm"
-            display={{ base: "none", md: "flex" }}
-            mr={8}
-            borderWidth="0px"
+      <Box ml={{ base: 0, md: 60 }} transition=".3s ease">
+        <Flex
+          as="header"
+          align="center"
+          justify={{ base: "space-between", md: "right" }}
+          w="full"
+          p="4"
+          bg="white"
+        >
+          <Flex
+            direction="row"
+            align="center"
+            display={{ base: "flex", md: "none" }}
           >
-            <InputLeftElement>
-              <Icon color="gray.500" as={FiSearch} cursor="pointer" />
-            </InputLeftElement>
-            <Input
-              _focus={{ _focus: "none" }}
-              placeholder="Search"
-              borderRadius="15px"
-              background="#F5FAF8"
-              fontWeight="semibold"
-              borderColor="white"
-              fontSize="md"
+            <IconButton
+              aria-label="Menu"
+              onClick={sidebar.onOpen}
+              icon={<Icon color="gray.500" as={FiMenu} cursor="pointer" />}
+              size="lg"
+              mr={5}
             />
-          </InputGroup>
+            <Text fontSize="2xl" ml="2" color="black" fontWeight="semibold">
+              PMS
+            </Text>
+          </Flex>
 
-          {/* notification and logout icon */}
           <Flex align="center">
+            <InputGroup w={{ base: "56", md: "96" }} mr={4}>
+              <InputLeftElement color="gray.500">
+                <FiSearch />
+              </InputLeftElement>
+              <Input placeholder="Search for patient..." />
+            </InputGroup>
+
             <Icon color="gray.500" as={FiBell} cursor="pointer" mr={5} />
 
             <Icon
@@ -187,8 +162,7 @@ const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               as={FiLogOut}
               cursor="pointer"
               mr={5}
-              fontSize="2xl"
-              role="button"
+              fontSize="lg"
               onClick={() => {
                 authContext.onSignOut();
                 router.push("/login");
@@ -196,9 +170,8 @@ const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             />
           </Flex>
         </Flex>
-      </Flex>
-      <Box ml={{ base: 0, md: 0, lg: "200px" }} transition=".3s ease">
-        <Box as="main" p="4" overflow="hidden" py={45} bg="white">
+
+        <Box as="main" pb="8" overflowX="hidden" bg="white">
           {children}
         </Box>
       </Box>
