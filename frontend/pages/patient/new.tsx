@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import {
   Button,
   Center,
@@ -20,12 +21,58 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
+import AuthContext from "../../contexts/auth-context";
+import NotifyContext from "../../contexts/notify-context";
+
+import { ApiRequest } from "../../util/request";
+
 const AddPatient: React.FC = ({}) => {
+  const auth = useContext(AuthContext);
+  const notify = useContext(NotifyContext);
+  const router = useRouter();
   const { register, handleSubmit } = useForm<API.Patient.BasicDetails>();
 
-  const onSubmit = (values: API.Patient.BasicDetails) => {
-    // eslint-disable-next-line no-console
-    console.log(values);
+  const onSubmit = async (values: API.Patient.BasicDetails) => {
+    // remove empty fields from the values object
+    for (const key in values) {
+      if (Object.prototype.hasOwnProperty.call(values, key)) {
+        if (!values[key]) {
+          delete values[key];
+        }
+      }
+    }
+
+    const { ok, data, err } = await ApiRequest<{ id: number }>({
+      path: "patients/add",
+      method: "POST",
+      obj: values,
+      token: auth.token,
+    });
+
+    if (!ok) {
+      notify.NewAlert({
+        msg: "Invalid form data",
+        description: err,
+        status: "error",
+      });
+      return;
+    }
+
+    notify.NewAlert({
+      msg: "New patient record saved",
+      status: "success",
+    });
+
+    if (!data) {
+      notify.NewAlert({
+        msg: "No patient id received",
+        description:
+          "Cannot redirect to patient profile due to lack of patient id in the database response",
+        status: "info",
+      });
+    } else {
+      router.push(`/patient/${data.id}`);
+    }
   };
 
   return (
@@ -270,11 +317,11 @@ const AddPatient: React.FC = ({}) => {
                     placeholder="Select who patient live with"
                     focusBorderColor="gray.300"
                   >
-                    <option value="Alone">Alone</option>
-                    <option value="With Spouse"> With Spouse</option>
-                    <option value="With Sibilings">With Sibilings</option>
-                    <option value="With Children">With Children</option>
-                    <option value="With Relation">With Relations</option>
+                    <option value="alone">Alone</option>
+                    <option value="spouse"> With Spouse</option>
+                    <option value="sibilings">With Sibilings</option>
+                    <option value="children">With Children</option>
+                    <option value="relations">With Relations</option>
                   </Select>
                 </FormControl>
               </GridItem>
