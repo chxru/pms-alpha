@@ -121,7 +121,12 @@ const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </DrawerContent>
       </Drawer>
 
-      <Box ml={{ base: 0, md: 60 }} transition=".3s ease">
+      <Flex
+        direction="column"
+        minH="100vh"
+        ml={{ base: 0, md: 60 }}
+        transition=".3s ease"
+      >
         <Flex
           as="header"
           align="center"
@@ -171,10 +176,18 @@ const Sidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </Flex>
         </Flex>
 
-        <Box as="main" pb="8" overflowX="hidden" bg="white">
+        <Flex
+          direction="column"
+          grow={1}
+          shrink={1}
+          as="main"
+          pb="8"
+          overflowX="hidden"
+          backgroundColor="#f8f8f8"
+        >
           {children}
-        </Box>
-      </Box>
+        </Flex>
+      </Flex>
     </Box>
   );
 };
