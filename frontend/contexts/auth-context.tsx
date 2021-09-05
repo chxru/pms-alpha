@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
+import type { API } from "types/api";
 
 const AuthContext = React.createContext<{
   user?: API.Auth.UserData;
