@@ -1,5 +1,6 @@
 import db from "../database/pg";
 import { DecryptData, EncryptData } from "../util/crypto";
+import { logger } from "../util/logger";
 
 import type { API } from "types/api";
 import type { PGDB } from "types/pg";
@@ -36,14 +37,46 @@ const HandleNewPatient = async (
   data: API.Patient.BasicDetails
 ): Promise<number> => {
   const encrypted = EncryptData(data);
+  const fullname = data.firstname + " " + data.lastname;
 
-  // save data in database
-  const query = await db.query(
-    "INSERT INTO patients.info (data) VALUES ($1) RETURNING id",
-    [encrypted]
-  );
+  let pid: number;
 
-  return query.rows[0].id;
+  // begin transaction
+  const trx = await db.connect();
+  try {
+    await trx.query("BEGIN");
+
+    // save encrypted data in patients.info
+    const q1 = await db.query(
+      "INSERT INTO patients.info (data) VALUES ($1) RETURNING id",
+      [encrypted]
+    );
+
+    // get patient id
+    pid = q1.rows[0].id;
+
+    // insert full name to patients.search
+    await trx.query("INSERT INTO patients.search VALUES ($1, $2)", [
+      pid,
+      fullname,
+    ]);
+
+    // commiting
+    await trx.query("COMMIT");
+  } catch (error) {
+    // rallback
+    await trx.query("ROLLBACK");
+
+    logger(
+      "Error occured in HandleNewPatient transcation, rollbacked",
+      "error"
+    );
+    throw error;
+  } finally {
+    trx.release();
+  }
+
+  return pid;
 };
 
 export { HandlePatientBasicInfo, HandleNewPatient };
