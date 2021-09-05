@@ -1,5 +1,8 @@
-declare namespace PGDB {
-  namespace User {
+//@ts-ignore
+import type { API } from "./api";
+
+export namespace PGDB {
+  export namespace User {
     export interface Data extends API.Auth.UserData {
       id: number;
       created_at: Date;
@@ -21,7 +24,7 @@ declare namespace PGDB {
     }
   }
 
-  namespace Patient {
+  export namespace Patient {
     export interface BasicDetails extends API.Patient.BasicDetails {
       id: number;
       created_at: Date;

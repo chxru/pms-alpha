@@ -1,6 +1,8 @@
 import db from "../database/pg";
 import { EncryptData } from "../util/crypto";
 
+import type { API } from "types/api";
+
 /**
  * @param {API.Patient.BasicDetails} data
  * @return {*}  {Promise<number>} patient id

@@ -2,6 +2,8 @@ import fetch from "node-fetch";
 import { serialize } from "cookie";
 import type { NextApiRequest, NextApiResponse } from "next";
 
+import type { API } from "types/api";
+
 type ResponseType = {
   success: boolean;
   user?: API.Auth.UserData;

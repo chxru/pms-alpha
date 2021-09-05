@@ -26,6 +26,8 @@ import NotifyContext from "../../contexts/notify-context";
 
 import { ApiRequest } from "../../util/request";
 
+import type { API } from "../../../types/api";
+
 const AddPatient: React.FC = ({}) => {
   const auth = useContext(AuthContext);
   const notify = useContext(NotifyContext);

@@ -1,5 +1,5 @@
-declare namespace API {
-  namespace Auth {
+export namespace API {
+  export namespace Auth {
     /**
      * Data passing with the jwt
      *
@@ -30,7 +30,7 @@ declare namespace API {
     }
   }
 
-  namespace Patient {
+  export namespace Patient {
     /**
      * Basic data gathered from the patient
      *

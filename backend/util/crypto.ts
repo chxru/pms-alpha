@@ -1,4 +1,5 @@
 import { createCipheriv, createDecipheriv, createHash } from "crypto";
+import type { API } from "types/api";
 
 /*
   For reference 

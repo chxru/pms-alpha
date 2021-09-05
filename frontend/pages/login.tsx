@@ -18,6 +18,8 @@ import Head from "next/head";
 import NotifyContext from "../contexts/notify-context";
 import AuthContext from "../contexts/auth-context";
 
+import type { API } from "types/api";
+
 interface LoginForm {
   username: string;
   password: string;

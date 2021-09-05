@@ -3,10 +3,9 @@
     "target": "es6",
     "module": "commonjs",
     "rootDir": "./",
+    "baseUrl": "../",
     "outDir": "./build",
     "esModuleInterop": true,
     "strict": true
-  },
-  "include": ["**/*.ts", "../types/*.d.ts"],
-  "exclude": ["node_modules"]
+  }
 }

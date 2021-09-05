@@ -10,6 +10,8 @@ import Overlay from "../components/overlay";
 import AuthContext from "../contexts/auth-context";
 import NotifyContext from "../contexts/notify-context";
 
+import type { API } from "types/api";
+
 function MyApp({ Component, pageProps }: AppProps) {
   const notify = useContext(NotifyContext);
 

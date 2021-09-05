@@ -4,6 +4,10 @@ import { ComparePwd, HashPwd } from "../util/bcrypt";
 import { DecodeJWT, GenerateJWT } from "../util/jwt";
 import { logger } from "../util/logger";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import type { PGDB } from "types/pg";
+
 interface RegisterData {
   email: string;
   username: string;
