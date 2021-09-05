@@ -1,84 +1,149 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import {
-  Box,
-  Center,
   Container,
   Divider,
   Flex,
   Heading,
-  HStack,
   SimpleGrid,
   Text,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
 } from "@chakra-ui/react";
-import { FiEdit } from "react-icons/fi";
-import { Icon } from "@chakra-ui/icon";
+
+import { ApiRequest } from "frontend/util/request";
+import AuthContext from "frontend/contexts/auth-context";
+import NotifyContext from "frontend/contexts/notify-context";
+
+import type { PGDB } from "types/pg";
 
 const ProfileView: React.FC = ({}) => {
+  const router = useRouter();
+  const auth = useContext(AuthContext);
+  const notify = useContext(NotifyContext);
+
+  const [patient, setpatientData] = useState<PGDB.Patient.BasicDetails>();
+  const [age, setage] = useState<string>();
+
+  /**
+   * Capitalize first letter of each word
+   *
+   * @param {string} string
+   * @return {*}  {string}
+   */
+  const FormatText = (string: string): string =>
+    string
+      .split(" ")
+      .map((m) => m[0].toUpperCase() + m.substr(1))
+      .join(" ");
+
+  const FetchPatientInfo = async () => {
+    const { id } = router.query;
+    let { success, data, err } = await ApiRequest<PGDB.Patient.BasicDetails>({
+      path: `patients/${id}/basic`,
+      method: "GET",
+      token: auth.token,
+    });
+
+    if (!success || err) {
+      notify.NewAlert({
+        msg: "Fetching patient info failed",
+        description: err,
+        status: "error",
+      });
+
+      // redirect back
+      router.back();
+      return;
+    }
+
+    if (!data) {
+      notify.NewAlert({
+        msg: "Request didn't came with expected response",
+        status: "error",
+      });
+
+      // redirect back
+      router.back();
+      return;
+    }
+
+    // format the input
+    for (const key in data) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        const element = data[key];
+        if (typeof element === "string") {
+          data[key] = FormatText(element);
+        }
+
+        if (key === "dob") {
+          if (!element) return;
+
+          // calculate age
+          // dob is saved in yyyy-mm-dd
+          const t = element
+            .toString()
+            .split("-")
+            .map((e) => parseInt(e));
+          const dob = new Date(t[0], t[1], t[2]);
+          const today = new Date();
+
+          const diff = Math.floor(today.getTime() - dob.getTime());
+          const years = Math.floor(diff / (1000 * 3600 * 24 * 365.25));
+
+          setage(`${years} years`);
+        }
+      }
+    }
+
+    setpatientData(data);
+  };
+
+  // onMount
+  useEffect(() => {
+    (async () => {
+      await FetchPatientInfo();
+    })();
+    // FIXME:
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <Head>
-        <title>Profile View</title>
+        <title>
+          {patient?.firstname} {patient?.lastname}
+        </title>
         <meta name="description" content="Profile View" />
       </Head>
 
-      <Container
-        overflowY="auto"
-        maxW="6xl"
-        minH="100vh"
-        mt={10}
-        borderWidth="2px"
-        borderColor="white"
-        borderRadius="10px"
-        bg="whitesmoke"
-      >
+      <Container overflowY="auto" maxW="4xl" minH="100vh">
         <Flex align="center" pl={2} mt={5}>
-          <Box
-            w="100%"
-            h="max-content"
-            mr={3}
-            mb={{ base: "10px", md: "none" }}
-            borderRadius="15px"
-            borderWidth="2px"
-            shadow="lg"
+          <Container
+            maxW="4xl"
+            mt="28px"
+            mb={10}
+            px="35px"
+            py="21px"
+            shadow="md"
             bg="white"
           >
-            {/* Patient Name */}
-            <Center>
-              <HStack>
-                <Heading size="md" fontWeight="semibold" my={2}>
-                  David Miller
-                </Heading>
-                <Flex
-                  align="center"
-                  py="20px"
-                  cursor="pointer"
-                  //Add onClick for edit option
-                >
-                  <Icon
-                    color="gray.500"
-                    as={FiEdit}
-                    cursor="pointer"
-                    ml={5}
-                    fontSize="2xl"
-                  />
-                </Flex>
-              </HStack>
-            </Center>
+            <Heading my="20px" size="md" fontWeight="semibold">
+              {patient?.firstname} {patient?.lastname}
+            </Heading>
 
-            <Tabs isFitted variant="enclosed">
-              <TabList mb="1em">
-                <Tab _focus={{ _focus: "none" }}>Personal Details</Tab>
-                <Tab _focus={{ _focus: "none" }}>Medical Details</Tab>
-              </TabList>
-              <TabPanels>
-                {/* Personal Details Tab*/}
-                <TabPanel>
+            <Accordion allowToggle allowMultiple>
+              <AccordionItem>
+                <AccordionButton>
+                  <Text>Personal details</Text>
+                  <AccordionIcon />
+                </AccordionButton>
+
+                <AccordionPanel>
                   {/* Basic Details */}
                   <Heading
                     size="sm"
@@ -88,87 +153,41 @@ const ProfileView: React.FC = ({}) => {
                     textColor="gray.700"
                   >
                     Basic Details
-                    <Divider w="80%" />
                   </Heading>
-                  <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }}>
+
+                  <Divider />
+
+                  <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} pb={4}>
                     {/* Gender */}
                     <Flex direction="column" ml={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Gender
+                      <Text>Gender</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.gender}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        Male
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Birthday */}
                     <Flex direction="column" ml={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Birthday
+                      <Text>Birthday</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.dob}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        1997-08-11
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Marital Status*/}
                     <Flex direction="column" ml={6} mt={4} pr={2}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Marital Status
+                      <Text>Marital Status</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.marital}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        Married
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Age */}
                     <Flex direction="column" ml={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Age
+                      <Text>Age</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {age}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        24 years
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
                   </SimpleGrid>
 
@@ -181,127 +200,56 @@ const ProfileView: React.FC = ({}) => {
                     textColor="gray.700"
                   >
                     Contact Details
-                    <Divider w="80%" />
                   </Heading>
-                  <SimpleGrid columns={{ base: 2, md: 3, lg: 3 }}>
+                  <Divider />
+
+                  <SimpleGrid columns={{ base: 2, md: 3, lg: 3 }} pb={4}>
                     {/* Address */}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Address
+                      <Text>Address</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.address}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        No,152/2 Galle Rd, Rathnapura
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Grama Niladari */}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        GN Sector
+                      <Text>GN Sector</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.grama_niladhari}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        Rathnapura
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* DS Sector */}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        DS Sector
+                      <Text>DS Sector</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.divisional_sector}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        Kaluthara
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Contact Details */}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Mobile
+                      <Text>Mobile</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.contact_number}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        0772258635
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* PHI */}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        PHI
+                      <Text>PHI</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.phi_tp}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        0772258635
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* MOH */}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        MOH
+                      <Text>MOH</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.moh_tp}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        0772258635
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
                   </SimpleGrid>
 
@@ -316,79 +264,37 @@ const ProfileView: React.FC = ({}) => {
                     Relatives Details
                     <Divider w="80%" />
                   </Heading>
-                  <SimpleGrid columns={{ base: 2, md: 3, lg: 3 }}>
+                  <SimpleGrid columns={{ base: 2, md: 3, lg: 3 }} pb={4}>
                     {/* Living With */}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Living With
+                      <Text>Living With</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.living_with}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        Alone
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Other Person Name */}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Name
+                      <Text>Name</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.lw_name}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      ></Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Other Person Address */}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Address
+                      <Text>Address</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.lw_address}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      ></Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Other Person Mobile */}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Mobile
+                      <Text>Mobile</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.lw_tp}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      ></Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
                   </SimpleGrid>
 
@@ -401,156 +307,82 @@ const ProfileView: React.FC = ({}) => {
                     textColor="gray.700"
                   >
                     Other Details
-                    <Divider w="80%" />
                   </Heading>
-                  <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }}>
+                  <Divider />
+
+                  <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} pb={4}>
                     {/* Edu Status */}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Education
+                      <Text>Education</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.edu_status && patient?.edu_status.join(" ")}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        1-5 , OL
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Job*/}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Job
+                      <Text>Job</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.has_job ? patient.job : "Unemployeed"}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        Engineer
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Sahanadara */}
                     <Flex direction="column" mx={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        GOV. Sahanadara
+                      <Text>GOV. Sahanadara</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.gov_facilities}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      ></Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
                   </SimpleGrid>
-                </TabPanel>
+                </AccordionPanel>
+              </AccordionItem>
 
-                {/* Medical Details Tab */}
-                <TabPanel>
+              <AccordionItem>
+                <AccordionButton>
+                  <Text>Medical Details</Text>
+                  <AccordionIcon />
+                </AccordionButton>
+
+                <AccordionPanel>
                   <SimpleGrid columns={{ base: 2, md: 3, lg: 3 }}>
                     {/* Disease */}
                     <Flex direction="column" ml={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Disease
+                      <Text>Disease</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.diseases}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        Depression
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Treatment */}
                     <Flex direction="column" ml={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Treatment History
+                      <Text>Treatment History</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.treatment_his &&
+                          patient?.treatment_his.join(" ")}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        Clogapine , ECT
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Last Clinc Visit*/}
                     <Flex direction="column" ml={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Last Clinc
+                      <Text>Last Clinc</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.last_clinic_visit}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        06/05/2021
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
 
                     {/* Date of informed Over phone */}
                     <Flex direction="column" ml={6} mt={4}>
-                      <Text
-                        fontWeight="bold"
-                        textColor="gray.500"
-                        fontSize="sm"
-                      >
-                        Informed over Phone
+                      <Text>Informed over Phone</Text>
+                      <Text fontWeight="semibold" mb={2}>
+                        {patient?.informed_over_phone}
                       </Text>
-                      <Text
-                        fontWeight="semibold"
-                        textColor="gray.400"
-                        mb={2}
-                        fontSize="sm"
-                      >
-                        06/05/2021
-                      </Text>
-                      <Divider width="80px" mb={5}></Divider>
                     </Flex>
                   </SimpleGrid>
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </Box>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+          </Container>
         </Flex>
       </Container>
     </>
