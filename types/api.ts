@@ -62,7 +62,7 @@ export namespace API {
       lw_name?: string;
       lw_address?: string;
       lw_tp?: number;
-      edu_status?: string;
+      edu_status?: string[];
       has_job: boolean;
       job?: string;
       gov_facilities?: string;
