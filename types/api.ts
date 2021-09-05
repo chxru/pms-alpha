@@ -67,7 +67,7 @@ export namespace API {
       job?: string;
       gov_facilities?: string;
       diseases: string;
-      treatment_his?: string;
+      treatment_his?: string[];
       last_clinic_visit?: Date;
       informed_over_phone?: Date;
       home_visit?: Date;
