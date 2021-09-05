@@ -44,14 +44,14 @@ const AddPatient: React.FC = ({}) => {
       }
     }
 
-    const { ok, data, err } = await ApiRequest<{ id: number }>({
+    const { success, data, err } = await ApiRequest<{ id: number }>({
       path: "patients/add",
       method: "POST",
       obj: values,
       token: auth.token,
     });
 
-    if (!ok) {
+    if (!success) {
       notify.NewAlert({
         msg: "Invalid form data",
         description: err,

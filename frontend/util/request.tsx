@@ -1,3 +1,5 @@
+import type { API } from "types/api";
+
 interface request {
   path: string;
   method: "GET" | "POST";
@@ -5,12 +7,6 @@ interface request {
     [key: string]: any;
   };
   token?: string;
-}
-
-interface response<T> {
-  ok: boolean;
-  err?: string;
-  data?: T;
 }
 
 /**
@@ -30,10 +26,10 @@ const ApiRequest = async <T,>({
   method,
   obj,
   token,
-}: request): Promise<response<T>> => {
+}: request): Promise<API.Response<T>> => {
   // access token is required
   if (!token) {
-    return { ok: false, err: "Token is missing" };
+    return { success: false, err: "Token is missing" };
   }
 
   try {
@@ -52,15 +48,15 @@ const ApiRequest = async <T,>({
       if (response.status === 400) {
         let e = err.split("\n")[0];
         e = e.split(":").pop().trim();
-        return { ok: false, err: e };
+        return { success: false, err: e };
       }
-      return { ok: false, err };
+      return { success: false, err };
     }
 
     const data: T = await response.json();
-    return { ok: true, data };
+    return { success: true, data };
   } catch (error: any) {
-    return { ok: false, err: error };
+    return { success: false, err: error };
   }
 };
 

@@ -8,9 +8,11 @@ import {
 } from "../controllers/patient.controller";
 import { logger } from "../util/logger";
 
+import type { API } from "types/api";
+
 const router = Router();
 
-router.get("/:id/basic", async (req, res) => {
+router.get("/:id/basic", async (req, res: Response<API.Response>) => {
   const pid = req.params.id;
   logger(`/patient/${pid}/basic`);
 
@@ -18,11 +20,11 @@ router.get("/:id/basic", async (req, res) => {
     const { err, data } = await HandlePatientBasicInfo(pid);
 
     if (err) {
-      res.status(400).json({ err });
+      res.status(400).json({ success: false, err });
       return;
     }
 
-    res.status(200).json({ res: data });
+    res.status(200).json({ success: true, data });
   } catch (error) {
     logger(`Error occured while fetching patient:${pid} basic info`, "error");
     console.log(error);
@@ -33,7 +35,7 @@ router.get("/:id/basic", async (req, res) => {
 router.post(
   "/add",
   checkSchema(new_patient_schema),
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response<API.Response>) => {
     logger("/patient/add");
 
     // schema validation
@@ -52,7 +54,7 @@ router.post(
       const id = await HandleNewPatient(req.body);
 
       logger("New patient info saved", "success");
-      res.status(200).json({ id });
+      res.status(200).json({ success: true, data: id });
     } catch (error) {
       logger("Error occured while saving patient info", "error");
       console.error(error);

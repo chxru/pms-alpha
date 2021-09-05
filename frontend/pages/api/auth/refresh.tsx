@@ -1,20 +1,26 @@
 import fetch from "node-fetch";
+
 import type { NextApiRequest, NextApiResponse } from "next";
+import type { API } from "types/api";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<API.Response>
 ) {
   // filter POST requests
   if (req.method !== "POST") {
-    res.status(403).send(`No ${req.method} requests accepted in this endpoint`);
+    res.status(403).json({
+      success: false,
+      err: `No ${req.method} requests accepted in this endpoint`,
+    });
     return;
   }
 
+  // TODO: Does this even work?? request fetch doesnt include credentials
   // reply if no token came in the cookie
   const refresh: string | undefined = req.cookies.refresh_token;
   if (!refresh) {
-    res.status(401).json({ err: "No token" });
+    res.status(403).json({ success: true, err: "No token" });
     return;
   }
 
@@ -28,14 +34,24 @@ export default async function handler(
       body: JSON.stringify({ refresh_token: refresh }),
     });
 
-    if (sr.ok) {
-      const data = await sr.json();
-      res.status(200).json(data);
-      return;
+    if (sr.status === 400) {
+      const data = (await sr.json()) as API.Response;
+      res.status(400).json({ success: false, err: data.err });
     }
 
-    res.status(403).send("server resoponse is not okay");
+    if (!sr.ok) {
+      res.status(500).json({
+        success: false,
+        err: "Error occured in next server",
+      });
+    }
+
+    const data = (await sr.json()) as API.Response;
+    res.status(200).json({ success: true, data: data.data });
   } catch (error) {
-    res.status(403).send(error);
+    res.status(502).json({
+      success: false,
+      err: "Error occured in next server",
+    });
   }
 }

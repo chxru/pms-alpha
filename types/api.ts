@@ -1,4 +1,15 @@
 export namespace API {
+  /**
+   * Default response format used in API
+   *
+   * @export
+   * @interface Response
+   */
+  export interface Response<T = any> {
+    success: boolean;
+    err?: string;
+    data?: T;
+  }
   export namespace Auth {
     /**
      * Data passing with the jwt
@@ -22,11 +33,9 @@ export namespace API {
      * @interface LoginResponse
      */
     export interface LoginResponse {
-      success: boolean;
-      user?: UserData;
-      access?: string;
-      refresh?: string;
-      err?: string;
+      user: UserData;
+      access: string;
+      refresh: string;
     }
   }
 

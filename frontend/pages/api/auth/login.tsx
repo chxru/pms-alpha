@@ -1,20 +1,15 @@
+/* eslint-disable no-console */
 import fetch from "node-fetch";
 import { serialize } from "cookie";
+
 import type { NextApiRequest, NextApiResponse } from "next";
-
 import type { API } from "types/api";
-
-type ResponseType = {
-  success: boolean;
-  user?: API.Auth.UserData;
-  err?: string;
-  desc?: string;
-  access?: string;
-};
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseType>
+  res: NextApiResponse<
+    API.Response<{ user: API.Auth.UserData; access: string }>
+  >
 ) {
   try {
     const sr = await fetch("http://localhost:3448/users/login", {
@@ -25,23 +20,31 @@ export default async function handler(
       body: JSON.stringify(req.body),
     });
 
-    if (!sr.ok) {
-      const desc = await sr.text();
+    const response = (await sr.json()) as API.Response<API.Auth.LoginResponse>;
+
+    // 400 => invalid params, schema fails
+    if (sr.status === 400) {
+      res.status(400).json(response);
+      return;
+    }
+
+    // 500 => internal server errors
+    if (sr.status === 500) {
+      res
+        .status(500)
+        .json({ success: false, err: "Error occured in internal server" });
+    }
+
+    // validate response data
+    if (!response.data) {
       res.status(500).json({
         success: false,
-        err: "Error occured in internal server",
-        desc,
+        err: "Empty server response",
       });
       return;
     }
 
-    const { success, user, access, refresh, err } =
-      (await sr.json()) as API.Auth.LoginResponse;
-
-    if (!success) {
-      res.status(200).json({ success, err });
-      return;
-    }
+    const { user, access, refresh } = response.data;
 
     if (!access || !refresh) {
       res.status(500).json({ success: false, err: "Tokens are missing" });
@@ -55,12 +58,13 @@ export default async function handler(
     });
 
     res.setHeader("Set-Cookie", header);
-    res.status(200).json({ success, user, access });
-  } catch (error: any) {
+    res.status(200).json({ success: true, data: { user, access } });
+  } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       success: false,
       err: "Error occured in next server",
-      desc: error.toString(),
     });
   }
 }

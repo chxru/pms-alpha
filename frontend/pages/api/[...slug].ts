@@ -3,6 +3,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import * as jwt from "jsonwebtoken";
 import fetch, { RequestInit } from "node-fetch";
 
+import type { API } from "types/api";
+
 const VerifyJWT = async (token: string) => {
   return new Promise<void>((resolve, reject) => {
     if (!process.env.JWT_ACCESS_TOKEN) {
@@ -23,7 +25,7 @@ const VerifyJWT = async (token: string) => {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<API.Response>
 ) {
   const { slug } = req.query;
   const body = req.body;
@@ -38,7 +40,7 @@ export default async function handler(
     await VerifyJWT(token);
   } catch (error) {
     console.log(error);
-    res.status(403).json({ err: "JWT Verification failed" });
+    res.status(403).json({ success: false, err: "JWT Verification failed" });
     return;
   }
 
@@ -62,23 +64,26 @@ export default async function handler(
     if (!response.ok) {
       // 400 => schema validation failed
       if (response.status === 400) {
-        const data = (await response.json()) as any;
-        res.status(400).json({ ...data });
+        const { err } = (await response.json()) as API.Response;
+        res.status(400).json({ success: false, err });
         return;
       }
 
       // 500 => backend errors
       if (response.status === 500) {
-        res
-          .status(500)
-          .json({ err: "Internal server error occured, contact admin" });
+        res.status(500).json({
+          success: false,
+          err: "Internal server error occured, contact admin",
+        });
       }
       return;
     }
 
-    const data = (await response.json()) as any;
+    const { data } = (await response.json()) as API.Response;
     res.status(200).json(data);
   } catch (error: any) {
-    res.status(502).json({ err: error });
+    console.error(error);
+
+    res.status(502);
   }
 }

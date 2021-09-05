@@ -54,11 +54,11 @@ const LoginPage: React.FC = () => {
       });
 
       if (!request.ok) {
-        const { err }: { err: string } = await request.json();
+        const { err } = (await request.json()) as API.Response;
 
         notify.NewAlert({
           msg: "User authentication failed",
-          description: err || "",
+          description: err,
           status: "error",
         });
 
@@ -67,14 +67,20 @@ const LoginPage: React.FC = () => {
 
       notify.NewAlert({ msg: "User authenticated", status: "success" });
 
-      const body: {
-        success: boolean;
-        user: API.Auth.UserData;
-        access: string;
-      } = await request.json();
+      const { data } =
+        (await request.json()) as API.Response<API.Auth.LoginResponse>;
+
+      if (!data?.access || !data.user) {
+        notify.NewAlert({
+          msg: "User authentication failed",
+          description: "Empty response",
+          status: "error",
+        });
+        return;
+      }
 
       router.push("/").then(() => {
-        authContext.onSignIn(body.access, body.user);
+        authContext.onSignIn(data.access, data.user);
       });
     } catch (error: any) {
       notify.NewAlert({
