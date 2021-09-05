@@ -2,10 +2,33 @@ import { Router, Request, Response } from "express";
 import { checkSchema, validationResult } from "express-validator";
 
 import { new_patient_schema } from "./schemas/patient.schema";
-import { HandleNewPatient } from "../controllers/patient.controller";
+import {
+  HandleNewPatient,
+  HandlePatientBasicInfo,
+} from "../controllers/patient.controller";
 import { logger } from "../util/logger";
 
 const router = Router();
+
+router.get("/:id/basic", async (req, res) => {
+  const pid = req.params.id;
+  logger(`/patient/${pid}/basic`);
+
+  try {
+    const { err, data } = await HandlePatientBasicInfo(pid);
+
+    if (err) {
+      res.status(400).json({ err });
+      return;
+    }
+
+    res.status(200).json({ res: data });
+  } catch (error) {
+    logger(`Error occured while fetching patient:${pid} basic info`, "error");
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
 
 router.post(
   "/add",
