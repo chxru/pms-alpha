@@ -79,4 +79,19 @@ const HandleNewPatient = async (
   return pid;
 };
 
-export { HandlePatientBasicInfo, HandleNewPatient };
+const SearchPatientByName = async (
+  content: string
+): Promise<API.Patient.SearchDetails[]> => {
+  if (!content) {
+    return [];
+  }
+
+  const query = await db.query(
+    "SELECT * FROM patients.search WHERE full_name ILIKE $1",
+    [`%${content}%`]
+  );
+
+  return query.rows;
+};
+
+export { HandlePatientBasicInfo, HandleNewPatient, SearchPatientByName };

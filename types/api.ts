@@ -75,5 +75,16 @@ export namespace API {
       hospital_admission: string;
       [key: string]: BasicDetails[keyof BasicDetails];
     }
+
+    /**
+     * Format what search request outputs
+     *
+     * @export
+     * @interface SearchDetails
+     */
+    export interface SearchDetails {
+      id: number;
+      full_name: string;
+    }
   }
 }

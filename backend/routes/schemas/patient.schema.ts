@@ -187,4 +187,13 @@ const new_patient_schema: Schema = {
   },
 };
 
-export { new_patient_schema };
+const search_patient_schema: Schema = {
+  search: {
+    in: "body",
+    isString: true,
+    trim: true,
+    errorMessage: "Search context is required",
+  },
+};
+
+export { new_patient_schema, search_patient_schema };
