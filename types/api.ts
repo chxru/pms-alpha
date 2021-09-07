@@ -73,7 +73,6 @@ export namespace API {
       home_visit?: Date;
       next_clinic_date?: Date;
       hospital_admission: string;
-      [key: string]: BasicDetails[keyof BasicDetails];
     }
 
     /**

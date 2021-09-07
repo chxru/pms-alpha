@@ -32,9 +32,15 @@ const AddPatient: React.FC = ({}) => {
   const auth = useContext(AuthContext);
   const notify = useContext(NotifyContext);
   const router = useRouter();
-  const { register, handleSubmit } = useForm<API.Patient.BasicDetails>();
 
-  const onSubmit = async (values: API.Patient.BasicDetails) => {
+  // to skip object key has type any value error
+  interface Details extends API.Patient.BasicDetails {
+    [key: string]: API.Patient.BasicDetails[keyof API.Patient.BasicDetails];
+  }
+
+  const { register, handleSubmit } = useForm<Details>();
+
+  const onSubmit = async (values: Details) => {
     // remove empty fields from the values object
     for (const key in values) {
       if (Object.prototype.hasOwnProperty.call(values, key)) {
