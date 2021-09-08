@@ -47,6 +47,7 @@ export namespace API {
      * @interface BasicDetails
      */
     export interface BasicDetails {
+      [key: string]: any;
       firstname: string;
       lastname: string;
       dob?: Date;

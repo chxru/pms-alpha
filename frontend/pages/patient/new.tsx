@@ -33,14 +33,9 @@ const AddPatient: React.FC = ({}) => {
   const notify = useContext(NotifyContext);
   const router = useRouter();
 
-  // to skip object key has type any value error
-  interface Details extends API.Patient.BasicDetails {
-    [key: string]: API.Patient.BasicDetails[keyof API.Patient.BasicDetails];
-  }
+  const { register, handleSubmit } = useForm<API.Patient.BasicDetails>();
 
-  const { register, handleSubmit } = useForm<Details>();
-
-  const onSubmit = async (values: Details) => {
+  const onSubmit = async (values: API.Patient.BasicDetails) => {
     // remove empty fields from the values object
     for (const key in values) {
       if (Object.prototype.hasOwnProperty.call(values, key)) {
