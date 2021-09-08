@@ -27,6 +27,18 @@ export namespace PGDB {
   export namespace Patient {
     export interface BasicDetails extends API.Patient.BasicDetails {
       id: number;
+      current_bedticket?: number;
+      bedtickets: {
+        admission_date: number;
+        discharge_date?: number;
+        id: number;
+      }[];
+    }
+
+    export interface BedTicketEntry {
+      type: string;
+      note: string;
+      attachments: string[];
       created_at: Date;
     }
 

@@ -85,5 +85,13 @@ export namespace API {
       id: number;
       full_name: string;
     }
+
+    export interface BedTicketDetails {
+      adimission_date: string;
+      discharged_date: string;
+      records: {
+        type: string;
+      }[];
+    }
   }
 }
