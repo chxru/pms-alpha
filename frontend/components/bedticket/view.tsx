@@ -22,7 +22,7 @@ const BedTicket: React.FC<bedticketProps> = ({ bid }) => {
         <Button colorScheme="orange">Discharge</Button>
       </ButtonGroup>
 
-      <NewRecord isOpen={nr_isOpen} onClose={nr_onClose} />
+      <NewRecord isOpen={nr_isOpen} onClose={nr_onClose} bid={bid} />
     </>
   );
 };

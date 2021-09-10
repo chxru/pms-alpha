@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Button,
   FormControl,
@@ -16,14 +16,22 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
+import AuthContext from "frontend/contexts/auth-context";
+import NotifyContext from "frontend/contexts/notify-context";
+
+import { ApiRequest } from "frontend/util/request";
+
 import type { PGDB } from "types/pg";
 
 interface newProps {
   isOpen: boolean;
   onClose: () => void;
+  bid?: number;
 }
 
-const NewRecord: React.FC<newProps> = ({ isOpen, onClose }) => {
+const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid }) => {
+  const auth = useContext(AuthContext);
+  const notify = useContext(NotifyContext);
   const {
     register,
     handleSubmit,
@@ -32,7 +40,28 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose }) => {
   } = useForm<Omit<PGDB.Patient.BedTicketEntry, "created_at">>();
 
   const OnSubmit = async (value: PGDB.Patient.BedTicketEntry) => {
-    console.log(value);
+    const { success, err } = await ApiRequest({
+      path: `/bedtickets/${bid}`,
+      method: "POST",
+      obj: value,
+      token: auth.token,
+    });
+
+    if (!success) {
+      notify.NewAlert({
+        msg: "Invalid form data",
+        description: err,
+        status: "error",
+      });
+      return;
+    }
+
+    notify.NewAlert({
+      msg: "New entry record saved",
+      status: "success",
+    });
+
+    onClose();
   };
 
   return (
