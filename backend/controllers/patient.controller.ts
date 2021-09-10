@@ -36,7 +36,7 @@ const HandlePatientBasicInfo = async (
 const HandleNewPatient = async (
   data: API.Patient.BasicDetails
 ): Promise<number> => {
-  const encrypted = EncryptData(data);
+  const encrypted = EncryptData(JSON.stringify(data));
   const fullname = data.firstname + " " + data.lastname;
 
   let pid: number;

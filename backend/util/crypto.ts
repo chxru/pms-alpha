@@ -1,5 +1,4 @@
 import { createCipheriv, createDecipheriv, createHash } from "crypto";
-import type { API } from "types/api";
 
 /*
   For reference 
@@ -21,17 +20,13 @@ const KEYPHASE = "3a6f0aa4866e7ee0d90f811eb68d00b7"; // TODO: Move it more secur
  * @param {API.Patient.BasicDetails} data
  * @return {*}  {string}
  */
-const EncryptData = (data: API.Patient.BasicDetails): string => {
+const EncryptData = (data: string): string => {
   const iv = Buffer.alloc(16, 0); // initialization vector
   const key = createHash("sha256").update(KEYPHASE).digest();
   const cipher = createCipheriv(ALGO, key, iv);
 
   // create a string of cipher text including the iv
-  const encrypted = Buffer.concat([
-    iv,
-    cipher.update(JSON.stringify(data)),
-    cipher.final(),
-  ]);
+  const encrypted = Buffer.concat([iv, cipher.update(data), cipher.final()]);
 
   return encrypted.toString("base64");
 };
