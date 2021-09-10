@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "@pms-alpha/frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,6 +12,7 @@
     "@chakra-ui/react": "^1.6.7",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@pms-alpha/types": "0.1.0",
     "cookie": "^0.4.1",
     "framer-motion": "^4",
     "jsonwebtoken": "^8.5.1",
