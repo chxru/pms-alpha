@@ -13,7 +13,10 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Button,
 } from "@chakra-ui/react";
+
+import BedTicket from "frontend/components/bedticket/view";
 
 import { ApiRequest } from "frontend/util/request";
 import AuthContext from "frontend/contexts/auth-context";
@@ -28,6 +31,7 @@ const ProfileView: React.FC = ({}) => {
 
   const [patient, setpatientData] = useState<PGDB.Patient.BasicDetails>();
   const [age, setage] = useState<string>();
+  const [creatingBD, setcreatingBD] = useState<boolean>(false);
 
   /**
    * Capitalize first letter of each word
@@ -88,7 +92,7 @@ const ProfileView: React.FC = ({}) => {
           const t = element
             .toString()
             .split("-")
-            .map((e) => parseInt(e));
+            .map((e: string) => parseInt(e));
           const dob = new Date(t[0], t[1], t[2]);
           const today = new Date();
 
@@ -101,6 +105,36 @@ const ProfileView: React.FC = ({}) => {
     }
 
     setpatientData(data);
+  };
+
+  const CreateBedTicket = async () => {
+    setcreatingBD(true);
+
+    const { success, err } = await ApiRequest({
+      path: `/bedtickets/new/${router.query.id}`,
+      method: "POST",
+      token: auth.token,
+    });
+
+    if (!success || err) {
+      notify.NewAlert({
+        msg: "Creating new bed ticket failed",
+        description: typeof err === "string" ? err : "",
+        status: "error",
+      });
+
+      return;
+    }
+
+    notify.NewAlert({
+      msg: "Bed ticket successfully created",
+      status: "success",
+    });
+
+    // re-fetch patient details
+    await FetchPatientInfo();
+
+    setcreatingBD(false);
   };
 
   // onMount
@@ -122,7 +156,7 @@ const ProfileView: React.FC = ({}) => {
       </Head>
 
       <Container overflowY="auto" maxW="4xl" minH="100vh">
-        <Flex align="center" pl={2} mt={5}>
+        <Flex align="center" pl={2} mt={5} flexDirection="column">
           <Container
             maxW="4xl"
             mt="28px"
@@ -382,6 +416,36 @@ const ProfileView: React.FC = ({}) => {
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
+          </Container>
+
+          <Container
+            maxW="4xl"
+            mt="28px"
+            mb={10}
+            px="35px"
+            py="21px"
+            shadow="md"
+            bg="white"
+          >
+            <Heading my="20px" size="md" fontWeight="semibold">
+              Bed Ticket
+            </Heading>
+
+            {patient?.current_bedticket ? (
+              <BedTicket bid={patient.current_bedticket} />
+            ) : (
+              <>
+                <Text>Patient has no active bed ticket record</Text>
+                <Button
+                  colorScheme="facebook"
+                  mt={2}
+                  onClick={CreateBedTicket}
+                  disabled={creatingBD}
+                >
+                  Create Bed Ticket
+                </Button>
+              </>
+            )}
           </Container>
         </Flex>
       </Container>
