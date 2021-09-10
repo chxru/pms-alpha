@@ -27,9 +27,10 @@ interface newProps {
   isOpen: boolean;
   onClose: () => void;
   bid?: number;
+  refresh: () => Promise<void>;
 }
 
-const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid }) => {
+const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
   const auth = useContext(AuthContext);
   const notify = useContext(NotifyContext);
   const {
@@ -60,6 +61,12 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid }) => {
       msg: "New entry record saved",
       status: "success",
     });
+
+    // refetch entries
+    // TODO: combine with add new request
+    await refresh();
+
+    reset();
 
     onClose();
   };
