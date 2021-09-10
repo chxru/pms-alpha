@@ -135,4 +135,40 @@ const HandleNewEntry = async (
   return { err: undefined };
 };
 
-export { HandleNewBedTicket, HandleNewEntry };
+/**
+ * Real all entries of bed ticket
+ *
+ * @param {string} bid
+ * @return {*}
+ */
+const HandleReadEntries = async (
+  bid: string
+): Promise<{ data?: PGDB.Patient.BedTicketEntry[]; err?: string }> => {
+  try {
+    const query = await db.query(
+      "SELECT records FROM patients.bedtickets WHERE id=$1",
+      [bid]
+    );
+
+    if (query.rowCount === 0) {
+      return { err: "Bed Ticket ID not found" };
+    }
+
+    const records = query.rows[0].records;
+
+    // decrypting data
+    const decrypted =
+      records === null
+        ? [] // in fresh bed tickets records is null
+        : DecryptData<PGDB.Patient.BedTicketEntry[]>(records);
+
+    return { data: decrypted };
+  } catch (error) {
+    logger("Error occured while HandleNewEntry transaction", "error");
+    console.log(error);
+
+    return { err: "Error occured while fetching new entries" };
+  }
+};
+
+export { HandleNewBedTicket, HandleNewEntry, HandleReadEntries };

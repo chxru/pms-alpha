@@ -22,4 +22,10 @@ const new_entry_schema: Schema = {
   },
 };
 
-export { new_bedticket_schemea, new_entry_schema };
+const read_entry_schema: Schema = {
+  id: {
+    in: "params",
+  },
+};
+
+export { new_bedticket_schemea, new_entry_schema, read_entry_schema };
