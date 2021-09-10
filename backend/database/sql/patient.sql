@@ -23,6 +23,6 @@ create index if not exists trgx_idx_patients_name on patients.search using gin (
 -- bed tickets
 create table if not exists patients.bedtickets(
   id integer primary key generated always as identity,
-  records text [],
+  records text,
   created_at TIMESTAMPTZ not null default now()
 )

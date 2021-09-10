@@ -21,7 +21,7 @@ const HandleNewBedTicket = async (pid: string): Promise<{ err?: string }> => {
     await trx.query("BEGIN");
 
     // fetch patient data from database
-    const q1 = await db.query("SELECT data FROM patients.info WHERE id=$1", [
+    const q1 = await trx.query("SELECT data FROM patients.info WHERE id=$1", [
       id,
     ]);
 
@@ -37,7 +37,7 @@ const HandleNewBedTicket = async (pid: string): Promise<{ err?: string }> => {
     }
 
     // save bed ticket in database
-    const q2 = await db.query(
+    const q2 = await trx.query(
       "INSERT INTO patients.bedtickets DEFAULT VALUES RETURNING id "
     );
 
@@ -55,10 +55,10 @@ const HandleNewBedTicket = async (pid: string): Promise<{ err?: string }> => {
     }
 
     // encrypting updated patient document
-    const encrypted = EncryptData(decrypted);
+    const encrypted = EncryptData(JSON.stringify(decrypted));
 
     // updating database
-    await db.query("UPDATE patients.info SET data=$1 WHERE id=$2", [
+    await trx.query("UPDATE patients.info SET data=$1 WHERE id=$2", [
       encrypted,
       pid,
     ]);
@@ -77,4 +77,62 @@ const HandleNewBedTicket = async (pid: string): Promise<{ err?: string }> => {
   return { err: undefined };
 };
 
-export { HandleNewBedTicket };
+/**
+ * Add new entry to bed ticket table
+ *
+ * @param {string} bid
+ * @param {PGDB.Patient.BedTicketEntry} data
+ * @return {*}  {Promise<{ err?: string }>}
+ */
+const HandleNewEntry = async (
+  bid: string,
+  data: PGDB.Patient.BedTicketEntry
+): Promise<{ err?: string }> => {
+  const trx = await db.connect();
+  try {
+    await trx.query("BEGIN");
+
+    const q1 = await trx.query(
+      "SELECT records FROM patients.bedtickets WHERE id=$1",
+      [bid]
+    );
+
+    if (q1.rowCount === 0) {
+      return { err: "Bed Ticket ID not found" };
+    }
+
+    const records = q1.rows[0].records;
+
+    // decrypting data
+    const decrypted =
+      records === null
+        ? [] // in fresh bed tickets records is null
+        : DecryptData<PGDB.Patient.BedTicketEntry[]>(records);
+
+    // insert new entry to saved array
+    decrypted.unshift(data);
+
+    // encrypting again
+    const encrypted = EncryptData(JSON.stringify(decrypted));
+
+    // updating database
+    await trx.query("UPDATE patients.bedtickets SET records=$1 WHERE id=$2", [
+      encrypted,
+      bid,
+    ]);
+
+    // commiting
+    await trx.query("COMMIT");
+  } catch (error) {
+    await trx.query("ROLLBACK");
+
+    logger("Error occured while HandleNewEntry transaction", "error");
+    throw error;
+  } finally {
+    trx.release();
+  }
+
+  return { err: undefined };
+};
+
+export { HandleNewBedTicket, HandleNewEntry };
