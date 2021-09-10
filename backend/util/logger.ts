@@ -23,7 +23,7 @@ const logger = (log: string, level: loglevel = "debug"): void => {
       break;
 
     case "debug":
-      if (!process.env.PRODUCTION) console.log(t, "DEBUG:", log);
+      if (process.env.PRODUCTION === "false") console.log(t, "DEBUG:", log);
       break;
   }
 };
