@@ -36,6 +36,7 @@ export namespace PGDB {
     }
 
     export interface BedTicketEntry {
+      id: number;
       type: string;
       note: string;
       attachments: string[];

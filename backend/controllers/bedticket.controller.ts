@@ -110,7 +110,11 @@ const HandleNewEntry = async (
         : DecryptData<PGDB.Patient.BedTicketEntry[]>(records);
 
     // insert new entry to saved array
-    decrypted.unshift({ ...data, created_at: new Date() });
+    decrypted.unshift({
+      ...data,
+      created_at: new Date(),
+      id: decrypted.length + 1,
+    });
 
     // encrypting again
     const encrypted = EncryptData(JSON.stringify(decrypted));
