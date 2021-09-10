@@ -53,8 +53,8 @@ export default async function handler(
       },
     };
 
-    // insert body to request if method is POST
-    if (method === "POST" && typeof body === "object") {
+    // insert body (if there is) to request if method is POST
+    if (method === "POST" && Object.keys(body).length) {
       options.body = JSON.stringify(body);
     }
 
@@ -80,7 +80,7 @@ export default async function handler(
     }
 
     const { data } = (await response.json()) as API.Response;
-    res.status(200).json(data);
+    res.status(200).json(data || {});
   } catch (error: any) {
     console.error(error);
 
