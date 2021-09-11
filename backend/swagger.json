@@ -1,0 +1,93 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "@pms/alpha server api",
+    "version": "0.1.0",
+    "description": "PMS (patient management system) is a simple system built to store patients records and related stuff securely",
+    "contact": {
+      "name": "Charuka Samarakoon",
+      "email": "charuka@protonmail.com",
+      "url": "https://charukahs.com"
+    }
+  },
+  "servers": [
+    { "url": "http://localhost:3448/", "description": "local server" }
+  ],
+  "components": {
+    "responses": {
+      "default": {
+        "description": "API requests always reponsein same type except in authentication",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "whether the request is successfulyy completed or not"
+                },
+                "err": {
+                  "type": "string",
+                  "description": "Contain if any error occured while running the requests"
+                },
+                "data": {
+                  "description": "Contain the data if requested"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "status",
+      "description": "PMS server related info"
+    },
+    {
+      "name": "patients",
+      "description": "Patients interacting with PMS"
+    },
+    {
+      "name": "bed tickets",
+      "description": "Generate when patients are admitted to the hospital / ward."
+    },
+    {
+      "name": "users",
+      "description": "Users who has administrative  / interacting access to PMS"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": ["status"],
+        "description": "To test server is up and running",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Login to PMS",
+        "description": "Login to PMS with username and password",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully authenticated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/responses/default" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

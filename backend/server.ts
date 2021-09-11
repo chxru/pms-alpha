@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import swaggerUi from "swagger-ui-express";
 
 import userRoutes from "./routes/auth.route";
 import patientRoutes from "./routes/patient.route";
@@ -7,6 +8,8 @@ import bedticketRoutes from "./routes/bedticket.route";
 
 import * as pgverify from "./database/boot";
 import { logger } from "./util/logger";
+
+import swaggerDoc from "./swagger.json";
 
 // dotenv
 dotenv.config({ path: "../.env" });
@@ -19,6 +22,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/users", userRoutes);
 app.use("/patients", patientRoutes);
 app.use("/bedtickets", bedticketRoutes);
+
+// swagger
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.all("/", (_req, res) => {
   console.log("hello from server");
