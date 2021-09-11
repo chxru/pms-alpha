@@ -21,12 +21,12 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
-import AuthContext from "../../contexts/auth-context";
-import NotifyContext from "../../contexts/notify-context";
+import AuthContext from "contexts/auth-context";
+import NotifyContext from "contexts/notify-context";
 
-import { ApiRequest } from "../../util/request";
+import { ApiRequest } from "util/request";
 
-import type { API } from "../../../types/api";
+import type { API } from "@pms-alpha/types";
 
 const AddPatient: React.FC = ({}) => {
   const auth = useContext(AuthContext);

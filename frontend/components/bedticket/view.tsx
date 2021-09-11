@@ -14,12 +14,12 @@ import {
 
 import NewRecord from "./new";
 
-import AuthContext from "frontend/contexts/auth-context";
-import NotifyContext from "frontend/contexts/notify-context";
+import AuthContext from "contexts/auth-context";
+import NotifyContext from "contexts/notify-context";
 
-import { ApiRequest } from "frontend/util/request";
+import { ApiRequest } from "util/request";
 
-import { PGDB } from "types/pg";
+import { PGDB } from "@pms-alpha/types";
 
 interface bedticketProps {
   bid: number;

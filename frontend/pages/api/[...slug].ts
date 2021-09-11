@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import * as jwt from "jsonwebtoken";
 import fetch, { RequestInit } from "node-fetch";
 
-import type { API } from "types/api";
+import type { API } from "@pms-alpha/types";
 
 const VerifyJWT = async (token: string) => {
   return new Promise<void>((resolve, reject) => {

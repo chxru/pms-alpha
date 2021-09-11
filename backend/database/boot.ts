@@ -1,7 +1,9 @@
 import { readdir, readFile } from "fs/promises";
 import path from "path";
-import pg from "./pg";
-import { logger } from "../util/logger";
+
+import pg from "database/pg";
+
+import { logger } from "util/logger";
 
 const CheckConnection = async (): Promise<void> => {
   const client = await pg.connect();

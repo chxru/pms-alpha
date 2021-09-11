@@ -5,12 +5,12 @@ import {
   HandleLogin,
   HandleRefreshToken,
   HandleRegister,
-} from "../controllers/auth.controller";
-import { signin_schema, signup_schema } from "./schemas/auth.schema";
+} from "controllers/auth.controller";
+import { signin_schema, signup_schema } from "routes/schemas/auth.schema";
 
 import { logger } from "../util/logger";
 
-import type { API } from "types/api";
+import type { API } from "@pms-alpha/types";
 
 const router = Router();
 

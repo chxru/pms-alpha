@@ -1,8 +1,8 @@
-import db from "../database/pg";
-import { DecryptData, EncryptData } from "../util/crypto";
-import { logger } from "../util/logger";
+import db from "database/pg";
+import { DecryptData, EncryptData } from "util/crypto";
+import { logger } from "util/logger";
 
-import type { PGDB } from "types/pg";
+import type { PGDB } from "@pms-alpha/types";
 
 /**
  * Create new bed ticket

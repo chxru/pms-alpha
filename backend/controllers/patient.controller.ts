@@ -1,9 +1,9 @@
-import db from "../database/pg";
-import { DecryptData, EncryptData } from "../util/crypto";
-import { logger } from "../util/logger";
+import db from "database/pg";
+import { DecryptData, EncryptData } from "util/crypto";
+import { logger } from "util/logger";
 
-import type { API } from "types/api";
-import type { PGDB } from "types/pg";
+import type { API } from "@pms-alpha/types";
+import type { PGDB } from "@pms-alpha/types";
 
 /**
  * Return decrypted patient basic info for gived patient id

@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { API } from "types/api";
+import type { API } from "@pms-alpha/types";
 
 export default async function handler(
   req: NextApiRequest,

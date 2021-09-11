@@ -15,10 +15,10 @@ import {
 import { useForm } from "react-hook-form";
 import Head from "next/head";
 
-import NotifyContext from "../contexts/notify-context";
-import AuthContext from "../contexts/auth-context";
+import NotifyContext from "contexts/notify-context";
+import AuthContext from "contexts/auth-context";
 
-import type { API } from "types/api";
+import type { API } from "@pms-alpha/types";
 
 interface LoginForm {
   username: string;
