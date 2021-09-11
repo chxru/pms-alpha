@@ -74,7 +74,7 @@ const AddPatient: React.FC = ({}) => {
         status: "info",
       });
     } else {
-      router.push(`/patient/${data.id}`);
+      router.push(`/patient/${data}`);
     }
   };
 
