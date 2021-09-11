@@ -1,11 +1,13 @@
 import { Router, Request, Response } from "express";
 import { checkSchema, validationResult } from "express-validator";
 import {
+  HandleDischarge,
   HandleNewBedTicket,
   HandleNewEntry,
   HandleReadEntries,
 } from "controllers/bedticket.controller";
 import {
+  close_bedticket_schema,
   new_bedticket_schemea,
   new_entry_schema,
   read_entry_schema,
@@ -17,6 +19,7 @@ import type { API } from "@pms-alpha/types";
 
 const router = Router();
 
+// create new bed ticket
 router.post(
   "/new/:id",
   checkSchema(new_bedticket_schemea),
@@ -53,6 +56,44 @@ router.post(
   }
 );
 
+// close bed ticket
+router.post(
+  "/close/:id",
+  checkSchema(close_bedticket_schema),
+  async (req: Request, res: Response<API.Response>) => {
+    logger(`/bedticket/close/${req.params.id}`);
+
+    // schema validation
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // concat array of errors to one string
+      const err = errors
+        .array()
+        .map((i) => `${i.param}: ${i.msg}`)
+        .join("\n");
+      logger("Patient discharge form schema validation failed", "info");
+      return res.status(400).json({ success: false, err });
+    }
+
+    try {
+      const { err } = await HandleDischarge(req.params.id);
+
+      if (err) {
+        res.status(400).json({ success: false, err });
+        return;
+      }
+
+      logger("Ned ticket discharged");
+      res.status(200).json({ success: true });
+    } catch (error) {
+      logger("Error occured while discharging", "error");
+      console.error(error);
+      res.sendStatus(500);
+    }
+  }
+);
+
+// add new entry to bed ticket
 router.post(
   "/:id",
   checkSchema(new_entry_schema),
@@ -89,6 +130,7 @@ router.post(
   }
 );
 
+// read entries
 router.get(
   "/:id",
   checkSchema(read_entry_schema),

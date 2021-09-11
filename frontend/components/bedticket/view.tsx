@@ -23,9 +23,12 @@ import { PGDB } from "@pms-alpha/types";
 
 interface bedticketProps {
   bid: number;
+  state: React.Dispatch<
+    React.SetStateAction<PGDB.Patient.BasicDetails | undefined>
+  >;
 }
 
-const BedTicket: React.FC<bedticketProps> = ({ bid }) => {
+const BedTicket: React.FC<bedticketProps> = ({ bid, state }) => {
   const [entries, setentries] = useState<PGDB.Patient.BedTicketEntry[]>([]);
 
   const auth = useContext(AuthContext);
@@ -61,6 +64,45 @@ const BedTicket: React.FC<bedticketProps> = ({ bid }) => {
 
     // update state
     setentries(data);
+  };
+
+  const DischargeBedticket = async () => {
+    const { success, err, data } = await ApiRequest<
+      PGDB.Patient.BedTicketEntry[]
+    >({
+      path: `/bedtickets/close/${bid}`,
+      method: "POST",
+      token: auth.token,
+    });
+
+    if (!success || err) {
+      notify.NewAlert({
+        msg: "Discharging failed",
+        description: err,
+        status: "error",
+      });
+
+      return;
+    }
+
+    if (!data) {
+      notify.NewAlert({
+        msg: "Request didn't came with expected response",
+        status: "error",
+      });
+
+      return;
+    }
+
+    notify.NewAlert({
+      msg: "Patient discharged successfully",
+      status: "success",
+    });
+
+    // update patient data in client side
+    state((prev) =>
+      prev ? { ...prev, current_bedticket: undefined } : undefined
+    );
   };
 
   // onMount
@@ -105,7 +147,9 @@ const BedTicket: React.FC<bedticketProps> = ({ bid }) => {
         <Button colorScheme="facebook" onClick={nr_onOpen}>
           Add New Record
         </Button>
-        <Button colorScheme="orange">Discharge</Button>
+        <Button colorScheme="orange" onClick={DischargeBedticket}>
+          Discharge
+        </Button>
       </ButtonGroup>
 
       <NewRecord

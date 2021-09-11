@@ -432,7 +432,10 @@ const ProfileView: React.FC = ({}) => {
             </Heading>
 
             {patient?.current_bedticket ? (
-              <BedTicket bid={patient.current_bedticket} />
+              <BedTicket
+                bid={patient.current_bedticket}
+                state={setpatientData}
+              />
             ) : (
               <>
                 <Text>Patient has no active bed ticket record</Text>

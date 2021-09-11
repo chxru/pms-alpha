@@ -6,6 +6,12 @@ const new_bedticket_schemea: Schema = {
   },
 };
 
+const close_bedticket_schema: Schema = {
+  id: {
+    in: "params",
+  },
+};
+
 const new_entry_schema: Schema = {
   id: {
     in: "params",
@@ -28,4 +34,9 @@ const read_entry_schema: Schema = {
   },
 };
 
-export { new_bedticket_schemea, new_entry_schema, read_entry_schema };
+export {
+  new_bedticket_schemea,
+  close_bedticket_schema,
+  new_entry_schema,
+  read_entry_schema,
+};
