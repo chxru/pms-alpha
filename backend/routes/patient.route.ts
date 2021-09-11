@@ -4,15 +4,15 @@ import { checkSchema, validationResult } from "express-validator";
 import {
   new_patient_schema,
   search_patient_schema,
-} from "./schemas/patient.schema";
+} from "routes/schemas/patient.schema";
 import {
   HandleNewPatient,
   HandlePatientBasicInfo,
   SearchPatientByName,
-} from "../controllers/patient.controller";
-import { logger } from "../util/logger";
+} from "controllers/patient.controller";
+import { logger } from "util/logger";
 
-import type { API } from "types/api";
+import type { API } from "@pms-alpha/types";
 
 const router = Router();
 

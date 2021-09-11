@@ -7,7 +7,7 @@ import {
   IoMdCheckmarkCircle,
 } from "react-icons/io";
 
-import NotifyContext from "../contexts/notify-context";
+import NotifyContext from "contexts/notify-context";
 
 interface AlertCardProps {
   msg: string;

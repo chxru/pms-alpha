@@ -1,12 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
 
-import userRoutes from "./routes/auth.route";
-import patientRoutes from "./routes/patient.route";
-import bedticketRoutes from "./routes/bedticket.route";
+import userRoutes from "routes/auth.route";
+import patientRoutes from "routes/patient.route";
+import bedticketRoutes from "routes/bedticket.route";
 
-import * as pgverify from "./database/boot";
-import { logger } from "./util/logger";
+import * as pgverify from "database/boot";
+import { logger } from "util/logger";
 
 // dotenv
 dotenv.config({ path: "../.env" });

@@ -16,13 +16,13 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-import BedTicket from "frontend/components/bedticket/view";
+import BedTicket from "components/bedticket/view";
 
-import { ApiRequest } from "frontend/util/request";
-import AuthContext from "frontend/contexts/auth-context";
-import NotifyContext from "frontend/contexts/notify-context";
+import { ApiRequest } from "util/request";
+import AuthContext from "contexts/auth-context";
+import NotifyContext from "contexts/notify-context";
 
-import type { PGDB } from "types/pg";
+import type { PGDB } from "@pms-alpha/types";
 
 const ProfileView: React.FC = ({}) => {
   const router = useRouter();

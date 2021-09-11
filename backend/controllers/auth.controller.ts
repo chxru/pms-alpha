@@ -1,12 +1,10 @@
-import db from "../database/pg";
+import db from "database/pg";
 
-import { ComparePwd, HashPwd } from "../util/bcrypt";
-import { DecodeJWT, GenerateJWT } from "../util/jwt";
-import { logger } from "../util/logger";
+import { ComparePwd, HashPwd } from "util/bcrypt";
+import { DecodeJWT, GenerateJWT } from "util/jwt";
+import { logger } from "util/logger";
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import type { PGDB } from "types/pg";
+import type { PGDB } from "@pms-alpha/types";
 
 interface RegisterData {
   email: string;

@@ -16,12 +16,12 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
-import AuthContext from "frontend/contexts/auth-context";
-import NotifyContext from "frontend/contexts/notify-context";
+import AuthContext from "contexts/auth-context";
+import NotifyContext from "contexts/notify-context";
 
-import { ApiRequest } from "frontend/util/request";
+import { ApiRequest } from "util/request";
 
-import type { PGDB } from "types/pg";
+import type { PGDB } from "@pms-alpha/types";
 
 interface newProps {
   isOpen: boolean;

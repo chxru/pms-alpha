@@ -2,15 +2,15 @@ import React, { useContext, useEffect, useState } from "react";
 import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 
-import LoginPage from "./login";
+import LoginPage from "pages/login";
 
-import Sidebar from "../components/sidebar";
-import Overlay from "../components/overlay";
+import Sidebar from "components/sidebar";
+import Overlay from "components/overlay";
 
-import AuthContext from "../contexts/auth-context";
-import NotifyContext from "../contexts/notify-context";
+import AuthContext from "contexts/auth-context";
+import NotifyContext from "contexts/notify-context";
 
-import type { API } from "types/api";
+import type { API } from "@pms-alpha/types";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const notify = useContext(NotifyContext);

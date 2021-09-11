@@ -3,11 +3,11 @@ import Head from "next/head";
 import type { NextPage } from "next";
 import { Button, Container, Flex, Heading, Input } from "@chakra-ui/react";
 
-import { ApiRequest } from "frontend/util/request";
-import NotifyContext from "frontend/contexts/notify-context";
-import AuthContext from "frontend/contexts/auth-context";
+import { ApiRequest } from "util/request";
+import NotifyContext from "contexts/notify-context";
+import AuthContext from "contexts/auth-context";
 
-import { API } from "types/api";
+import { API } from "@pms-alpha/types";
 
 const Search: NextPage = () => {
   const notify = useContext(NotifyContext);

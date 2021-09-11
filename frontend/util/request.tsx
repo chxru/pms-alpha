@@ -1,4 +1,4 @@
-import type { API } from "types/api";
+import type { API } from "@pms-alpha/types";
 
 interface request {
   path: string;

@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { logger } from "../util/logger";
+import { logger } from "util/logger";
 
 const pg = new Pool({
   user: process.env.PGUSER,

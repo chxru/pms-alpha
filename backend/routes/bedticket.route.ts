@@ -4,16 +4,16 @@ import {
   HandleNewBedTicket,
   HandleNewEntry,
   HandleReadEntries,
-} from "../controllers/bedticket.controller";
+} from "controllers/bedticket.controller";
 import {
   new_bedticket_schemea,
   new_entry_schema,
   read_entry_schema,
-} from "./schemas/bedticket.schema";
+} from "routes/schemas/bedticket.schema";
 
-import { logger } from "../util/logger";
+import { logger } from "util/logger";
 
-import type { API } from "types/api";
+import type { API } from "@pms-alpha/types";
 
 const router = Router();
 

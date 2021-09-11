@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import type { API } from "types/api";
+import type { API } from "@pms-alpha/types";
 
 const AuthContext = React.createContext<{
   user?: API.Auth.UserData;
