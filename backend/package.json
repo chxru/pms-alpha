@@ -8,8 +8,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "nodemon server.ts",
-    "lint": "eslint . --cache --ext .js,.jsx,.ts,.tsx"
+    "dev": "cross-env NODE_PATH=./ nodemon server.ts",
+    "lint": "cross-env NODE_PATH=./ eslint . --cache --ext .js,.jsx,.ts,.tsx"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -24,13 +24,14 @@
     "typescript": "^4.4.2"
   },
   "dependencies": {
+    "@pms-alpha/types": "0.1.0",
     "bcrypt": "^5.0.1",
+    "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-validator": "^6.12.1",
     "jsonwebtoken": "^8.5.1",
     "nodemon": "^2.0.12",
-    "pg": "^8.7.1",
-    "@pms-alpha/types": "0.1.0"
+    "pg": "^8.7.1"
   }
 }
