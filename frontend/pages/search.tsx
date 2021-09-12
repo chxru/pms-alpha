@@ -1,20 +1,31 @@
 import React, { useContext, useState } from "react";
 import Head from "next/head";
-import type { NextPage } from "next";
-import { Button, Container, Flex, Heading, Input } from "@chakra-ui/react";
+import {
+  Button,
+  Container,
+  Flex,
+  Grid,
+  Heading,
+  Input,
+  Text,
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 import { ApiRequest } from "util/request";
 import NotifyContext from "contexts/notify-context";
 import AuthContext from "contexts/auth-context";
 
-import { API } from "@pms-alpha/types";
+import type { NextPage } from "next";
+import type { API } from "@pms-alpha/types";
 
 const Search: NextPage = () => {
   const notify = useContext(NotifyContext);
   const auth = useContext(AuthContext);
+  const router = useRouter();
 
   const [search, setsearch] = useState<string>("");
   const [isSearching, setisSearching] = useState<boolean>(false);
+  const [results, setresults] = useState<API.Patient.SearchDetails[]>([]);
 
   const HandleSearch = async () => {
     setisSearching(true);
@@ -37,8 +48,7 @@ const Search: NextPage = () => {
         });
       }
 
-      // TODO: Handle search results
-      console.info(data);
+      setresults(data || []);
     } catch (error) {
       notify.NewAlert({
         msg: "Error occured while fetching search results",
@@ -87,6 +97,33 @@ const Search: NextPage = () => {
           </Button>
         </Flex>
       </Container>
+
+      {results.length !== 0 && (
+        <Container
+          maxW="4xl"
+          mb={10}
+          px="35px"
+          py="21px"
+          shadow="md"
+          bg="white"
+        >
+          <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+            {results.map((r) => (
+              <Flex
+                key={r.id}
+                direction="column"
+                cursor="pointer"
+                py={6}
+                onClick={() => {
+                  router.push(`/patient/${r.id}`);
+                }}
+              >
+                <Text>{r.full_name}</Text>
+              </Flex>
+            ))}
+          </Grid>
+        </Container>
+      )}
     </>
   );
 };
