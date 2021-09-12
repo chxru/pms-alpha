@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -26,6 +26,7 @@ interface LoginForm {
 }
 
 const LoginPage: React.FC = () => {
+  const [authenticating, setauthenticating] = useState<boolean>(false);
   const {
     handleSubmit,
     formState: { errors },
@@ -44,6 +45,8 @@ const LoginPage: React.FC = () => {
 
   // form submit
   const onSubmit = async (values: LoginForm) => {
+    setauthenticating(true);
+
     try {
       const request = await fetch("api/auth/login", {
         method: "POST",
@@ -82,12 +85,21 @@ const LoginPage: React.FC = () => {
       router.push("/").then(() => {
         authContext.onSignIn(data.access, data.user);
       });
-    } catch (error: any) {
-      notify.NewAlert({
-        msg: "Something is wrong",
-        description: error,
-        status: "error",
-      });
+    } catch (error) {
+      if (typeof error === "string") {
+        notify.NewAlert({
+          msg: "Error occured",
+          description: error,
+          status: "error",
+        });
+      } else {
+        notify.NewAlert({
+          msg: "Something is wrong",
+          status: "error",
+        });
+      }
+    } finally {
+      setauthenticating(false);
     }
   };
 
@@ -134,7 +146,12 @@ const LoginPage: React.FC = () => {
               </FormControl>
 
               <Flex direction="column">
-                <Button type="submit" m="2" colorScheme="teal">
+                <Button
+                  type="submit"
+                  m="2"
+                  colorScheme="teal"
+                  isLoading={authenticating}
+                >
                   Login
                 </Button>
                 <Button m="2" size="sm">
