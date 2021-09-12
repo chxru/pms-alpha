@@ -23,12 +23,13 @@ import { PGDB } from "@pms-alpha/types";
 
 interface bedticketProps {
   bid: number;
+  pid: number;
   state?: React.Dispatch<
     React.SetStateAction<PGDB.Patient.BasicDetails | undefined> // state is only passing in active bed ticket
   >;
 }
 
-const BedTicket: React.FC<bedticketProps> = ({ bid, state }) => {
+const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
   const [entries, setentries] = useState<PGDB.Patient.BedTicketEntry[]>([]);
 
   const auth = useContext(AuthContext);
@@ -80,7 +81,7 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, state }) => {
     const { success, err, data } = await ApiRequest<
       PGDB.Patient.BedTicketEntry[]
     >({
-      path: `/bedtickets/close/${bid}`,
+      path: `/bedtickets/close/${pid}`,
       method: "POST",
       token: auth.token,
     });

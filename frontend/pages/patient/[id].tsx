@@ -34,6 +34,12 @@ const ProfileView: React.FC = ({}) => {
   const auth = useContext(AuthContext);
   const notify = useContext(NotifyContext);
 
+  // types are stupid here
+  const id = parseInt(
+    (Array.isArray(router.query.id) ? router.query.id[0] : router.query.id) ||
+      "0"
+  );
+
   const [patient, setpatientData] = useState<PGDB.Patient.BasicDetails>();
   const [age, setage] = useState<string>();
   const [creatingBD, setcreatingBD] = useState<boolean>(false);
@@ -51,7 +57,6 @@ const ProfileView: React.FC = ({}) => {
       .join(" ");
 
   const FetchPatientInfo = async () => {
-    const { id } = router.query;
     let { success, data, err } = await ApiRequest<PGDB.Patient.BasicDetails>({
       path: `patients/${id}/basic`,
       method: "GET",
@@ -447,6 +452,7 @@ const ProfileView: React.FC = ({}) => {
                   {patient?.current_bedticket ? (
                     <BedTicket
                       bid={patient.current_bedticket}
+                      pid={id}
                       state={setpatientData}
                     />
                   ) : (
@@ -488,7 +494,7 @@ const ProfileView: React.FC = ({}) => {
                                 </AccordionButton>
                                 <AccordionPanel>
                                   {isExpanded ? (
-                                    <BedTicket bid={h.id} />
+                                    <BedTicket bid={h.id} pid={id} />
                                   ) : (
                                     <Text>Loading</Text>
                                   )}
