@@ -23,8 +23,8 @@ import { PGDB } from "@pms-alpha/types";
 
 interface bedticketProps {
   bid: number;
-  state: React.Dispatch<
-    React.SetStateAction<PGDB.Patient.BasicDetails | undefined>
+  state?: React.Dispatch<
+    React.SetStateAction<PGDB.Patient.BasicDetails | undefined> // state is only passing in active bed ticket
   >;
 }
 
@@ -67,6 +67,16 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, state }) => {
   };
 
   const DischargeBedticket = async () => {
+    if (!state) {
+      notify.NewAlert({
+        msg: "Un authorized function",
+        description:
+          "Looks like you are discharging patient who is already discharged",
+        status: "error",
+      });
+      return;
+    }
+
     const { success, err, data } = await ApiRequest<
       PGDB.Patient.BedTicketEntry[]
     >({
@@ -134,7 +144,7 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, state }) => {
         <Tbody>
           {entries.map((e) => {
             return (
-              <Tr key={e.id}>
+              <Tr key={`${bid}-${e.id}`}>
                 <Td>{e.type}</Td>
                 <Td>{e.note || " "}</Td>
                 <Td>{e.created_at}</Td>
@@ -143,21 +153,24 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, state }) => {
           })}
         </Tbody>
       </Table>
-      <ButtonGroup mt={2}>
-        <Button colorScheme="facebook" onClick={nr_onOpen}>
-          Add New Record
-        </Button>
-        <Button colorScheme="orange" onClick={DischargeBedticket}>
-          Discharge
-        </Button>
-      </ButtonGroup>
-
-      <NewRecord
-        isOpen={nr_isOpen}
-        onClose={nr_onClose}
-        refresh={FetchEntries}
-        bid={bid}
-      />
+      {state && (
+        <>
+          <ButtonGroup mt={2}>
+            <Button colorScheme="facebook" onClick={nr_onOpen}>
+              Add New Record
+            </Button>
+            <Button colorScheme="orange" onClick={DischargeBedticket}>
+              Discharge
+            </Button>
+          </ButtonGroup>
+          <NewRecord
+            isOpen={nr_isOpen}
+            onClose={nr_onClose}
+            refresh={FetchEntries}
+            bid={bid}
+          />
+        </>
+      )}
     </>
   );
 };

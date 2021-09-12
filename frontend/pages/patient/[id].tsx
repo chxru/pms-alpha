@@ -14,6 +14,11 @@ import {
   AccordionItem,
   AccordionPanel,
   Button,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
 } from "@chakra-ui/react";
 
 import BedTicket from "components/bedticket/view";
@@ -431,24 +436,72 @@ const ProfileView: React.FC = ({}) => {
               Bed Ticket
             </Heading>
 
-            {patient?.current_bedticket ? (
-              <BedTicket
-                bid={patient.current_bedticket}
-                state={setpatientData}
-              />
-            ) : (
-              <>
-                <Text>Patient has no active bed ticket record</Text>
-                <Button
-                  colorScheme="facebook"
-                  mt={2}
-                  onClick={CreateBedTicket}
-                  disabled={creatingBD}
-                >
-                  Create Bed Ticket
-                </Button>
-              </>
-            )}
+            <Tabs>
+              <TabList>
+                <Tab>Active</Tab>
+                <Tab>History</Tab>
+              </TabList>
+
+              <TabPanels>
+                <TabPanel>
+                  {patient?.current_bedticket ? (
+                    <BedTicket
+                      bid={patient.current_bedticket}
+                      state={setpatientData}
+                    />
+                  ) : (
+                    <>
+                      <Text>Patient has no active bed ticket record</Text>
+                      <Button
+                        colorScheme="facebook"
+                        mt={2}
+                        onClick={CreateBedTicket}
+                        disabled={creatingBD}
+                      >
+                        Create Bed Ticket
+                      </Button>
+                    </>
+                  )}
+                </TabPanel>
+                <TabPanel>
+                  <Accordion allowToggle allowMultiple>
+                    {patient?.bedtickets
+                      .filter((b) => b.id !== patient.current_bedticket)
+                      .map((h) => {
+                        return (
+                          <AccordionItem key={"his" + h.id.toString()}>
+                            {({ isExpanded }) => (
+                              <>
+                                <AccordionButton>
+                                  <Text>
+                                    {new Date(
+                                      h.admission_date
+                                    ).toLocaleDateString()}{" "}
+                                    -{" "}
+                                    {h.discharge_date
+                                      ? new Date(
+                                          h.discharge_date
+                                        ).toLocaleDateString()
+                                      : "N/A"}
+                                  </Text>
+                                  <AccordionIcon />
+                                </AccordionButton>
+                                <AccordionPanel>
+                                  {isExpanded ? (
+                                    <BedTicket bid={h.id} />
+                                  ) : (
+                                    <Text>Loading</Text>
+                                  )}
+                                </AccordionPanel>
+                              </>
+                            )}
+                          </AccordionItem>
+                        );
+                      })}
+                  </Accordion>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
           </Container>
         </Flex>
       </Container>
