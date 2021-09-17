@@ -5,7 +5,7 @@ const { readdir, readFile } = require("fs/promises");
 const path = require("path");
 const { Client } = require("pg");
 
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: "../../.env" });
 
 const pg = new Client({
   user: process.env.PGUSER,
