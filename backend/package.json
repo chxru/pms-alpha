@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "db": "node database/boot.js",
     "dev": "cross-env NODE_PATH=./ nodemon server.ts",
     "lint": "cross-env NODE_PATH=./ eslint . --cache --ext .js,.jsx,.ts,.tsx"
   },

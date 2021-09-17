@@ -5,7 +5,7 @@ import userRoutes from "routes/auth.route";
 import patientRoutes from "routes/patient.route";
 import bedticketRoutes from "routes/bedticket.route";
 
-import * as pgverify from "database/boot";
+import pg from "database/pg";
 import { logger } from "util/logger";
 
 // dotenv
@@ -32,11 +32,9 @@ const PORT = 3448;
     await app.listen(PORT);
     logger(`Backend listening on port ${PORT}`, "success");
 
-    // check database is up
-    await pgverify.CheckConnection();
-
-    // create tables
-    await pgverify.CreateTables();
+    // connect to database
+    await pg.connect();
+    logger("Connected to postgres", "success");
   } catch (error) {
     logger("Error occured while backend starts", "error");
     console.log(error);
