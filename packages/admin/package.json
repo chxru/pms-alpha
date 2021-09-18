@@ -3,20 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3446",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^1.6.7",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@pms-alpha/common": "0.1.0",
+    "@pms-alpha/types": "0.1.0",
+    "cookie": "^0.4.1",
+    "framer-motion": "^4",
+    "jsonwebtoken": "^8.5.1",
     "next": "11.1.2",
+    "next-transpile-modules": "^8.0.0",
+    "node-fetch": "^3.0.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-hook-form": "^7.14.2",
+    "react-icons": "^4.2.0"
   },
   "devDependencies": {
-    "@types/react": "17.0.21",
+    "@babel/core": "^7.0.0",
+    "@types/cookie": "^0.4.1",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/react": "17.0.19",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.2",
-    "typescript": "4.4.3"
+    "typescript": "4.4.2"
   }
 }
