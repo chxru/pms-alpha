@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { FiBell, FiLogOut, FiMenu, FiSearch } from "react-icons/fi";
 
-import AuthContext from "contexts/auth-context";
+import AuthContext from "@pms-alpha/common/contexts/auth-context";
 
 interface sidebarProps {
   name: string;

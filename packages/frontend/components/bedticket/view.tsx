@@ -12,12 +12,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import NewRecord from "./new";
+import NewRecord from "components/bedticket/new";
 
-import AuthContext from "contexts/auth-context";
-import NotifyContext from "contexts/notify-context";
+import AuthContext from "@pms-alpha/common/contexts/auth-context";
+import NotifyContext from "@pms-alpha/common/contexts/notify-context";
 
-import { ApiRequest } from "util/request";
+import { ApiRequest } from "@pms-alpha/common/util/request";
 
 import { PGDB } from "@pms-alpha/types";
 
