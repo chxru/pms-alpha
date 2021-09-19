@@ -10,7 +10,8 @@
     "packages/*"
   ],
   "scripts": {
-    "frontend": "yarn --cwd packages/frontend dev",
-    "backend": "yarn --cwd packages/backend dev"
+    "admin": "yarn --cwd packages/admin dev",
+    "backend": "yarn --cwd packages/backend dev",
+    "frontend": "yarn --cwd packages/frontend dev"
   }
 }

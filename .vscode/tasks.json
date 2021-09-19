@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "packages/admin/",
+      "problemMatcher": [],
+      "label": "npm: dev - packages/admin",
+      "detail": "Run Admin UI"
+    },
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "packages/backend/",
+      "problemMatcher": [],
+      "label": "npm: dev - packages/backend",
+      "detail": "Run backend server"
+    },
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "packages/frontend/",
+      "problemMatcher": [],
+      "label": "npm: dev - packages/frontend",
+      "detail": "Run frontend"
+    }
+  ]
+}
