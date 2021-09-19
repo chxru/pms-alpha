@@ -23,9 +23,9 @@ import {
 
 import BedTicket from "components/bedticket/view";
 
-import { ApiRequest } from "util/request";
-import AuthContext from "contexts/auth-context";
-import NotifyContext from "contexts/notify-context";
+import { ApiRequest } from "@pms-alpha/common/util/request";
+import AuthContext from "@pms-alpha/common/contexts/auth-context";
+import NotifyContext from "@pms-alpha/common/contexts/notify-context";
 
 import type { PGDB } from "@pms-alpha/types";
 
