@@ -37,6 +37,7 @@ export namespace PGDB {
 
     export interface BedTicketEntry {
       id: number;
+      category: "diagnosis" | "report" | "other";
       type: string;
       note: string;
       attachments: string[];

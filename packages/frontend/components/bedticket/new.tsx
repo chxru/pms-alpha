@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   FormControl,
@@ -21,7 +21,15 @@ import NotifyContext from "@pms-alpha/common/contexts/notify-context";
 
 import { ApiRequest } from "@pms-alpha/common/util/request";
 
-import type { PGDB } from "@pms-alpha/types";
+import type { API, PGDB } from "@pms-alpha/types";
+import {
+  AutoComplete,
+  AutoCompleteGroup,
+  AutoCompleteGroupTitle,
+  AutoCompleteInput,
+  AutoCompleteItem,
+  AutoCompleteList,
+} from "@choc-ui/chakra-autocomplete";
 
 interface newProps {
   isOpen: boolean;
@@ -33,6 +41,13 @@ interface newProps {
 const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
   const auth = useContext(AuthContext);
   const notify = useContext(NotifyContext);
+
+  const [diagnoisisArr, setdiagnoisisArr] = useState<{
+    [key: string]: string[];
+  }>({});
+  const [selectedType, setselectedType] = useState<string>();
+  const [selectedDiagnose, setselectedDiagnose] = useState<string>();
+
   const {
     register,
     handleSubmit,
@@ -40,11 +55,55 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
     formState: { errors },
   } = useForm<Omit<PGDB.Patient.BedTicketEntry, "created_at">>();
 
+  const FetchDiagnosisTypes = async () => {
+    const { success, data } = await ApiRequest<API.DiagnosisData[]>({
+      path: "/diagnosis",
+      method: "GET",
+      token: auth.token,
+    });
+
+    if (!success) {
+      notify.NewAlert({
+        msg: "Error occured while fetching diagnosis data",
+        status: "error",
+      });
+      return;
+    }
+
+    // holds values temp before updating state
+    const temp: {
+      [key: string]: string[];
+    } = {};
+
+    data?.forEach((d) => {
+      if (!temp[d.category]) {
+        temp[d.category] = [d.name];
+      } else {
+        temp[d.category].push(d.name);
+      }
+    });
+
+    setdiagnoisisArr(temp);
+  };
+
   const OnSubmit = async (value: PGDB.Patient.BedTicketEntry) => {
+    let obj = value;
+    if (value.category === "diagnosis") {
+      if (!selectedDiagnose) {
+        notify.NewAlert({
+          msg: "Invalid form data",
+          description: "Diagnose type shouldn't be empty",
+          status: "error",
+        });
+        return;
+      }
+      obj.type = selectedDiagnose;
+    }
+
     const { success, err } = await ApiRequest({
       path: `/bedtickets/${bid}`,
       method: "POST",
-      obj: value,
+      obj,
       token: auth.token,
     });
 
@@ -71,6 +130,12 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
     onClose();
   };
 
+  useEffect(() => {
+    setselectedType(undefined);
+    FetchDiagnosisTypes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
@@ -85,16 +150,56 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
               <FormLabel>Entry type</FormLabel>
               <Select
                 placeholder="Select record type"
-                {...register("type", { required: true })}
+                {...register("category", { required: true })}
+                onChange={(v) => {
+                  setselectedType(v.target.value.toLocaleLowerCase());
+                }}
               >
-                <option>Diagnosis</option>
-                <option>Report</option>
-                <option>Other</option>
+                <option value="diagnosis">Diagnosis</option>
+                <option value="report">Report</option>
+                <option value="other">Other</option>
               </Select>
               {errors.type && (
                 <FormHelperText>This field is required</FormHelperText>
               )}
             </FormControl>
+
+            {selectedType === "diagnosis" &&
+            Object.entries(diagnoisisArr).length ? (
+              <FormControl>
+                <FormLabel>Diagnosis type</FormLabel>
+                <AutoComplete
+                  openOnFocus
+                  onChange={(v) =>
+                    setselectedDiagnose(typeof v === "string" ? v : "N/A")
+                  }
+                >
+                  <AutoCompleteInput variant="filled" />
+                  <AutoCompleteList>
+                    {Object.entries(diagnoisisArr).map(
+                      ([category, diagnosis], c_id) => (
+                        <AutoCompleteGroup key={c_id} showDivider>
+                          <AutoCompleteGroupTitle textTransform="capitalize">
+                            {category}
+                          </AutoCompleteGroupTitle>
+                          {diagnosis.map((d, d_id) => (
+                            <AutoCompleteItem
+                              key={d_id}
+                              value={d}
+                              textTransform="capitalize"
+                            >
+                              {d}
+                            </AutoCompleteItem>
+                          ))}
+                        </AutoCompleteGroup>
+                      )
+                    )}
+                  </AutoCompleteList>
+                </AutoComplete>
+              </FormControl>
+            ) : (
+              <FormHelperText>Loading</FormHelperText>
+            )}
 
             <FormControl>
               <FormLabel>Notes</FormLabel>

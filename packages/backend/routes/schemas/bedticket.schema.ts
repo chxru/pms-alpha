@@ -19,6 +19,11 @@ const new_entry_schema: Schema = {
   type: {
     in: "body",
     isString: true,
+    optional: true,
+  },
+  category: {
+    in: "body",
+    isString: true,
   },
   note: {
     in: "body",

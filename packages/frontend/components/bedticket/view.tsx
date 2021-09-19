@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Badge,
   Button,
   ButtonGroup,
   Table,
@@ -136,6 +137,7 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
 
         <Thead>
           <Tr>
+            <Th></Th>
             <Th>Type</Th>
             <Th>Notes</Th>
             <Th>Timestamp</Th>
@@ -146,7 +148,10 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
           {entries.map((e) => {
             return (
               <Tr key={`${bid}-${e.id}`}>
-                <Td>{e.type}</Td>
+                <Td>
+                  <Badge>{e.category?.toUpperCase()}</Badge>
+                </Td>
+                <Td>{e.type || "N/A"}</Td>
                 <Td>{e.note || " "}</Td>
                 <Td>{e.created_at}</Td>
               </Tr>
