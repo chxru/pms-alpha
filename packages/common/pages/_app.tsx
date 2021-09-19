@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import LoginPage from "@pms-alpha/common/pages/login";
@@ -11,9 +10,13 @@ import Splash from "@pms-alpha/common/components/splash";
 import AuthContext from "@pms-alpha/common/contexts/auth-context";
 import NotifyContext from "@pms-alpha/common/contexts/notify-context";
 
+import type { AppProps } from "next/app";
 import type { API } from "@pms-alpha/types";
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({
+  Component,
+  pageProps,
+}: Pick<AppProps, "Component" | "pageProps">) {
   const notify = useContext(NotifyContext);
 
   const [loading, setloading] = useState<boolean>(true);

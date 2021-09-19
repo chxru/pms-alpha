@@ -1,3 +1,14 @@
 import MyApp from "@pms-alpha/common/pages/_app";
+import MetaContext from "@pms-alpha/common/contexts/meta-context";
 
-export default MyApp;
+import type { AppProps } from "next/app";
+
+const App = ({ Component, pageProps }: AppProps) => {
+  return (
+    <MetaContext.Provider value={{ instance: "user" }}>
+      <MyApp pageProps={pageProps} Component={Component} />
+    </MetaContext.Provider>
+  );
+};
+
+export default App;
