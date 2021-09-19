@@ -1,0 +1,150 @@
+name,category
+Severe acute undernutrition,Nutrition
+Moderate acute undernutrition,Nutrition
+Stunting,Nutrition
+Oveweight/Obesity,Nutrition
+Rickets,Nutrition
+Metabolic acidosis,Fluids and Electrolytes disorders
+Metabolic alkalosis,Fluids and Electrolytes disorders
+Respiratory acidosis,Fluids and Electrolytes disorders
+Respiratory alkalosis,Fluids and Electrolytes disorders
+Hypernatremia,Fluids and Electrolytes disorders
+Hyponatremia,Fluids and Electrolytes disorders
+Hypokalemia,Fluids and Electrolytes disorders
+Hyperkalemia,Fluids and Electrolytes disorders
+Hypomagnesima,Fluids and Electrolytes disorders
+Hypocalcemia,Fluids and Electrolytes disorders
+Down syndrome, Genetic Syndromes
+Turner syndrome, Genetic Syndromes
+Pierre robin sequence, Genetic Syndromes
+Other syndromes, Genetic Syndromes
+Homocystinuria,Inborn Errors of Metabolism
+Other Amino acid disorders,Inborn Errors of Metabolism
+Oragnic acidemias,Inborn Errors of Metabolism
+Urea cycle defect,Inborn Errors of Metabolism
+Fatty acid oxidation disorders,Inborn Errors of Metabolism
+Lipid transportation disorders,Inborn Errors of Metabolism
+Peroxisomal disorders,Inborn Errors of Metabolism
+Adrenoleukodystrophy,Inborn Errors of Metabolism
+Mucopolysaccharidoses,Inborn Errors of Metabolism
+Gaucher,Inborn Errors of Metabolism
+Nieman Pick,Inborn Errors of Metabolism
+Farber,Inborn Errors of Metabolism
+Fabry,Inborn Errors of Metabolism
+Zellweger ,Inborn Errors of Metabolism
+Glycogen storage disorder,Inborn Errors of Metabolism
+Pophyrias,Inborn Errors of Metabolism
+Hypoglycemia,Inborn Errors of Metabolism
+Neonatal Jaundice,Neonatology
+Weight loss in newborn,Neonatology
+Respiratory distress,Neonatology
+Diaphragmatic hernia,Neonatology
+Pyloric stenosis,Neonatology
+Prematurity,Neonatology
+Birth asphyxia,Neonatology
+Fever in neonates,Neonatology
+Acquired Immunodeficiency,Immunology
+Inherited Immunodeficiency,Immunology
+Acute Urticaria,Allergic Disorders
+Anaphylaxis,Allergic Disorders
+Juvenile Idiopathic arthritis,Rheumatology
+Reactive and post infectious arthirtis,Rheumatology
+SLE,Rheumatology
+Kawasaki disease,Rheumatology
+Henosh Schonlein Purpura,Rheumatology
+Dermatomyositis,Rheumatology
+Dengue/ Dengue Haemorrhagic fever,Infections
+Viral fever,Infections
+Gram-Positive Bacterial Infections,Infections
+Gram-Negative Bacterial Infections,Infections
+Mycoplasmal Infections,Infections
+Rickettsial Infections,Infections
+Tuberculosis,Infections
+COVID-19,Infections
+Chicken pox,Infections
+Hand foot and mouth disease,Infections
+Measles,Infections
+Cleft lip and Palate,GIT
+Gastroesophageal Reflux Disease,GIT
+Hiatal Hernia,GIT
+Tracheo-oeso-phageal fistula,GIT
+Gastroesophageal Reflux Disease,GIT
+"Intestinal Atresia, Stenosis",GIT
+Malrotation,GIT
+Meckel Diverticulum,GIT
+Hirschsprung Disease,GIT
+Intussusception,GIT
+Inflammatory Bowel Disease,GIT
+Acute Gastroenteritis in Children,GIT
+Chronic Diarrhea,GIT
+constipation ,GIT
+cyclic vomiting syndrome,GIT
+Acute appendicitis,GIT
+Pancreatitis,GIT
+Viral Hepatitis,GIT
+Autoimmune Hepatitis,GIT
+Portal Hypertension and Varices,GIT
+Biliary atresia,GIT
+Common cold,Respiratory System
+Upper respiratory tract infection,Respiratory System
+Lower respiratory tract infection/ pneumonia,Respiratory System
+sinusitis,Respiratory System
+croup,Respiratory System
+congenital laryngomalacia,Respiratory System
+bronchiolitis,Respiratory System
+Aspiration pneumonia,Respiratory System
+Bronchiectasis,Respiratory System
+Asthma,Respiratory System
+pleural effusion,Respiratory System
+Chylothorax,Respiratory System
+Acynotic heart disease,Cardiovascular
+Cyanotic heart disease,Cardiovascular
+Rheumatic carditis,Cardiovascular
+Infective Endocarditis,Cardiovascular
+Supra ventricular tachycardia-SVT,Cardiovascular
+heart block,Cardiovascular
+hypercynotic spell,Cardiovascular
+Iron-Deficiency Anemia,Haematology
+Physiologic Anemia of Infancy,Haematology
+Physiologic Anemia of Infancy,Haematology
+Anemia of Chronic Disease ,Haematology
+(Diamond-Blackfan,Haematology
+Hereditary Spherocytosis,Haematology
+Thalassemia ,Haematology
+Sickel cell anaemia,Haematology
+Autoimmune haemolytic anaemia,Haematology
+polycythemia,Haematology
+Pancytopenias,Haematology
+Eosinophilia,Haematology
+Immune thromobocytopenic purpura (ITP),Haematology
+Haematological malignancy,Malignancy
+Lymphoma,Malignancy
+Brain tumours,Malignancy
+Acute Glomerulonephritis,Renal
+Nephrotic syndrome,Renal
+Renal tubular acidosis,Renal
+Nephrogenic DI,Renal
+UTI,Renal
+Vesico ureteric reflux,Renal
+Posterior urethral valve,Renal
+hydronephrosis,Renal
+neuropathic bladder,Renal
+nocturnal eneuresis,Renal
+Hypothyroidsm,Endocrine
+short stature,Endocrine
+Diabetes mellitus,Endocrine
+Hypoparathyroidsm,Endocrine
+precaucious puberty,Endocrine
+Epilepsy,Neurology
+Neurocutaneous disorders,Neurology
+ADEM,Neurology
+Meningitis/ Encephalitis,Neurology
+Neural tube defects,Neurology
+Neuro regression,Neurology
+Spinal muscular atrophy,Neurology
+Acute flaccid paralysis,Neurology
+Muscular dystrophies ,Neurology
+Headache/ Migraine,Neurology
+Bell's palsy,Neurology
+fever following vaccine,Immunisation
+admitted for vaccination,Immunisation

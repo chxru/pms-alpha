@@ -1,0 +1,598 @@
+[
+  {
+    "name": "Severe acute undernutrition",
+    "category": "Nutrition"
+  },
+  {
+    "name": "Moderate acute undernutrition",
+    "category": "Nutrition"
+  },
+  {
+    "name": "Stunting",
+    "category": "Nutrition"
+  },
+  {
+    "name": "Oveweight/Obesity",
+    "category": "Nutrition"
+  },
+  {
+    "name": "Rickets",
+    "category": "Nutrition"
+  },
+  {
+    "name": "Metabolic acidosis",
+    "category": "Fluids and Electrolytes disorders"
+  },
+  {
+    "name": "Metabolic alkalosis",
+    "category": "Fluids and Electrolytes disorders"
+  },
+  {
+    "name": "Respiratory acidosis",
+    "category": "Fluids and Electrolytes disorders"
+  },
+  {
+    "name": "Respiratory alkalosis",
+    "category": "Fluids and Electrolytes disorders"
+  },
+  {
+    "name": "Hypernatremia",
+    "category": "Fluids and Electrolytes disorders"
+  },
+  {
+    "name": "Hyponatremia",
+    "category": "Fluids and Electrolytes disorders"
+  },
+  {
+    "name": "Hypokalemia",
+    "category": "Fluids and Electrolytes disorders"
+  },
+  {
+    "name": "Hyperkalemia",
+    "category": "Fluids and Electrolytes disorders"
+  },
+  {
+    "name": "Hypomagnesima",
+    "category": "Fluids and Electrolytes disorders"
+  },
+  {
+    "name": "Hypocalcemia",
+    "category": "Fluids and Electrolytes disorders"
+  },
+  {
+    "name": "Down syndrome",
+    "category": " Genetic Syndromes"
+  },
+  {
+    "name": "Turner syndrome",
+    "category": " Genetic Syndromes"
+  },
+  {
+    "name": "Pierre robin sequence",
+    "category": " Genetic Syndromes"
+  },
+  {
+    "name": "Other syndromes",
+    "category": " Genetic Syndromes"
+  },
+  {
+    "name": "Homocystinuria",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Other Amino acid disorders",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Oragnic acidemias",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Urea cycle defect",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Fatty acid oxidation disorders",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Lipid transportation disorders",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Peroxisomal disorders",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Adrenoleukodystrophy",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Mucopolysaccharidoses",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Gaucher",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Nieman Pick",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Farber",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Fabry",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Zellweger ",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Glycogen storage disorder",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Pophyrias",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Hypoglycemia",
+    "category": "Inborn Errors of Metabolism"
+  },
+  {
+    "name": "Neonatal Jaundice",
+    "category": "Neonatology"
+  },
+  {
+    "name": "Weight loss in newborn",
+    "category": "Neonatology"
+  },
+  {
+    "name": "Respiratory distress",
+    "category": "Neonatology"
+  },
+  {
+    "name": "Diaphragmatic hernia",
+    "category": "Neonatology"
+  },
+  {
+    "name": "Pyloric stenosis",
+    "category": "Neonatology"
+  },
+  {
+    "name": "Prematurity",
+    "category": "Neonatology"
+  },
+  {
+    "name": "Birth asphyxia",
+    "category": "Neonatology"
+  },
+  {
+    "name": "Fever in neonates",
+    "category": "Neonatology"
+  },
+  {
+    "name": "Acquired Immunodeficiency",
+    "category": "Immunology"
+  },
+  {
+    "name": "Inherited Immunodeficiency",
+    "category": "Immunology"
+  },
+  {
+    "name": "Acute Urticaria",
+    "category": "Allergic Disorders"
+  },
+  {
+    "name": "Anaphylaxis",
+    "category": "Allergic Disorders"
+  },
+  {
+    "name": "Juvenile Idiopathic arthritis",
+    "category": "Rheumatology"
+  },
+  {
+    "name": "Reactive and post infectious arthirtis",
+    "category": "Rheumatology"
+  },
+  {
+    "name": "SLE",
+    "category": "Rheumatology"
+  },
+  {
+    "name": "Kawasaki disease",
+    "category": "Rheumatology"
+  },
+  {
+    "name": "Henosh Schonlein Purpura",
+    "category": "Rheumatology"
+  },
+  {
+    "name": "Dermatomyositis",
+    "category": "Rheumatology"
+  },
+  {
+    "name": "Dengue/ Dengue Haemorrhagic fever",
+    "category": "Infections"
+  },
+  {
+    "name": "Viral fever",
+    "category": "Infections"
+  },
+  {
+    "name": "Gram-Positive Bacterial Infections",
+    "category": "Infections"
+  },
+  {
+    "name": "Gram-Negative Bacterial Infections",
+    "category": "Infections"
+  },
+  {
+    "name": "Mycoplasmal Infections",
+    "category": "Infections"
+  },
+  {
+    "name": "Rickettsial Infections",
+    "category": "Infections"
+  },
+  {
+    "name": "Tuberculosis",
+    "category": "Infections"
+  },
+  {
+    "name": "COVID-19",
+    "category": "Infections"
+  },
+  {
+    "name": "Chicken pox",
+    "category": "Infections"
+  },
+  {
+    "name": "Hand foot and mouth disease",
+    "category": "Infections"
+  },
+  {
+    "name": "Measles",
+    "category": "Infections"
+  },
+  {
+    "name": "Cleft lip and Palate",
+    "category": "GIT"
+  },
+  {
+    "name": "Gastroesophageal Reflux Disease",
+    "category": "GIT"
+  },
+  {
+    "name": "Hiatal Hernia",
+    "category": "GIT"
+  },
+  {
+    "name": "Tracheo-oeso-phageal fistula",
+    "category": "GIT"
+  },
+  {
+    "name": "Gastroesophageal Reflux Disease",
+    "category": "GIT"
+  },
+  {
+    "name": "Intestinal Atresia, Stenosis",
+    "category": "GIT"
+  },
+  {
+    "name": "Malrotation",
+    "category": "GIT"
+  },
+  {
+    "name": "Meckel Diverticulum",
+    "category": "GIT"
+  },
+  {
+    "name": "Hirschsprung Disease",
+    "category": "GIT"
+  },
+  {
+    "name": "Intussusception",
+    "category": "GIT"
+  },
+  {
+    "name": "Inflammatory Bowel Disease",
+    "category": "GIT"
+  },
+  {
+    "name": "Acute Gastroenteritis in Children",
+    "category": "GIT"
+  },
+  {
+    "name": "Chronic Diarrhea",
+    "category": "GIT"
+  },
+  {
+    "name": "constipation ",
+    "category": "GIT"
+  },
+  {
+    "name": "cyclic vomiting syndrome",
+    "category": "GIT"
+  },
+  {
+    "name": "Acute appendicitis",
+    "category": "GIT"
+  },
+  {
+    "name": "Pancreatitis",
+    "category": "GIT"
+  },
+  {
+    "name": "Viral Hepatitis",
+    "category": "GIT"
+  },
+  {
+    "name": "Autoimmune Hepatitis",
+    "category": "GIT"
+  },
+  {
+    "name": "Portal Hypertension and Varices",
+    "category": "GIT"
+  },
+  {
+    "name": "Biliary atresia",
+    "category": "GIT"
+  },
+  {
+    "name": "Common cold",
+    "category": "Respiratory System"
+  },
+  {
+    "name": "Upper respiratory tract infection",
+    "category": "Respiratory System"
+  },
+  {
+    "name": "Lower respiratory tract infection/ pneumonia",
+    "category": "Respiratory System"
+  },
+  {
+    "name": "sinusitis",
+    "category": "Respiratory System"
+  },
+  {
+    "name": "croup",
+    "category": "Respiratory System"
+  },
+  {
+    "name": "congenital laryngomalacia",
+    "category": "Respiratory System"
+  },
+  {
+    "name": "bronchiolitis",
+    "category": "Respiratory System"
+  },
+  {
+    "name": "Aspiration pneumonia",
+    "category": "Respiratory System"
+  },
+  {
+    "name": "Bronchiectasis",
+    "category": "Respiratory System"
+  },
+  {
+    "name": "Asthma",
+    "category": "Respiratory System"
+  },
+  {
+    "name": "pleural effusion",
+    "category": "Respiratory System"
+  },
+  {
+    "name": "Chylothorax",
+    "category": "Respiratory System"
+  },
+  {
+    "name": "Acynotic heart disease",
+    "category": "Cardiovascular"
+  },
+  {
+    "name": "Cyanotic heart disease",
+    "category": "Cardiovascular"
+  },
+  {
+    "name": "Rheumatic carditis",
+    "category": "Cardiovascular"
+  },
+  {
+    "name": "Infective Endocarditis",
+    "category": "Cardiovascular"
+  },
+  {
+    "name": "Supra ventricular tachycardia-SVT",
+    "category": "Cardiovascular"
+  },
+  {
+    "name": "heart block",
+    "category": "Cardiovascular"
+  },
+  {
+    "name": "hypercynotic spell",
+    "category": "Cardiovascular"
+  },
+  {
+    "name": "Iron-Deficiency Anemia",
+    "category": "Haematology"
+  },
+  {
+    "name": "Physiologic Anemia of Infancy",
+    "category": "Haematology"
+  },
+  {
+    "name": "Physiologic Anemia of Infancy",
+    "category": "Haematology"
+  },
+  {
+    "name": "Anemia of Chronic Disease ",
+    "category": "Haematology"
+  },
+  {
+    "name": "(Diamond-Blackfan",
+    "category": "Haematology"
+  },
+  {
+    "name": "Hereditary Spherocytosis",
+    "category": "Haematology"
+  },
+  {
+    "name": "Thalassemia ",
+    "category": "Haematology"
+  },
+  {
+    "name": "Sickel cell anaemia",
+    "category": "Haematology"
+  },
+  {
+    "name": "Autoimmune haemolytic anaemia",
+    "category": "Haematology"
+  },
+  {
+    "name": "polycythemia",
+    "category": "Haematology"
+  },
+  {
+    "name": "Pancytopenias",
+    "category": "Haematology"
+  },
+  {
+    "name": "Eosinophilia",
+    "category": "Haematology"
+  },
+  {
+    "name": "Immune thromobocytopenic purpura (ITP)",
+    "category": "Haematology"
+  },
+  {
+    "name": "Haematological malignancy",
+    "category": "Malignancy"
+  },
+  {
+    "name": "Lymphoma",
+    "category": "Malignancy"
+  },
+  {
+    "name": "Brain tumours",
+    "category": "Malignancy"
+  },
+  {
+    "name": "Acute Glomerulonephritis",
+    "category": "Renal"
+  },
+  {
+    "name": "Nephrotic syndrome",
+    "category": "Renal"
+  },
+  {
+    "name": "Renal tubular acidosis",
+    "category": "Renal"
+  },
+  {
+    "name": "Nephrogenic DI",
+    "category": "Renal"
+  },
+  {
+    "name": "UTI",
+    "category": "Renal"
+  },
+  {
+    "name": "Vesico ureteric reflux",
+    "category": "Renal"
+  },
+  {
+    "name": "Posterior urethral valve",
+    "category": "Renal"
+  },
+  {
+    "name": "hydronephrosis",
+    "category": "Renal"
+  },
+  {
+    "name": "neuropathic bladder",
+    "category": "Renal"
+  },
+  {
+    "name": "nocturnal eneuresis",
+    "category": "Renal"
+  },
+  {
+    "name": "Hypothyroidsm",
+    "category": "Endocrine"
+  },
+  {
+    "name": "short stature",
+    "category": "Endocrine"
+  },
+  {
+    "name": "Diabetes mellitus",
+    "category": "Endocrine"
+  },
+  {
+    "name": "Hypoparathyroidsm",
+    "category": "Endocrine"
+  },
+  {
+    "name": "precaucious puberty",
+    "category": "Endocrine"
+  },
+  {
+    "name": "Epilepsy",
+    "category": "Neurology"
+  },
+  {
+    "name": "Neurocutaneous disorders",
+    "category": "Neurology"
+  },
+  {
+    "name": "ADEM",
+    "category": "Neurology"
+  },
+  {
+    "name": "Meningitis/ Encephalitis",
+    "category": "Neurology"
+  },
+  {
+    "name": "Neural tube defects",
+    "category": "Neurology"
+  },
+  {
+    "name": "Neuro regression",
+    "category": "Neurology"
+  },
+  {
+    "name": "Spinal muscular atrophy",
+    "category": "Neurology"
+  },
+  {
+    "name": "Acute flaccid paralysis",
+    "category": "Neurology"
+  },
+  {
+    "name": "Muscular dystrophies ",
+    "category": "Neurology"
+  },
+  {
+    "name": "Headache/ Migraine",
+    "category": "Neurology"
+  },
+  {
+    "name": "Bell's palsy",
+    "category": "Neurology"
+  },
+  {
+    "name": "fever following vaccine",
+    "category": "Immunisation"
+  },
+  {
+    "name": "admitted for vaccination",
+    "category": "Immunisation"
+  }
+]
