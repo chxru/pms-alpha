@@ -39,6 +39,11 @@ export namespace API {
     }
   }
 
+  export interface DiagnosisData {
+    category: string;
+    name: string;
+  }
+
   export namespace Patient {
     /**
      * Basic data gathered from the patient

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import userRoutes from "routes/auth.route";
 import patientRoutes from "routes/patient.route";
 import bedticketRoutes from "routes/bedticket.route";
+import diagnosisRoutes from "routes/diagnosis.route";
 
 import pg from "database/pg";
 import { logger } from "util/logger";
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/users", userRoutes);
 app.use("/patients", patientRoutes);
 app.use("/bedtickets", bedticketRoutes);
+app.use("/diagnosis", diagnosisRoutes);
 
 app.all("/", (_req, res) => {
   console.log("hello from server");
