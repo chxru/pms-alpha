@@ -93,7 +93,7 @@ const SidebarContent = (props: {
           aria-label="Main Navigation"
         >
           {meta.routes.map((r) => (
-            <NavItem name={r.label} route={r.route} />
+            <NavItem key={r.route} name={r.label} route={r.route} />
           ))}
         </Flex>
       </Box>
