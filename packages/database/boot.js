@@ -1,6 +1,3 @@
-/* eslint-disable */
-// @ts-ignore
-
 const { readdir, readFile } = require("fs/promises");
 const path = require("path");
 const { Client } = require("pg");
