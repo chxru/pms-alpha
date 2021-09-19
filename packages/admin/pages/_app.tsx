@@ -4,8 +4,12 @@ import MetaContext from "@pms-alpha/common/contexts/meta-context";
 import type { AppProps } from "next/app";
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const routes: { label: string; route: string }[] = [
+    { label: "Dashboard", route: "/" },
+  ];
+
   return (
-    <MetaContext.Provider value={{ instance: "admin" }}>
+    <MetaContext.Provider value={{ instance: "user", routes }}>
       <MyApp pageProps={pageProps} Component={Component} />
     </MetaContext.Provider>
   );

@@ -17,6 +17,7 @@ import {
 import { FiBell, FiLogOut, FiMenu, FiSearch } from "react-icons/fi";
 
 import AuthContext from "@pms-alpha/common/contexts/auth-context";
+import MetaContext from "@pms-alpha/common/contexts/meta-context";
 
 interface sidebarProps {
   name: string;
@@ -55,6 +56,8 @@ const SidebarContent = (props: {
   w?: string;
   borderRight?: string;
 }) => {
+  const meta = useContext(MetaContext);
+
   return (
     <Flex
       as="nav"
@@ -89,10 +92,9 @@ const SidebarContent = (props: {
           color="gray.600"
           aria-label="Main Navigation"
         >
-          <NavItem name="Dashboard" route="/" />
-          <NavItem name="Add Patient" route="/patient/new" />
-          <NavItem name="Search" route="/search" />
-          <NavItem name="Calender" route="/dashboard" />
+          {meta.routes.map((r) => (
+            <NavItem name={r.label} route={r.route} />
+          ))}
         </Flex>
       </Box>
       <Box textAlign="center">
