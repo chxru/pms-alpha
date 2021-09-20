@@ -37,6 +37,7 @@ export default async function handler(
     if (sr.status === 400) {
       const data = (await sr.json()) as API.Response;
       res.status(400).json({ success: false, err: data.err });
+      return;
     }
 
     if (!sr.ok) {
@@ -44,6 +45,7 @@ export default async function handler(
         success: false,
         err: "Error occured in next server",
       });
+      return;
     }
 
     const data = (await sr.json()) as API.Response;
