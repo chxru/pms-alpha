@@ -5,6 +5,7 @@ import {
   HandleLogin,
   HandleRefreshToken,
   HandleRegister,
+  HandleUsersCount,
 } from "controllers/auth.controller";
 import { signin_schema, signup_schema } from "routes/schemas/auth.schema";
 
@@ -136,5 +137,17 @@ router.post(
     }
   }
 );
+
+router.get("/count", async (req, res) => {
+  logger("GET /auth/count");
+
+  try {
+    const count = await HandleUsersCount();
+    res.send(count);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
 
 export default router;
