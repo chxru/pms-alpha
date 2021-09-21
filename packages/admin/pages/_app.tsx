@@ -10,7 +10,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   ];
 
   return (
-    <MetaContext.Provider value={{ instance: "user", routes }}>
+    <MetaContext.Provider value={{ instance: "admin", routes }}>
       <MyApp pageProps={pageProps} Component={Component} />
     </MetaContext.Provider>
   );
