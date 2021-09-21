@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import LoginPage from "@pms-alpha/common/pages/login";
+import RegisterPage from "@pms-alpha/common/pages/register";
+import NoAccessPage from "@pms-alpha/common/pages/noaccess";
 
 import Sidebar from "@pms-alpha/common/components/sidebar";
 import Overlay from "@pms-alpha/common/components/overlay";
@@ -9,6 +11,7 @@ import Splash from "@pms-alpha/common/components/splash";
 
 import AuthContext from "@pms-alpha/common/contexts/auth-context";
 import NotifyContext from "@pms-alpha/common/contexts/notify-context";
+import MetaContext from "../contexts/meta-context";
 
 import type { AppProps } from "next/app";
 import type { API } from "@pms-alpha/types";
@@ -20,8 +23,12 @@ function MyApp({
   const notify = useContext(NotifyContext);
 
   const [loading, setloading] = useState<boolean>(true);
+  const [count, setcount] = useState<number>();
   const [accessToken, setaccessToken] = useState<string>();
   const [userData, setuserData] = useState<API.Auth.UserData>();
+
+  const meta = useContext(MetaContext);
+
   const onSignIn = (token: string, user: API.Auth.UserData) => {
     setaccessToken(token);
     setuserData(user);
@@ -34,6 +41,22 @@ function MyApp({
       lname: "",
       username: "",
     });
+  };
+
+  const FetchCount = async () => {
+    try {
+      const res = await fetch("api/auth/count");
+
+      if (!res.ok) {
+        throw new Error("res-not-okay");
+      }
+
+      const n = await res.text();
+      setcount(parseInt(n));
+    } catch (error) {
+      console.error(error);
+      setcount(0);
+    }
   };
 
   const RefreshAccessToken = async () => {
@@ -66,6 +89,8 @@ function MyApp({
   };
 
   const onMount = async () => {
+    await FetchCount();
+
     await RefreshAccessToken();
     setloading(false);
 
@@ -93,8 +118,12 @@ function MyApp({
             <Sidebar>
               <Component {...pageProps} />
             </Sidebar>
-          ) : (
+          ) : count !== 0 ? (
             <LoginPage />
+          ) : meta.instance === "admin" ? (
+            <RegisterPage />
+          ) : (
+            <NoAccessPage />
           )}
         </Overlay>
       </AuthContext.Provider>
