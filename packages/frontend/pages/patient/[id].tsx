@@ -471,39 +471,40 @@ const ProfileView: React.FC = ({}) => {
                 </TabPanel>
                 <TabPanel>
                   <Accordion allowToggle allowMultiple>
-                    {patient?.bedtickets
-                      .filter((b) => b.id !== patient.current_bedticket)
-                      .map((h) => {
-                        return (
-                          <AccordionItem key={"his" + h.id.toString()}>
-                            {({ isExpanded }) => (
-                              <>
-                                <AccordionButton>
-                                  <Text>
-                                    {new Date(
-                                      h.admission_date
-                                    ).toLocaleDateString()}{" "}
-                                    -{" "}
-                                    {h.discharge_date
-                                      ? new Date(
-                                          h.discharge_date
-                                        ).toLocaleDateString()
-                                      : "N/A"}
-                                  </Text>
-                                  <AccordionIcon />
-                                </AccordionButton>
-                                <AccordionPanel>
-                                  {isExpanded ? (
-                                    <BedTicket bid={h.id} pid={id} />
-                                  ) : (
-                                    <Text>Loading</Text>
-                                  )}
-                                </AccordionPanel>
-                              </>
-                            )}
-                          </AccordionItem>
-                        );
-                      })}
+                    {Array.isArray(patient?.bedtickets) &&
+                      patient?.bedtickets
+                        .filter((b) => b.id !== patient.current_bedticket)
+                        .map((h) => {
+                          return (
+                            <AccordionItem key={"his" + h.id.toString()}>
+                              {({ isExpanded }) => (
+                                <>
+                                  <AccordionButton>
+                                    <Text>
+                                      {new Date(
+                                        h.admission_date
+                                      ).toLocaleDateString()}{" "}
+                                      -{" "}
+                                      {h.discharge_date
+                                        ? new Date(
+                                            h.discharge_date
+                                          ).toLocaleDateString()
+                                        : "N/A"}
+                                    </Text>
+                                    <AccordionIcon />
+                                  </AccordionButton>
+                                  <AccordionPanel>
+                                    {isExpanded ? (
+                                      <BedTicket bid={h.id} pid={id} />
+                                    ) : (
+                                      <Text>Loading</Text>
+                                    )}
+                                  </AccordionPanel>
+                                </>
+                              )}
+                            </AccordionItem>
+                          );
+                        })}
                   </Accordion>
                 </TabPanel>
               </TabPanels>
