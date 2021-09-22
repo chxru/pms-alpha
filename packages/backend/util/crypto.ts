@@ -1,4 +1,5 @@
 import { createCipheriv, createDecipheriv, createHash } from "crypto";
+import { GetDBKey } from "./keytar";
 
 /*
   For reference 
@@ -12,7 +13,14 @@ import { createCipheriv, createDecipheriv, createHash } from "crypto";
 */
 
 const ALGO = "aes256"; // TODO: cbc? gcm?
-const KEYPHASE = "3a6f0aa4866e7ee0d90f811eb68d00b7"; // TODO: Move it more secure
+let KEYPHASE: string;
+
+/**
+ * Load encryption keys to memory
+ */
+const LoadDBKey = async (): Promise<void> => {
+  KEYPHASE = await GetDBKey();
+};
 
 /**
  * Encrypt JSON object
@@ -56,4 +64,4 @@ const DecryptData = <T>(data: string): T => {
   return JSON.parse(decrypted.toString());
 };
 
-export { EncryptData, DecryptData };
+export { LoadDBKey, EncryptData, DecryptData };

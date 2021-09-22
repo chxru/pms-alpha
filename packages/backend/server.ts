@@ -8,6 +8,7 @@ import diagnosisRoutes from "routes/diagnosis.route";
 
 import pg from "database/pg";
 import { logger } from "util/logger";
+import { LoadDBKey } from "util/crypto";
 
 // dotenv
 dotenv.config({ path: "../../.env" });
@@ -37,6 +38,27 @@ const PORT = 3448;
     // connect to database
     await pg.connect();
     logger("Connected to postgres", "success");
+
+    // check if the first start
+    const q = await pg.query<{ count: number }>(
+      "SELECT COUNT(*) FROM users.data"
+    );
+    const fresh: boolean = q.rows[0].count == 0;
+
+    if (fresh) {
+      console.log("\n");
+      console.log("Welcome to PMS-Alpha");
+      console.log(
+        "Login to admin portal via http://0.0.0.0:3446 to start using PMS"
+      );
+      console.log(
+        "For more information visit https://github.com/pms-lk/pms-alpha"
+      );
+      console.log("\n");
+    } else {
+      await LoadDBKey();
+      logger("Key loaded to memory", "success");
+    }
   } catch (error) {
     logger("Error occured while backend starts", "error");
     console.log(error);

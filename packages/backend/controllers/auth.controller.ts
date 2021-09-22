@@ -3,6 +3,8 @@ import db from "database/pg";
 import { ComparePwd, HashPwd } from "util/bcrypt";
 import { DecodeJWT, GenerateJWT } from "util/jwt";
 import { logger } from "util/logger";
+import { SaveDBKey } from "util/keytar";
+import { LoadDBKey } from "util/crypto";
 
 import type { PGDB } from "@pms-alpha/types";
 
@@ -47,6 +49,12 @@ const HandleRegister = async (
         "INSERT INTO users.auth (id, username, pwd) VALUES ($1, $2, $3)",
         [uid, data.username, hashedPwd]
       );
+
+      // create encryption keys if its the very first user
+      await SaveDBKey(data.password);
+
+      // load keys to memory
+      await LoadDBKey();
 
       // commiting
       await trx.query("COMMIT");
