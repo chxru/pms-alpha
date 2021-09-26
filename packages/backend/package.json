@@ -8,9 +8,12 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
     "db": "node database/boot.js",
     "dev": "cross-env NODE_PATH=./ nodemon server.ts",
-    "lint": "cross-env NODE_PATH=./ eslint . --cache --ext .js,.jsx,.ts,.tsx"
+    "lint": "cross-env NODE_PATH=./ eslint . --cache --ext .js,.jsx,.ts,.tsx",
+    "start": "cross-env NODE_PATH=./build node build/server.js "
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
