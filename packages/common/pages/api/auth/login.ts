@@ -12,7 +12,8 @@ export default async function handler(
   >
 ) {
   try {
-    const sr = await fetch("http://localhost:3448/users/login", {
+    const baseUrl = process.env.BACKEND_URL;
+    const sr = await fetch(`${baseUrl}/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=utf-8",

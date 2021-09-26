@@ -26,7 +26,8 @@ export default async function handler(
 
   // generate new access token from backend
   try {
-    const sr = await fetch("http://localhost:3448/users/refresh", {
+    const baseUrl = process.env.BACKEND_URL;
+    const sr = await fetch(`${baseUrl}/users/refresh`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=utf-8",

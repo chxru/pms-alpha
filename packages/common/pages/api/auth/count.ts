@@ -7,7 +7,8 @@ export default async function handler(
   res: NextApiResponse<string>
 ) {
   try {
-    const sr = await fetch("http://localhost:3448/users/count");
+    const baseUrl = process.env.BACKEND_URL;
+    const sr = await fetch(`${baseUrl}/users/count`);
 
     if (!sr.ok) {
       throw new Error("internal server error");

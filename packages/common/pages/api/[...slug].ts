@@ -59,7 +59,8 @@ export default async function handler(
     }
 
     const url = typeof slug === "string" ? slug : slug.join("/");
-    const response = await fetch(`http://localhost:3448/${url}`, options);
+    const baseUrl = process.env.BACKEND_URL;
+    const response = await fetch(`${baseUrl}/${url}`, options);
 
     if (!response.ok) {
       // 400 => schema validation failed
