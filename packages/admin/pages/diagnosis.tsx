@@ -1,18 +1,9 @@
 import React from "react";
 import Head from "next/head";
-import {
-  Button,
-  Container,
-  Flex,
-  Heading,
-  Input,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
+
+import NewDiagnosisForm from "components/diagnosis/new";
+import SearchDiagnosis from "components/diagnosis/search";
+import ImportDiagnosis from "components/diagnosis/import";
 
 import type { NextPage } from "next";
 
@@ -25,85 +16,11 @@ const Diagnosis: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Container
-        maxW="4xl"
-        mt="28px"
-        px="35px"
-        py="21px"
-        shadow="md"
-        bg="white"
-      >
-        <Heading my="20px" size="md" fontWeight="semibold">
-          Search diagnosis
-        </Heading>
+      <SearchDiagnosis />
 
-        <Flex>
-          <Input placeholder="Enter name..." />
-          <Button w={48} ml={4}>
-            Search
-          </Button>
-        </Flex>
+      <NewDiagnosisForm />
 
-        <Table variant="simple" mt={7}>
-          <Thead>
-            <Tr>
-              <Th>Name</Th>
-              <Th>Category</Th>
-              <Th>Edit</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            <Tr>
-              <Td>inches</Td>
-              <Td>millimetres (mm)</Td>
-              <Td>25.4</Td>
-            </Tr>
-          </Tbody>
-        </Table>
-      </Container>
-
-      <Container
-        maxW="4xl"
-        mt="28px"
-        px="35px"
-        py="21px"
-        shadow="md"
-        bg="white"
-      >
-        <Heading my="20px" size="md" fontWeight="semibold">
-          Add new diagnosis
-        </Heading>
-
-        <Flex>
-          <Input placeholder="Name" mr={4} />
-          <Input placeholder="Category" />
-          <Button w={48} ml={4} colorScheme="teal">
-            Add
-          </Button>
-        </Flex>
-      </Container>
-
-      {/* TODO: */}
-      <Container
-        maxW="4xl"
-        mt="28px"
-        mb={10}
-        px="35px"
-        py="21px"
-        shadow="md"
-        bg="white"
-      >
-        <Heading my="20px" size="md" fontWeight="semibold">
-          Import file
-        </Heading>
-
-        <Flex>
-          <Input placeholder="Name" type="file" accept=".json" mr={4} />
-          <Button w={48} ml={4} colorScheme="teal">
-            Import
-          </Button>
-        </Flex>
-      </Container>
+      <ImportDiagnosis />
     </>
   );
 };
