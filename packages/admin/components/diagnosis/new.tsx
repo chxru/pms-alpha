@@ -1,9 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Container, Flex, Heading, Input } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
 import NotifyContext from "@pms-alpha/common/contexts/notify-context";
 import AuthContext from "@pms-alpha/common/contexts/auth-context";
+
+import { ApiRequest } from "@pms-alpha/common/util/request";
 
 interface NewDiagnosis {
   name: string;
@@ -17,10 +19,38 @@ const NewDiagnosisForm: React.FC = () => {
     register,
   } = useForm<NewDiagnosis>();
   const notify = useContext(NotifyContext);
-  const authContext = useContext(AuthContext);
+  const auth = useContext(AuthContext);
+
+  const [fetching, setfetching] = useState<boolean>(false);
 
   const onNewDiagnoseSubmit = async (values: NewDiagnosis) => {
-    console.log(values);
+    setfetching(true);
+
+    try {
+      const { success, err } = await ApiRequest({
+        path: "diagnosis",
+        method: "POST",
+        obj: values,
+        token: auth.token,
+      });
+
+      if (!success) {
+        throw err;
+      }
+
+      notify.NewAlert({
+        status: "success",
+        msg: "New diagnose type added successfully",
+      });
+    } catch (error) {
+      console.error(error);
+      notify.NewAlert({
+        status: "error",
+        msg: "Adding new diagnose item failed",
+      });
+    } finally {
+      setfetching(false);
+    }
   };
 
   return (
@@ -49,7 +79,7 @@ const NewDiagnosisForm: React.FC = () => {
               mb={4}
             />
           </Flex>
-          <Button type="submit" w={48} colorScheme="teal">
+          <Button type="submit" w={48} colorScheme="teal" disabled={fetching}>
             Add
           </Button>
         </form>
