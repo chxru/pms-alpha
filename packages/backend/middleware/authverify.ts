@@ -9,7 +9,8 @@ const verifyToken = (
   next: express.NextFunction
 ): void | express.Response => {
   // skip token verification for /users
-  if (req.path.startsWith("/users")) {
+  // TODO: static file bypass is temporary
+  if (req.path.startsWith("/users") || req.path.startsWith("/files")) {
     next();
     return;
   }
