@@ -97,7 +97,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
 
   const FetchDiagnosisTypes = async () => {
     const { success, data } = await ApiRequest<API.DiagnosisData[]>({
-      path: "/diagnosis",
+      path: "diagnosis",
       method: "GET",
       token: auth.token,
     });
@@ -141,7 +141,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
     }
 
     const { success, err } = await ApiRequest({
-      path: `/bedtickets/${bid}`,
+      path: `bedtickets/${bid}`,
       method: "POST",
       obj,
       token: auth.token,

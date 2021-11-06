@@ -40,7 +40,7 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
     const { success, err, data } = await ApiRequest<
       PGDB.Patient.BedTicketEntry[]
     >({
-      path: `/bedtickets/${bid}`,
+      path: `bedtickets/${bid}`,
       method: "GET",
       token: auth.token,
     });
@@ -82,7 +82,7 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
     const { success, err, data } = await ApiRequest<
       PGDB.Patient.BedTicketEntry[]
     >({
-      path: `/bedtickets/close/${pid}`,
+      path: `bedtickets/close/${pid}`,
       method: "POST",
       token: auth.token,
     });

@@ -121,7 +121,7 @@ const ProfileView: React.FC = ({}) => {
     setcreatingBD(true);
 
     const { success, err } = await ApiRequest({
-      path: `/bedtickets/new/${router.query.id}`,
+      path: `bedtickets/new/${router.query.id}`,
       method: "POST",
       token: auth.token,
     });
