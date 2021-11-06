@@ -140,10 +140,19 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
       obj.type = selectedDiagnose;
     }
 
+    const formData = new FormData();
+
+    for (const file of acceptedFiles) {
+      formData.append("files", file);
+    }
+
+    formData.append("category", value.category);
+    formData.append("note", value.note);
+
     const { success, err } = await ApiRequest({
       path: `bedtickets/${bid}`,
       method: "POST",
-      obj,
+      obj: formData,
       token: auth.token,
     });
 
