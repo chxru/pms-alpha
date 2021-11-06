@@ -1,4 +1,5 @@
 import * as jwt from "jsonwebtoken";
+import { logger } from "@pms-alpha/common/util/logger";
 
 /**
  * Generate Json web token
@@ -70,4 +71,19 @@ const DecodeJWT = (
   });
 };
 
-export { GenerateJWT, DecodeJWT };
+const VerifyJWT = (token: string): boolean => {
+  if (!process.env.JWT_ACCESS_TOKEN) {
+    logger("JWT_REFRESH_TOKEN is missing", "error");
+    return false;
+  }
+
+  try {
+    jwt.verify(token, process.env.JWT_ACCESS_TOKEN);
+    return true;
+  } catch (error) {
+    logger("Catched in verifyJwt " + error, "info");
+    return false;
+  }
+};
+
+export { GenerateJWT, DecodeJWT, VerifyJWT };
