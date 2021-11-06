@@ -3,17 +3,21 @@ import {
   Badge,
   Button,
   ButtonGroup,
+  IconButton,
   Table,
   TableCaption,
   Tbody,
   Td,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
+import { FiExternalLink } from "react-icons/fi";
 
 import NewRecord from "components/bedticket/new";
+import AttachmentDrawer from "components/bedticket/drawer";
 
 import AuthContext from "@pms-alpha/common/contexts/auth-context";
 import NotifyContext from "@pms-alpha/common/contexts/notify-context";
@@ -32,6 +36,7 @@ interface bedticketProps {
 
 const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
   const [entries, setentries] = useState<PGDB.Patient.BedTicketEntry[]>([]);
+  const [selectedEntry, setselectedEntry] = useState<number>(0);
 
   const auth = useContext(AuthContext);
   const notify = useContext(NotifyContext);
@@ -133,8 +138,23 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
     onOpen: nr_onOpen,
     onClose: nr_onClose,
   } = useDisclosure();
+
+  const {
+    isOpen: ad_isOpen,
+    onOpen: ad_onOpen,
+    onClose: ad_onClose,
+  } = useDisclosure();
+
   return (
     <>
+      {entries.length != 0 && (
+        <AttachmentDrawer
+          isOpen={ad_isOpen}
+          onClose={ad_onClose}
+          data={entries[selectedEntry]}
+        />
+      )}
+
       <Table>
         <TableCaption>Bed ticket entries</TableCaption>
 
@@ -144,11 +164,12 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
             <Th>Type</Th>
             <Th>Notes</Th>
             <Th>Timestamp</Th>
+            <Th></Th>
           </Tr>
         </Thead>
 
         <Tbody>
-          {entries.map((e) => {
+          {entries.map((e, i) => {
             return (
               <Tr key={`${bid}-${e.id}`}>
                 <Td>
@@ -169,6 +190,22 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
                       hour12: false,
                     }) +
                     "h"}
+                </Td>
+                <Td>
+                  <ButtonGroup>
+                    <Tooltip label="Expand">
+                      <IconButton
+                        variant="ghost"
+                        aria-label="View attachments"
+                        colorScheme="teal"
+                        icon={<FiExternalLink />}
+                        onClick={() => {
+                          setselectedEntry(i);
+                          ad_onOpen();
+                        }}
+                      />
+                    </Tooltip>
+                  </ButtonGroup>
                 </Td>
               </Tr>
             );
