@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
+import path from "path";
 
 import { verifyToken } from "middleware/authverify";
 
@@ -28,6 +29,8 @@ app.use("/users", userRoutes);
 app.use("/patients", patientRoutes);
 app.use("/bedtickets", bedticketRoutes);
 app.use("/diagnosis", diagnosisRoutes);
+
+app.use("/files", express.static(path.join(__dirname, "../../", "uploads")));
 
 app.all("/", (_req, res) => {
   console.log("hello from server");
