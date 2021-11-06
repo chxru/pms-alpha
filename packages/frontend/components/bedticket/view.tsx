@@ -60,15 +60,6 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
       return;
     }
 
-    if (!data) {
-      notify.NewAlert({
-        msg: "Request didn't came with expected response",
-        status: "error",
-      });
-
-      return;
-    }
-
     // update data timestamp
     data.map((d) => (d.created_at = new Date(d.created_at)));
 
