@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import morgan from "morgan";
 
 import userRoutes from "routes/auth.route";
 import patientRoutes from "routes/patient.route";
@@ -16,6 +17,7 @@ dotenv.config({ path: "../../.env" });
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
 // routes
 app.use("/users", userRoutes);
