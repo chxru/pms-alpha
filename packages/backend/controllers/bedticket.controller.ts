@@ -86,7 +86,13 @@ const HandleNewBedTicket = async (pid: string): Promise<{ err?: string }> => {
  */
 const HandleNewEntry = async (
   bid: string,
-  data: PGDB.Patient.BedTicketEntry
+  data: PGDB.Patient.BedTicketEntry,
+  files:
+    | Express.Multer.File[]
+    | {
+        [fieldname: string]: Express.Multer.File[];
+      }
+    | undefined
 ): Promise<{ err?: string }> => {
   const trx = await db.connect();
   try {
@@ -108,6 +114,20 @@ const HandleNewEntry = async (
       records === null
         ? [] // in fresh bed tickets records is null
         : DecryptData<PGDB.Patient.BedTicketEntry[]>(records);
+
+    // adding attachment data
+    data.attachments = [];
+    // only supports "array of files"
+    if (Array.isArray(files)) {
+      files.forEach((f) => {
+        data.attachments.push({
+          fileName: f.filename,
+          originalName: f.originalname,
+          size: f.size,
+          mimetype: f.mimetype,
+        });
+      });
+    }
 
     // insert new entry to saved array
     decrypted.unshift({

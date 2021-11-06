@@ -1,5 +1,9 @@
 import { Router, Request, Response } from "express";
 import { checkSchema, validationResult } from "express-validator";
+import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
+import { extname } from "path";
+
 import {
   HandleDischarge,
   HandleNewBedTicket,
@@ -17,7 +21,15 @@ import { logger } from "util/logger";
 
 import type { API } from "@pms-alpha/types";
 
+const storage = multer.diskStorage({
+  destination: "../../uploads/",
+  filename: (_req, file, cb) => {
+    cb(null, uuidv4() + extname(file.originalname));
+  },
+});
+
 const router = Router();
+const upload = multer({ storage });
 
 // create new bed ticket
 router.post(
@@ -96,6 +108,7 @@ router.post(
 // add new entry to bed ticket
 router.post(
   "/:id",
+  upload.array("files"),
   checkSchema(new_entry_schema),
   async (req: Request, res: Response<API.Response>) => {
     logger(`/bedticket/${req.params.id}`);
@@ -113,7 +126,7 @@ router.post(
     }
 
     try {
-      const { err } = await HandleNewEntry(req.params.id, req.body);
+      const { err } = await HandleNewEntry(req.params.id, req.body, req.files);
 
       if (err) {
         res.status(400).json({ success: false, err });
