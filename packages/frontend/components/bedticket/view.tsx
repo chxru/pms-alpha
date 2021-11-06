@@ -64,6 +64,9 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
       return;
     }
 
+    // update data timestamp
+    data.map((d) => (d.created_at = new Date(d.created_at)));
+
     // update state
     setentries(data);
   };
@@ -153,7 +156,20 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
                 </Td>
                 <Td>{e.type || "N/A"}</Td>
                 <Td>{e.note || " "}</Td>
-                <Td>{e.created_at}</Td>
+                <Td>
+                  {e.created_at.toLocaleDateString([], {
+                    year: "2-digit",
+                    month: "2-digit",
+                    day: "2-digit",
+                  }) +
+                    " " +
+                    e.created_at.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: false,
+                    }) +
+                    "h"}
+                </Td>
               </Tr>
             );
           })}
