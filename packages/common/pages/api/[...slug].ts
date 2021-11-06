@@ -1,4 +1,10 @@
-/* eslint-disable no-console */
+/*
+  Depricated!
+  Now requests goes to backend directly instead through next js server.
+  Check this commit for more info
+
+  TODO: Remove this file
+*/
 import { NextApiRequest, NextApiResponse } from "next";
 import * as jwt from "jsonwebtoken";
 import fetch, { RequestInit } from "node-fetch";
