@@ -2,10 +2,10 @@ import db from "database/pg";
 
 import { ComparePwd, HashPwd } from "util/bcrypt";
 import { DecodeJWT, GenerateJWT } from "util/jwt";
-import { logger } from "util/logger";
 import { SaveDBKey } from "util/keytar";
 import { LoadDBKey } from "util/crypto";
 
+import { logger } from "@pms-alpha/common/util/logger";
 import type { PGDB } from "@pms-alpha/types";
 
 interface RegisterData {

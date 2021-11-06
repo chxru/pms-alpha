@@ -8,8 +8,9 @@ import bedticketRoutes from "routes/bedticket.route";
 import diagnosisRoutes from "routes/diagnosis.route";
 
 import pg from "database/pg";
-import { logger } from "util/logger";
 import { LoadDBKey } from "util/crypto";
+
+import { logger } from "@pms-alpha/common/util/logger";
 
 // dotenv
 dotenv.config({ path: "../../.env" });

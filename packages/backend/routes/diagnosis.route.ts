@@ -1,14 +1,15 @@
 import { Request, Response, Router } from "express";
+import { checkSchema, validationResult } from "express-validator";
 
-import { logger } from "../util/logger";
-
-import type { API } from "@pms-alpha/types";
 import {
   FetchAllDiagnosis,
   InsertDiagnosis,
 } from "controllers/diagnosis.controller";
-import { checkSchema, validationResult } from "express-validator";
 import { new_diagnosis_schema } from "./schemas/diagnosis.schema";
+
+import { logger } from "@pms-alpha/common/util/logger";
+
+import type { API } from "@pms-alpha/types";
 
 const router = Router();
 

@@ -10,7 +10,8 @@ import {
   HandlePatientBasicInfo,
   SearchPatientByName,
 } from "controllers/patient.controller";
-import { logger } from "util/logger";
+
+import { logger } from "@pms-alpha/common/util/logger";
 
 import type { API } from "@pms-alpha/types";
 

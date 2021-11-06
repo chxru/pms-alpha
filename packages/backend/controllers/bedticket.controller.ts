@@ -1,6 +1,7 @@
 import db from "database/pg";
 import { DecryptData, EncryptData } from "util/crypto";
-import { logger } from "util/logger";
+
+import { logger } from "@pms-alpha/common/util/logger";
 
 import type { PGDB } from "@pms-alpha/types";
 
