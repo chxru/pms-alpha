@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
+  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -12,9 +13,16 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  Table,
+  Tbody,
+  Td,
   Textarea,
+  Th,
+  Thead,
+  Tr,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { useDropzone } from "react-dropzone";
 
 import AuthContext from "@pms-alpha/common/contexts/auth-context";
 import NotifyContext from "@pms-alpha/common/contexts/notify-context";
@@ -54,6 +62,38 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
     reset,
     formState: { errors },
   } = useForm<Omit<PGDB.Patient.BedTicketEntry, "created_at">>();
+
+  const [acceptedFiles, setacceptedFiles] = useState<File[]>([]);
+  const onDropAccepted = (file: File[]) => {
+    // prevent duplications
+    let duplicate = false;
+    for (const f of acceptedFiles) {
+      if (f.name == file[0].name && f.size == file[0].size) {
+        duplicate = true;
+        break;
+      }
+    }
+
+    if (duplicate) {
+      notify.NewAlert({
+        status: "warning",
+        msg: "Dupicate attachment",
+      });
+      return;
+    }
+
+    setacceptedFiles((f) => [...f, file[0]]);
+  };
+
+  const onDropRejected = () => {
+    notify.NewAlert({ msg: "Only images are supported", status: "error" });
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: "image/*",
+    onDropAccepted,
+    onDropRejected,
+  });
 
   const FetchDiagnosisTypes = async () => {
     const { success, data } = await ApiRequest<API.DiagnosisData[]>({
@@ -137,7 +177,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
   }, []);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered size="2xl">
       <ModalOverlay />
 
       <ModalContent>
@@ -202,6 +242,61 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
             )}
 
             <FormControl>
+              <FormLabel>Attachments</FormLabel>
+              <Flex
+                {...getRootProps()}
+                marginY="4"
+                paddingY="4"
+                paddingX="6"
+                bg="gray.100"
+                rounded="md"
+              >
+                <input {...getInputProps()} />
+                <p>Drag and drop attachments here, or click to select files</p>
+              </Flex>
+
+              {acceptedFiles.length != 0 && (
+                <Table variant="simple" size="sm">
+                  <Thead>
+                    <Tr>
+                      <Th>Filename</Th>
+                      <Th>Size</Th>
+                      <Th></Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {acceptedFiles.map((file, i) => {
+                      return (
+                        <Tr key={file.name + file.size}>
+                          <Td>{file.name}</Td>
+                          <Td>
+                            {file.size < 1000000
+                              ? (file.size / 1000).toFixed(1) + " KB"
+                              : (file.size / 1000000).toFixed(1) + " MB"}
+                          </Td>
+                          <Td>
+                            <Button
+                              colorScheme="red"
+                              onClick={() => {
+                                setacceptedFiles((files) => {
+                                  const temp = [...files];
+                                  temp.splice(i, 1);
+                                  return temp;
+                                });
+                              }}
+                            >
+                              Remove
+                            </Button>
+                          </Td>
+                        </Tr>
+                      );
+                    })}
+                  </Tbody>
+                </Table>
+              )}
+            </FormControl>
+
+            <FormControl>
               <FormLabel>Notes</FormLabel>
               <Textarea {...register("note")} />
             </FormControl>
@@ -215,6 +310,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
               type="reset"
               onClick={() => {
                 reset();
+                setacceptedFiles([]);
                 onClose();
               }}
             >
