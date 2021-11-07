@@ -1,13 +1,16 @@
-//@ts-ignore
 import type { API } from "./api";
 
 export namespace PGDB {
   export namespace User {
-    export interface Data extends API.Auth.UserData {
+    export interface Data {
       id: number;
+      fname: string;
+      lname: string;
+      username: string;
+      pwd: string;
       created_at: Date;
       updated_at: Date;
-      created_by: number;
+      created_by?: number;
     }
 
     export interface Auth {

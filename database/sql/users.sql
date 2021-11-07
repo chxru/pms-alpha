@@ -5,6 +5,7 @@ create schema if not exists users;
 create table if not exists users.data(
   id integer primary key generated always as identity,
   username varchar(255) unique not null,
+  pwd text not null,
   email varchar(255),
   fname varchar(255) not null,
   lname varchar(255) not null,
@@ -13,12 +14,8 @@ create table if not exists users.data(
   created_by integer references users.data(id)
 );
 
--- create users.auth
-create table if not exists users.auth(
-  id integer references users.data(id),
-  username varchar(255) primary key,
-  pwd varchar(255) not null
-);
+-- create index for user.password
+create index if not exists user_username_idx on users.data (username);
 
 -- create user.tokens to store refresh tokens
 create table if not exists users.tokens(

@@ -1,3 +1,5 @@
+import { PGDB } from ".";
+
 export namespace API {
   /**
    * Default response format used in API
@@ -17,12 +19,8 @@ export namespace API {
      * @export
      * @interface UserData
      */
-    export interface UserData {
-      id: number;
-      fname: string;
-      lname: string;
-      username: string;
-    }
+    export interface UserData
+      extends Pick<PGDB.User.Data, "id" | "fname" | "lname" | "username"> {}
 
     /**
      * Return type when the backend successfully executed the
