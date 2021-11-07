@@ -7,7 +7,13 @@ import {
   Grid,
   Heading,
   Input,
-  Text,
+  Table,
+  TableCaption,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
@@ -107,21 +113,35 @@ const Search: NextPage = () => {
           shadow="md"
           bg="white"
         >
-          <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-            {results.map((r) => (
-              <Flex
-                key={r.id}
-                direction="column"
-                cursor="pointer"
-                py={6}
-                onClick={() => {
-                  router.push(`/patient/${r.id}`);
-                }}
-              >
-                <Text>{r.full_name}</Text>
-              </Flex>
-            ))}
-          </Grid>
+          <Table variant="simple">
+            <TableCaption>Search result</TableCaption>
+            <Thead>
+              <Tr>
+                <Th>id</Th>
+                <Th>Name</Th>
+                <Th>Options</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {results.map((r) => (
+                <Tr key={r.id}>
+                  <Td>{r.id}</Td>
+                  <Td>{r.full_name}</Td>
+                  <Td>
+                    <Button
+                      colorScheme="teal"
+                      onClick={() => {
+                        router.push(`/patient/${r.id}`);
+                      }}
+                    >
+                      View
+                    </Button>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+          <Grid templateColumns="repeat(2, 1fr)" gap={6}></Grid>
         </Container>
       )}
     </>
