@@ -1,3 +1,10 @@
+/*
+  Initially developed to create tables etc in db
+  Dockerfile should take care of this job now
+
+  Not deleting this in case in future
+*/
+
 const { readdir, readFile } = require("fs/promises");
 const path = require("path");
 const { Client } = require("pg");
