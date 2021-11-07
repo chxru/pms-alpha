@@ -2,7 +2,7 @@ version: "3.1"
 
 services:
   db:
-    build: ./packages/database
+    build: ./database
     restart: unless-stopped
     ports:
       - ${PGPORT}:5432
