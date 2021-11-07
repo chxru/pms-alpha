@@ -1,5 +1,5 @@
 import * as jwt from "jsonwebtoken";
-import { logger } from "@pms-alpha/common/util/logger";
+import { logger } from "@pms-alpha/shared";
 
 /**
  * Generate Json web token

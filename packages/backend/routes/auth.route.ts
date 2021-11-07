@@ -9,7 +9,7 @@ import {
 } from "controllers/auth.controller";
 import { signin_schema, signup_schema } from "routes/schemas/auth.schema";
 
-import { logger } from "@pms-alpha/common/util/logger";
+import { logger } from "@pms-alpha/shared";
 
 import type { API } from "@pms-alpha/types";
 

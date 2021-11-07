@@ -7,11 +7,14 @@
   "license": "MIT",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/backend",
+    "packages/frontend/*",
+    "packages/shared",
+    "packages/types"
   ],
   "scripts": {
-    "admin": "yarn --cwd packages/admin dev",
+    "admin": "yarn --cwd packages/frontend/admin dev",
     "backend": "yarn --cwd packages/backend dev",
-    "frontend": "yarn --cwd packages/frontend dev"
+    "user": "yarn --cwd packages/frontend/user dev"
   }
 }

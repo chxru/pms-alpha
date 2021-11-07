@@ -7,7 +7,7 @@ import {
 } from "controllers/diagnosis.controller";
 import { new_diagnosis_schema } from "./schemas/diagnosis.schema";
 
-import { logger } from "@pms-alpha/common/util/logger";
+import { logger } from "@pms-alpha/shared";
 
 import type { API } from "@pms-alpha/types";
 

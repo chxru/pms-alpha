@@ -1,4 +1,5 @@
-import { logger } from "@pms-alpha/common/util/logger";
+import { logger } from "./logger";
+
 import type { API } from "@pms-alpha/types";
 
 interface request {

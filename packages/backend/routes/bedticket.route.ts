@@ -17,7 +17,7 @@ import {
   read_entry_schema,
 } from "routes/schemas/bedticket.schema";
 
-import { logger } from "@pms-alpha/common/util/logger";
+import { logger } from "@pms-alpha/shared";
 
 import type { API } from "@pms-alpha/types";
 

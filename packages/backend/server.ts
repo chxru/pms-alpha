@@ -13,7 +13,7 @@ import diagnosisRoutes from "routes/diagnosis.route";
 import pg from "database/pg";
 import { LoadDBKey } from "util/crypto";
 
-import { logger } from "@pms-alpha/common/util/logger";
+import { logger } from "@pms-alpha/shared";
 
 // dotenv
 dotenv.config({ path: "../../.env" });

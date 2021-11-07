@@ -11,7 +11,7 @@ import {
   SearchPatientByName,
 } from "controllers/patient.controller";
 
-import { logger } from "@pms-alpha/common/util/logger";
+import { logger } from "@pms-alpha/shared";
 
 import type { API } from "@pms-alpha/types";
 

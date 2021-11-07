@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { logger } from "@pms-alpha/common/util/logger";
+import { logger } from "@pms-alpha/shared";
 
 const pg = new Pool({
   user: process.env.PGUSER,

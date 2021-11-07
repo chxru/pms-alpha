@@ -5,7 +5,8 @@ import { DecodeJWT, GenerateJWT } from "util/jwt";
 import { SaveDBKey } from "util/keytar";
 import { LoadDBKey } from "util/crypto";
 
-import { logger } from "@pms-alpha/common/util/logger";
+import { logger } from "@pms-alpha/shared";
+
 import type { PGDB } from "@pms-alpha/types";
 
 interface RegisterData {

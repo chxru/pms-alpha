@@ -1,0 +1,9 @@
+{
+  "name": "@pms-alpha/shared",
+  "version": "0.1.0",
+  "license": "MIT",
+  "private": "true",
+  "dependencies": {
+    "chalk": "^4.1.2"
+  }
+}

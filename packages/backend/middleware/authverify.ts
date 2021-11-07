@@ -1,7 +1,7 @@
 import express from "express";
 import { VerifyJWT } from "util/jwt";
 
-import { logger } from "@pms-alpha/common/util/logger";
+import { logger } from "@pms-alpha/shared";
 
 const verifyToken = (
   req: express.Request,
