@@ -7,7 +7,11 @@ export default async function handler(
   res: NextApiResponse<string>
 ) {
   try {
-    const baseUrl = process.env.BACKEND_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    if (!baseUrl) {
+      throw new Error("baseUrl Not found");
+    }
+
     const sr = await fetch(`${baseUrl}/users/count`);
 
     if (!sr.ok) {

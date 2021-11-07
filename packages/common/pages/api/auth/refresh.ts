@@ -26,7 +26,11 @@ export default async function handler(
 
   // generate new access token from backend
   try {
-    const baseUrl = process.env.BACKEND_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    if (!baseUrl) {
+      throw new Error("baseUrl Not found");
+    }
+
     const sr = await fetch(`${baseUrl}/users/refresh`, {
       method: "POST",
       headers: {

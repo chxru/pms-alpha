@@ -38,6 +38,10 @@ const ApiRequest = async <T,>({
   }
 
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    if (!baseUrl) {
+      throw new Error("baseUrl Not found " + baseUrl);
+    }
     // setup headers
     const headers = new Headers({});
 
@@ -47,8 +51,7 @@ const ApiRequest = async <T,>({
     headers.append("Authorization", token);
 
     // send requests to backend
-    // TODO: no hard coded URLs
-    const response = await fetch(`http://localhost:3448/${path}`, {
+    const response = await fetch(`${baseUrl}/${path}`, {
       method,
       headers,
       body: obj instanceof FormData ? obj : JSON.stringify(obj),
