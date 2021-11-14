@@ -1,10 +1,3 @@
-// @ts-nocheck
-/*
-  React-table types are a total mess
-  Until they fixes types, let the ts-nocheck be there for the sake
-  of person who edit this file
-*/
-
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
   Container,
@@ -210,7 +203,7 @@ const SearchDiagnosis: React.FC = () => {
             min={1}
             max={pageOptions.length}
             onChange={(value) => {
-              const page = value ? value - 1 : 0;
+              const page = value ? parseInt(value) - 1 : 0;
               gotoPage(page);
             }}
             defaultValue={pageIndex + 1}
