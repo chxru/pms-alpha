@@ -29,17 +29,26 @@ import {
   FiChevronsRight,
 } from "react-icons/fi";
 import { Column, usePagination, useTable } from "react-table";
+
 import { ApiRequest } from "@pms-alpha/common/util/request";
 import AuthContext from "@pms-alpha/common/contexts/auth-context";
 
+import { API, PGDB } from "@pms-alpha/types";
+
 interface ColumnStruct {
   name: string;
-  category: string;
+  category: number;
+  id: number;
 }
 
 const SearchDiagnosis: React.FC = () => {
+  const auth = useContext(AuthContext);
+  const [data, setdata] = useState<PGDB.Diagnosis.Data[]>([]);
+  const [categories, setcategories] = useState<PGDB.Diagnosis.Categories[]>([]);
+
   const columns = useMemo<Column<ColumnStruct>[]>(
     () => [
+      { Header: "id", accessor: "id" },
       { Header: "Name", accessor: "name" },
       { Header: "Category", accessor: "category" },
       {
@@ -58,8 +67,6 @@ const SearchDiagnosis: React.FC = () => {
     []
   );
 
-  const auth = useContext(AuthContext);
-  const [data, setdata] = useState<{ name: string; category: string }[]>([]);
   useEffect(() => {
     (async () => {
       try {
@@ -67,12 +74,7 @@ const SearchDiagnosis: React.FC = () => {
           success,
           data: results,
           err,
-        } = await ApiRequest<
-          {
-            name: string;
-            category: string;
-          }[]
-        >({
+        } = await ApiRequest<API.Diagnosis.Data>({
           path: "diagnosis",
           method: "GET",
           token: auth.token,
@@ -82,7 +84,8 @@ const SearchDiagnosis: React.FC = () => {
 
         if (!results) throw new Error("Data is undefined");
 
-        setdata(results);
+        setdata(results.data);
+        setcategories(results.categories);
       } catch (error) {
         console.error(error);
         setdata([]);

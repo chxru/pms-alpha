@@ -33,7 +33,6 @@ import type { API, PGDB } from "@pms-alpha/types";
 import {
   AutoComplete,
   AutoCompleteGroup,
-  AutoCompleteGroupTitle,
   AutoCompleteInput,
   AutoCompleteItem,
   AutoCompleteList,
@@ -50,10 +49,8 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
   const auth = useContext(AuthContext);
   const notify = useContext(NotifyContext);
 
-  const [diagnoisisArr, setdiagnoisisArr] = useState<{
-    [key: string]: string[];
-  }>({});
   const [selectedType, setselectedType] = useState<string>();
+  const [diagnosisData, setdiagnosisData] = useState<API.Diagnosis.Data>();
   const [selectedDiagnose, setselectedDiagnose] = useState<string>();
 
   const {
@@ -96,7 +93,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
   });
 
   const FetchDiagnosisTypes = async () => {
-    const { success, data } = await ApiRequest<API.DiagnosisData[]>({
+    const { success, data } = await ApiRequest<API.Diagnosis.Data>({
       path: "diagnosis",
       method: "GET",
       token: auth.token,
@@ -110,20 +107,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
       return;
     }
 
-    // holds values temp before updating state
-    const temp: {
-      [key: string]: string[];
-    } = {};
-
-    data?.forEach((d) => {
-      if (!temp[d.category]) {
-        temp[d.category] = [d.name];
-      } else {
-        temp[d.category].push(d.name);
-      }
-    });
-
-    setdiagnoisisArr(temp);
+    setdiagnosisData(data);
   };
 
   const OnSubmit = async (value: PGDB.Patient.BedTicketEntry) => {
@@ -213,8 +197,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
               )}
             </FormControl>
 
-            {selectedType === "diagnosis" &&
-            Object.entries(diagnoisisArr).length ? (
+            {selectedType === "diagnosis" && diagnosisData?.data.length ? (
               <FormControl>
                 <FormLabel>Diagnosis type</FormLabel>
                 <AutoComplete
@@ -225,24 +208,21 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
                 >
                   <AutoCompleteInput variant="filled" />
                   <AutoCompleteList>
-                    {Object.entries(diagnoisisArr).map(
-                      ([category, diagnosis], c_id) => (
-                        <AutoCompleteGroup key={c_id} showDivider>
-                          <AutoCompleteGroupTitle textTransform="capitalize">
-                            {category}
-                          </AutoCompleteGroupTitle>
-                          {diagnosis.map((d, d_id) => (
+                    {diagnosisData.categories.map((cat, catid) => (
+                      <AutoCompleteGroup key={`cat-${catid}`} showDivider>
+                        {diagnosisData.data
+                          .filter((d) => d.category === catid)
+                          .map((data) => (
                             <AutoCompleteItem
-                              key={d_id}
-                              value={d}
+                              key={`item-${data.id}`}
+                              value={data.id.toString()}
                               textTransform="capitalize"
                             >
-                              {d}
+                              {data.name}
                             </AutoCompleteItem>
                           ))}
-                        </AutoCompleteGroup>
-                      )
-                    )}
+                      </AutoCompleteGroup>
+                    ))}
                   </AutoCompleteList>
                 </AutoComplete>
               </FormControl>

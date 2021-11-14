@@ -15,12 +15,10 @@ const router = Router();
 
 router.get(
   "/",
-  async (req: Request, res: Response<API.Response<API.DiagnosisData[]>>) => {
-    logger("GET diagnisis/");
-
+  async (req: Request, res: Response<API.Response<API.Diagnosis.Data>>) => {
     try {
-      const arr = await FetchAllDiagnosis();
-      res.status(200).json({ success: true, data: arr });
+      const data = await FetchAllDiagnosis();
+      res.status(200).json({ success: true, data });
     } catch (error) {
       logger("Error occured fetching all diagnosis types", "error");
       console.error(error);
@@ -32,9 +30,10 @@ router.get(
 router.post(
   "/",
   checkSchema(new_diagnosis_schema),
-  async (req: Request<API.DiagnosisData>, res: Response<API.Response>) => {
-    logger("POST diagnisis/");
-
+  async (
+    req: Request<API.Diagnosis.NewDiagnosisForm>,
+    res: Response<API.Response>
+  ) => {
     // schema validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -48,10 +47,7 @@ router.post(
     }
 
     try {
-      await InsertDiagnosis({
-        name: req.body.name,
-        category: req.body.category,
-      });
+      await InsertDiagnosis(req.body.name, req.body.category);
       res.status(200).json({ success: true });
     } catch (error) {
       logger("Error occured saving diagnosis type", "error");

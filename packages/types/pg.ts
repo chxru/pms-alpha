@@ -58,4 +58,17 @@ export namespace PGDB {
       created_at: Date;
     }
   }
+
+  export namespace Diagnosis {
+    export interface Categories {
+      id: number;
+      name: string;
+    }
+
+    export interface Data {
+      id: number;
+      category: number;
+      name: string;
+    }
+  }
 }

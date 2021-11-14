@@ -1,15 +1,12 @@
 -- create schema
-create schema if not exists pms;
+create schema if not exists diagnosis;
+
+-- store categories
+create table if not exists diagnosis.categories(id serial primary key, name text not null);
 
 -- store diagnosis data
-create table if not exists pms.diagnosis(
-  id serial,
-  category text not null,
+create table if not exists diagnosis.data(
+  id serial primary key,
+  category integer not null references diagnosis.categories(id),
   name text not null
 );
-
--- activate extension pg_trgm
-create extension if not exists pg_trgm;
-
--- create index using pg_trgm
-create index if not exists trgx_idx_diag_name on pms.diagnosis using gin (name gin_trgm_ops);
