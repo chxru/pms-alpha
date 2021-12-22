@@ -9,7 +9,7 @@ const new_diagnosis_schema: Schema = {
   category: {
     in: "body",
     trim: true,
-    isNumeric: true,
+    isString: true,
   },
 };
 
