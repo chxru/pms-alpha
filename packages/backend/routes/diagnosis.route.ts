@@ -26,7 +26,7 @@ const upload = multer({ storage });
 
 router.get(
   "/",
-  async (req: Request, res: Response<API.Response<API.Diagnosis.Data>>) => {
+  async (req: Request, res: Response<API.Response<API.Diagnosis.Data[]>>) => {
     try {
       const data = await FetchAllDiagnosis();
       res.status(200).json({ success: true, data });

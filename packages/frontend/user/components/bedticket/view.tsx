@@ -60,6 +60,16 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
       return;
     }
 
+    if (!data) {
+      notify.NewAlert({
+        msg: "Fetching entries failed",
+        description: "Data is missing",
+        status: "error",
+      });
+
+      return;
+    }
+
     // update data timestamp
     data.map((d) => (d.created_at = new Date(d.created_at)));
 

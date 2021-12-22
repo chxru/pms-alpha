@@ -1,24 +1,16 @@
 import { logger } from "@pms-alpha/shared";
-import { API, PGDB } from "@pms-alpha/types";
+import { API } from "@pms-alpha/types";
 import db from "database/pg";
 
 import { ParseDiagnosisCSV } from "util/csv";
 
-const FetchAllDiagnosis = async (): Promise<API.Diagnosis.Data> => {
-  // fetch categories
-  const q1 = await db.query<PGDB.Diagnosis.Categories>(
-    "SELECT * FROM diagnosis.categories"
-  );
-
+const FetchAllDiagnosis = async (): Promise<API.Diagnosis.Data[]> => {
   // fetch data
-  const q2 = await db.query<PGDB.Diagnosis.Data>(
-    "SELECT * FROM diagnosis.data"
+  const q = await db.query<API.Diagnosis.Data>(
+    "SELECT diagnosis.data.id, diagnosis.data.name, diagnosis.categories.name as category FROM diagnosis.data INNER JOIN diagnosis.categories ON diagnosis.data.category = diagnosis.categories.id"
   );
 
-  return {
-    categories: q1.rows,
-    data: q2.rows,
-  };
+  return q.rows;
 };
 
 const InsertDiagnosis = async (

@@ -38,9 +38,8 @@ export namespace API {
   }
 
   export namespace Diagnosis {
-    export interface Data {
-      categories: PGDB.Diagnosis.Categories[];
-      data: PGDB.Diagnosis.Data[];
+    export interface Data extends Omit<PGDB.Diagnosis.Data, "category"> {
+      category: string;
     }
 
     export interface NewDiagnosisForm {

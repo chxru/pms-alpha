@@ -33,18 +33,13 @@ import { Column, usePagination, useTable } from "react-table";
 import { ApiRequest } from "@pms-alpha/common/util/request";
 import AuthContext from "@pms-alpha/common/contexts/auth-context";
 
-import { API, PGDB } from "@pms-alpha/types";
+import { API } from "@pms-alpha/types";
 
-interface ColumnStruct {
-  name: string;
-  category: number;
-  id: number;
-}
+type ColumnStruct = API.Diagnosis.Data;
 
 const SearchDiagnosis: React.FC = () => {
   const auth = useContext(AuthContext);
-  const [data, setdata] = useState<PGDB.Diagnosis.Data[]>([]);
-  const [categories, setcategories] = useState<PGDB.Diagnosis.Categories[]>([]);
+  const [data, setdata] = useState<API.Diagnosis.Data[]>([]);
 
   const columns = useMemo<Column<ColumnStruct>[]>(
     () => [
@@ -74,7 +69,7 @@ const SearchDiagnosis: React.FC = () => {
           success,
           data: results,
           err,
-        } = await ApiRequest<API.Diagnosis.Data>({
+        } = await ApiRequest<API.Diagnosis.Data[]>({
           path: "diagnosis",
           method: "GET",
           token: auth.token,
@@ -84,8 +79,7 @@ const SearchDiagnosis: React.FC = () => {
 
         if (!results) throw new Error("Data is undefined");
 
-        setdata(results.data);
-        setcategories(results.categories);
+        setdata(results);
       } catch (error) {
         console.error(error);
         setdata([]);

@@ -33,6 +33,7 @@ import type { API, PGDB } from "@pms-alpha/types";
 import {
   AutoComplete,
   AutoCompleteGroup,
+  AutoCompleteGroupTitle,
   AutoCompleteInput,
   AutoCompleteItem,
   AutoCompleteList,
@@ -50,7 +51,8 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
   const notify = useContext(NotifyContext);
 
   const [selectedType, setselectedType] = useState<string>();
-  const [diagnosisData, setdiagnosisData] = useState<API.Diagnosis.Data>();
+  const [diagnosisCategories, setdiagnosisCategories] = useState<string[]>();
+  const [diagnosisData, setdiagnosisData] = useState<API.Diagnosis.Data[]>();
   const [selectedDiagnose, setselectedDiagnose] = useState<string>();
 
   const {
@@ -93,7 +95,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
   });
 
   const FetchDiagnosisTypes = async () => {
-    const { success, data } = await ApiRequest<API.Diagnosis.Data>({
+    const { success, data } = await ApiRequest<API.Diagnosis.Data[]>({
       path: "diagnosis",
       method: "GET",
       token: auth.token,
@@ -107,6 +109,10 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
       return;
     }
 
+    const categories = new Set<string>();
+    data?.forEach((d) => categories.add(d.category));
+
+    setdiagnosisCategories([...categories]);
     setdiagnosisData(data);
   };
 
@@ -121,7 +127,10 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
         });
         return;
       }
-      obj.type = selectedDiagnose;
+      // TODO: unnecessary loop?
+      obj.type =
+        diagnosisData?.find((d) => d.name == selectedDiagnose)?.id.toString() ||
+        obj.type;
     }
 
     const formData = new FormData();
@@ -132,6 +141,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
 
     formData.append("category", value.category);
     formData.append("note", value.note);
+    formData.append("type", obj.type);
 
     const { success, err } = await ApiRequest({
       path: `bedtickets/${bid}`,
@@ -197,7 +207,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
               )}
             </FormControl>
 
-            {selectedType === "diagnosis" && diagnosisData?.data.length ? (
+            {selectedType === "diagnosis" && diagnosisData?.length ? (
               <FormControl>
                 <FormLabel>Diagnosis type</FormLabel>
                 <AutoComplete
@@ -208,14 +218,15 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
                 >
                   <AutoCompleteInput variant="filled" />
                   <AutoCompleteList>
-                    {diagnosisData.categories.map((cat, catid) => (
-                      <AutoCompleteGroup key={`cat-${catid}`} showDivider>
-                        {diagnosisData.data
-                          .filter((d) => d.category === catid)
+                    {diagnosisCategories?.map((cat) => (
+                      <AutoCompleteGroup key={`cat-${cat}`} showDivider>
+                        <AutoCompleteGroupTitle>{cat}</AutoCompleteGroupTitle>
+                        {diagnosisData
+                          ?.filter((d) => d.category === cat)
                           .map((data) => (
                             <AutoCompleteItem
                               key={`item-${data.id}`}
-                              value={data.id.toString()}
+                              value={data.name}
                               textTransform="capitalize"
                             >
                               {data.name}
