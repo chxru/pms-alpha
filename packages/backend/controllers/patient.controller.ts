@@ -40,44 +40,14 @@ const HandleNewPatient = async (
   const encrypted = EncryptData(JSON.stringify(data));
   const fullname = data.fname + " " + data.lname;
 
-  let pid: number;
+  const q = await db.query<{ id: number }>(
+    "INSERT INTO patients.info (data, full_name) VALUES ($1, $2) RETURNING id",
+    [encrypted, fullname]
+  );
 
-  // begin transaction
-  const trx = await db.connect();
-  try {
-    await trx.query("BEGIN");
+  logger(`New patient ${fullname} registered`, "success");
 
-    // save encrypted data in patients.info
-    const q1 = await db.query(
-      "INSERT INTO patients.info (data) VALUES ($1) RETURNING id",
-      [encrypted]
-    );
-
-    // get patient id
-    pid = q1.rows[0].id;
-
-    // insert full name to patients.search
-    await trx.query("INSERT INTO patients.search VALUES ($1, $2)", [
-      pid,
-      fullname,
-    ]);
-
-    // commiting
-    await trx.query("COMMIT");
-  } catch (error) {
-    // rallback
-    await trx.query("ROLLBACK");
-
-    logger(
-      "Error occured in HandleNewPatient transcation, rollbacked",
-      "error"
-    );
-    throw error;
-  } finally {
-    trx.release();
-  }
-
-  return pid;
+  return q.rows[0].id;
 };
 
 const SearchPatientByName = async (
@@ -87,8 +57,9 @@ const SearchPatientByName = async (
     return [];
   }
 
+  // https://niallburkley.com/blog/index-columns-for-like-in-postgres/
   const query = await db.query(
-    "SELECT * FROM patients.search WHERE full_name ILIKE $1",
+    "SELECT * FROM patients.info WHERE full_name ILIKE $1",
     [`%${content}%`]
   );
 
