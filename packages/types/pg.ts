@@ -28,8 +28,28 @@ export namespace PGDB {
   }
 
   export namespace Patient {
-    export interface BasicDetails extends API.Patient.BasicDetails {
+    export interface Info {
       id: number;
+      uuid: string;
+      full_name: string;
+      data: string;
+      created_at: Date;
+    }
+
+    export interface BasicDetails {
+      fname: string;
+      lname?: string;
+      dob?: string;
+      gender: "male" | "female" | "other";
+      internal_id?: string;
+      guardian: {
+        fname: string;
+        lname?: string;
+        nic?: string;
+        mobile: string;
+        tp?: string;
+        address?: string;
+      };
       current_bedticket?: number;
       bedtickets: {
         admission_date: number;

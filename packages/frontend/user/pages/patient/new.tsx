@@ -4,8 +4,6 @@ import { useRouter } from "next/router";
 import {
   Button,
   Center,
-  Checkbox,
-  CheckboxGroup,
   Container,
   Divider,
   FormControl,
@@ -17,7 +15,6 @@ import {
   Input,
   Radio,
   RadioGroup,
-  Select,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
@@ -33,16 +30,13 @@ const AddPatient: React.FC = ({}) => {
   const notify = useContext(NotifyContext);
   const router = useRouter();
 
-  const { register, handleSubmit } = useForm<API.Patient.BasicDetails>();
+  const { register, handleSubmit } = useForm<API.Patient.RegistrationForm>();
 
-  const onSubmit = async (values: API.Patient.BasicDetails) => {
-    // remove empty fields from the values object
-    for (const key in values) {
-      if (Object.prototype.hasOwnProperty.call(values, key)) {
-        if (!values[key]) {
-          delete values[key];
-        }
-      }
+  const onSubmit = async (values: API.Patient.RegistrationForm) => {
+    // manually deleting empty tp fields
+    // express-validator throw errors when field exists but is empty
+    if ("tp" in values.guardian && !values.guardian.tp) {
+      delete values.guardian.tp;
     }
 
     const { success, data, err } = await ApiRequest<{ id: number }>({
@@ -112,7 +106,6 @@ const AddPatient: React.FC = ({}) => {
               mt="15px"
               pt="15px"
             >
-              {/* First Name */}
               <GridItem>
                 <FormControl id="firstname" isRequired>
                   <FormLabel htmlFor="firstname">First Name</FormLabel>
@@ -122,14 +115,13 @@ const AddPatient: React.FC = ({}) => {
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...register("firstname")}
+                    {...register("fname", { required: true })}
                   />
                 </FormControl>
               </GridItem>
 
-              {/* Last Name */}
               <GridItem>
-                <FormControl id="lastname" isRequired>
+                <FormControl id="lastname">
                   <FormLabel htmlFor="lastname">Last Name</FormLabel>
                   <Input
                     focusBorderColor="gray.300"
@@ -137,15 +129,16 @@ const AddPatient: React.FC = ({}) => {
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...register("lastname")}
+                    {...register("lname")}
                   />
                 </FormControl>
               </GridItem>
 
-              {/* Gender */}
               <GridItem>
                 <FormControl as="fieldset" isRequired id="gender">
-                  <FormLabel as="legend"> Gender </FormLabel>
+                  <FormLabel as="legend" htmlFor="gender">
+                    Gender
+                  </FormLabel>
                   <RadioGroup name="gender">
                     <HStack spacing="50px">
                       <Radio value="male" {...register("gender")}>
@@ -154,12 +147,14 @@ const AddPatient: React.FC = ({}) => {
                       <Radio value="female" {...register("gender")}>
                         Female
                       </Radio>
+                      <Radio value="other" {...register("gender")}>
+                        Other
+                      </Radio>
                     </HStack>
                   </RadioGroup>
                 </FormControl>
               </GridItem>
 
-              {/* Date of Birth */}
               <GridItem>
                 <FormControl id="dob">
                   <FormLabel htmlFor="dob">Date of Birth</FormLabel>
@@ -173,28 +168,10 @@ const AddPatient: React.FC = ({}) => {
                   />
                 </FormControl>
               </GridItem>
-
-              {/* Marital status */}
-              <GridItem>
-                <FormControl as="fieldset" isRequired id="marital">
-                  <FormLabel as="legend"> Marital Status </FormLabel>
-                  <RadioGroup name="marital">
-                    <HStack spacing="50px">
-                      <Radio value="married" {...register("marital")}>
-                        Married
-                      </Radio>
-                      <Radio value="unmarried" {...register("marital")}>
-                        Unmarried
-                      </Radio>
-                    </HStack>
-                  </RadioGroup>
-                </FormControl>
-              </GridItem>
             </Grid>
 
-            {/* Contact Informations  */}
             <Heading fontWeight="semibold" size="md" mt="50px">
-              Contact Details
+              Guarding Details
               <Divider mt={2} shadow="dark-lg" />
             </Heading>
 
@@ -204,6 +181,48 @@ const AddPatient: React.FC = ({}) => {
               mt="15px"
               pt="15px"
             >
+              <GridItem>
+                <FormControl id="guardian.fnamei" isRequired>
+                  <FormLabel htmlFor="guardian.fname">First Name</FormLabel>
+                  <Input
+                    focusBorderColor="gray.300"
+                    borderRadius="10px"
+                    background="white"
+                    fontWeight="semibold"
+                    type="text"
+                    {...register("guardian.fname", { required: true })}
+                  />
+                </FormControl>
+              </GridItem>
+
+              <GridItem>
+                <FormControl id="guardian.lname">
+                  <FormLabel htmlFor="guardian.lname">Last Name</FormLabel>
+                  <Input
+                    focusBorderColor="gray.300"
+                    borderRadius="10px"
+                    background="white"
+                    fontWeight="semibold"
+                    type="text"
+                    {...register("guardian.lname")}
+                  />
+                </FormControl>
+              </GridItem>
+
+              <GridItem>
+                <FormControl id="guardian.nic">
+                  <FormLabel htmlFor="guardian.nic">NIC</FormLabel>
+                  <Input
+                    focusBorderColor="gray.300"
+                    borderRadius="10px"
+                    background="white"
+                    fontWeight="semibold"
+                    type="text"
+                    {...register("guardian.nic")}
+                  />
+                </FormControl>
+              </GridItem>
+
               {/* Address */}
               <GridItem colSpan={2}>
                 <FormControl id="address" isRequired>
@@ -214,387 +233,50 @@ const AddPatient: React.FC = ({}) => {
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...register("address")}
+                    {...register("guardian.address", { required: true })}
                   />
                 </FormControl>
               </GridItem>
 
-              {/* Grama Niladari Sector */}
               <GridItem>
-                <FormControl id="grama_niladhari">
-                  <FormLabel htmlFor="grama_niladhari">
-                    Grama Niladari Sector
-                  </FormLabel>
+                <FormControl id="guardian.mobile" isRequired>
+                  <FormLabel htmlFor="guardian.mobile">Mobile Number</FormLabel>
                   <Input
                     focusBorderColor="gray.300"
                     borderRadius="10px"
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...register("grama_niladhari")}
+                    {...register("guardian.mobile")}
                   />
                 </FormControl>
               </GridItem>
 
-              {/* Divisional Sector */}
               <GridItem>
-                <FormControl id="divisional_sector">
-                  <FormLabel htmlFor="divisional_sector">
-                    Divisional Seceratory
-                  </FormLabel>
+                <FormControl id="guardian.tp">
+                  <FormLabel htmlFor="guardian.tp">Land Number</FormLabel>
                   <Input
                     focusBorderColor="gray.300"
                     borderRadius="10px"
                     background="white"
                     fontWeight="semibold"
                     type="text"
-                    {...register("divisional_sector")}
-                  />
-                </FormControl>
-              </GridItem>
-
-              {/* Contact Number */}
-              <GridItem>
-                <FormControl id="contact_number" isRequired>
-                  <FormLabel htmlFor="contact_number">Contact Number</FormLabel>
-                  <Input
-                    focusBorderColor="gray.300"
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="text"
-                    {...register("contact_number")}
-                  />
-                </FormControl>
-              </GridItem>
-
-              {/* PHI Contact Number */}
-              <GridItem>
-                <FormControl id="phi_tp">
-                  <FormLabel htmlFor="phi_tp">PHI Contact Number</FormLabel>
-                  <Input
-                    focusBorderColor="gray.300"
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="text"
-                    {...register("phi_tp")}
-                  />
-                </FormControl>
-              </GridItem>
-
-              {/* MOH Contact Number */}
-              <GridItem>
-                <FormControl id="moh_tp">
-                  <FormLabel htmlFor="moh_tp">MOH Contact Number</FormLabel>
-                  <Input
-                    focusBorderColor="gray.300"
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="text"
-                    {...register("moh_tp")}
+                    {...register("guardian.tp")}
                   />
                 </FormControl>
               </GridItem>
             </Grid>
 
-            {/* Living With */}
-            <Heading fontWeight="semibold" size="md" mt="50px">
-              Relatives Details
-              <Divider mt={2} shadow="dark-lg" />
-            </Heading>
-
-            <Grid
-              templateColumns={{ base: "repeat(1, 1fr)", sm: "repeat(2, 1fr)" }}
-              gap={7}
-              mt="15px"
-              pt="15px"
-            >
-              {/* Living with */}
-              <GridItem>
-                <FormControl isRequired id="living_with">
-                  <FormLabel htmlFor="living_with"> Living With </FormLabel>
-                  <Select
-                    {...register("living_with")}
-                    placeholder="Select who patient live with"
-                    focusBorderColor="gray.300"
-                  >
-                    <option value="alone">Alone</option>
-                    <option value="spouse"> With Spouse</option>
-                    <option value="sibilings">With Sibilings</option>
-                    <option value="children">With Children</option>
-                    <option value="relations">With Relations</option>
-                  </Select>
-                </FormControl>
-              </GridItem>
-
-              {/* Other Person's Name */}
-              <GridItem>
-                <FormControl id="lw_name">
-                  <FormLabel htmlFor="lw_name">Name of Other person </FormLabel>
-                  <Input
-                    focusBorderColor="gray.300"
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="text"
-                    {...register("lw_name")}
-                  />
-                </FormControl>
-              </GridItem>
-
-              {/* Other Person Address */}
-              <GridItem>
-                <FormControl id="lw_address">
-                  <FormLabel htmlFor="lw_address">Address</FormLabel>
-                  <Input
-                    focusBorderColor="gray.300"
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="text"
-                    {...register("lw_address")}
-                  />
-                </FormControl>
-              </GridItem>
-
-              {/* Other Person Number */}
-              <GridItem>
-                <FormControl id="lw_tp">
-                  <FormLabel htmlFor="lw_tp">Contact Number</FormLabel>
-                  <Input
-                    focusBorderColor="gray.300"
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="text"
-                    {...register("lw_tp")}
-                  />
-                </FormControl>
-              </GridItem>
-            </Grid>
-
-            {/*  Other Details */}
-            <Heading fontWeight="semibold" size="md" mt="50px">
-              Other Details
-              <Divider mt={2} shadow="dark-lg" />
-            </Heading>
-
-            <Grid
-              templateColumns={{ base: "repeat(1, 1fr)", sm: "repeat(2, 1fr)" }}
-              gap={7}
-              mt="15px"
-              pt="15px"
-            >
-              {/* Edu Status */}
-              <GridItem>
-                <FormControl id="lw_tp">
-                  <FormLabel htmlFor="lw_tp">
-                    Educational Qualification
-                  </FormLabel>
-                  <CheckboxGroup>
-                    <HStack spacing="50px">
-                      <Checkbox value="1-5" {...register("edu_status")}>
-                        1-5
-                      </Checkbox>
-                      <Checkbox value="6-OL" {...register("edu_status")}>
-                        6-OL
-                      </Checkbox>
-                      <Checkbox value="AL" {...register("edu_status")}>
-                        AL
-                      </Checkbox>
-                    </HStack>
-                  </CheckboxGroup>
-                </FormControl>
-              </GridItem>
-
-              {/* Has job? */}
-              <GridItem>
-                <FormControl as="fieldset" isRequired id="has_job">
-                  <FormLabel as="legend"> Is Patient has a job </FormLabel>
-                  <RadioGroup name="has_job">
-                    <HStack spacing="50px">
-                      <Radio value="true" {...register("has_job")}>
-                        Yes
-                      </Radio>
-                      <Radio value="false" {...register("has_job")}>
-                        No
-                      </Radio>
-                    </HStack>
-                  </RadioGroup>
-                </FormControl>
-              </GridItem>
-
-              {/* Job */}
-              <GridItem>
-                <FormControl id="job">
-                  <FormLabel htmlFor="job">Job</FormLabel>
-                  <Input
-                    focusBorderColor="gray.300"
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="text"
-                    {...register("job")}
-                  />
-                </FormControl>
-              </GridItem>
-
-              {/* Sahanadara from Gov */}
-              <GridItem colStart={1}>
-                <FormControl id="gov_facilities">
-                  <FormLabel htmlFor="gov_facilities">
-                    Sahanadara Received From Government
-                  </FormLabel>
-                  <Input
-                    focusBorderColor="gray.300"
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="text"
-                    {...register("gov_facilities")}
-                  />
-                </FormControl>
-              </GridItem>
-            </Grid>
-
-            {/* Medical Details */}
-            <Heading fontWeight="semibold" size="md" mt="50px">
-              Medical Details
-              <Divider mt={2} shadow="dark-lg" />
-            </Heading>
-
-            <Grid
-              templateColumns={{ base: "repeat(1, 1fr)", sm: "repeat(2, 1fr)" }}
-              gap={7}
-              mt="15px"
-              pt="15px"
-            >
-              {/* Disease */}
-              <GridItem>
-                <FormControl id="disease" isRequired>
-                  <FormLabel htmlFor="disease">Diseases</FormLabel>
-                  <Input
-                    placeholder="Use comma to separate diseases"
-                    focusBorderColor="gray.300"
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="text"
-                    {...register("diseases")}
-                  />
-                </FormControl>
-              </GridItem>
-
-              {/* Treatment History */}
-              <GridItem>
-                <FormControl id="treatment_his">
-                  <FormLabel htmlFor="treatment_his">
-                    Treatment History
-                  </FormLabel>
-                  <CheckboxGroup>
-                    <HStack spacing="50px">
-                      <Checkbox
-                        value="Clogapine"
-                        {...register("treatment_his")}
-                      >
-                        Clogapine
-                      </Checkbox>
-                      <Checkbox
-                        value="Depo injection"
-                        {...register("treatment_his")}
-                      >
-                        Depo injection
-                      </Checkbox>
-                      <Checkbox value="ECT" {...register("treatment_his")}>
-                        ECT
-                      </Checkbox>
-                    </HStack>
-                  </CheckboxGroup>
-                </FormControl>
-              </GridItem>
-
-              {/* Last Clinic Visit */}
-              <GridItem>
-                <FormControl id="last_clinic_visit">
-                  <FormLabel htmlFor="last_clinic_visit">
-                    Last Clinic Visit
-                  </FormLabel>
-                  <Input
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="date"
-                    focusBorderColor="gray.300"
-                    {...register("last_clinic_visit")}
-                  />
-                </FormControl>
-              </GridItem>
-
-              {/* Date of informed Over phone */}
-              <GridItem>
-                <FormControl id="informed_over_phone">
-                  <FormLabel htmlFor="informed_over_phone">
-                    Informed Over Phone
-                  </FormLabel>
-                  <Input
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="date"
-                    focusBorderColor="gray.300"
-                    {...register("informed_over_phone")}
-                  />
-                </FormControl>
-              </GridItem>
-
-              {/* Home Visit Date */}
-              <GridItem>
-                <FormControl id="home_visit">
-                  <FormLabel htmlFor="home_visit">Home Visit</FormLabel>
-                  <Input
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="date"
-                    focusBorderColor="gray.300"
-                    {...register("home_visit")}
-                  />
-                </FormControl>
-              </GridItem>
-
-              {/* Next Clinc Date */}
-              <GridItem>
-                <FormControl id="next_clinic_date">
-                  <FormLabel htmlFor="next_clinic_date">
-                    Next Clinc Date
-                  </FormLabel>
-                  <Input
-                    borderRadius="10px"
-                    background="white"
-                    fontWeight="semibold"
-                    type="date"
-                    focusBorderColor="gray.300"
-                    {...register("next_clinic_date")}
-                  />
-                </FormControl>
-              </GridItem>
-            </Grid>
-
-            {/* Hospital Admission */}
             <GridItem>
-              <FormControl id="hospital_admission" isRequired>
-                <FormLabel htmlFor="hospital_admission">
-                  Hospital Admission
-                </FormLabel>
+              <FormControl id="internal_id">
+                <FormLabel htmlFor="internal_id">Internal ID</FormLabel>
                 <Input
                   focusBorderColor="gray.300"
                   borderRadius="10px"
                   background="white"
                   fontWeight="semibold"
                   type="text"
-                  {...register("hospital_admission")}
+                  {...register("internal_id")}
                 />
               </FormControl>
             </GridItem>
