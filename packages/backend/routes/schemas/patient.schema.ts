@@ -1,16 +1,16 @@
 import { Schema } from "express-validator";
 
 const new_patient_schema: Schema = {
-  firstname: {
+  fname: {
     in: "body",
     isString: true,
     errorMessage: "First name is required",
     trim: true,
   },
-  lastname: {
+  lname: {
     in: "body",
     isString: true,
-    errorMessage: "Last name is required",
+    errorMessage: "Last name is not a string",
     trim: true,
   },
   gender: {
@@ -18,172 +18,56 @@ const new_patient_schema: Schema = {
     isString: true,
     errorMessage: "Gender is required",
     isIn: {
-      options: [["male", "female"]],
-      errorMessage: "Gender should be male or female",
+      options: [["male", "female", "other"]],
+      errorMessage: "Gender should be male, female or other",
     },
   },
   dob: {
     in: "body",
-    isString: true,
     matches: {
       options: [/\d{4}-\d{2}-\d{2}/], // regex to yyyy-mm-dd
       errorMessage: "dob should be yyyy-mm-dd format",
     },
     optional: true,
   },
-  marital: {
+  internal_id: {
     in: "body",
     isString: true,
-    errorMessage: "Marital status is required",
-    isIn: {
-      options: [["married", "unmarried"]],
-      errorMessage: "Invalid marital status",
-    },
   },
-  address: {
+  "guardian.fname": {
+    in: "body",
+    isString: true,
+    errorMessage: "Guarding first name is required",
+    trim: true,
+  },
+  "guardian.lname": {
+    in: "body",
+    isString: true,
+    errorMessage: "Last name is not a string",
+    trim: true,
+  },
+  "guardian.nic": {
+    in: "body",
+    isString: true,
+    trim: true,
+  },
+  "guardian.address": {
     in: "body",
     isString: true,
     trim: true,
     errorMessage: "Address is required",
   },
-  grama_niladhari: {
-    in: "body",
-    isString: true,
-    trim: true,
-    optional: true,
-  },
-  divisional_sector: {
-    in: "body",
-    isString: true,
-    trim: true,
-    optional: true,
-  },
-  contact_number: {
+  "guardian.mobile": {
     in: "body",
     isMobilePhone: true,
     errorMessage: "Valid mobile number is required",
   },
-  phi_tp: {
+  "guardian.tp": {
     in: "body",
     isMobilePhone: true,
-    optional: true,
-  },
-  moh_tp: {
-    in: "body",
-    isMobilePhone: true,
-    optional: true,
-  },
-  living_with: {
-    in: "body",
-    isIn: {
-      options: [["alone", "spouse", "sibilings", "children", "relations"]],
-      errorMessage: "Invalid option for living with",
-    },
-  },
-  lw_name: {
-    in: "body",
-    optional: true,
-    isString: true,
+    errorMessage: "Valid mobile number is required",
     trim: true,
-  },
-  lw_address: {
-    in: "body",
     optional: true,
-    isString: true,
-    trim: true,
-  },
-  lw_tp: {
-    in: "body",
-    optional: true,
-    isMobilePhone: true,
-  },
-  edu_status: {
-    in: "body",
-    // TODO: validate possible inputs here
-    isArray: {
-      options: {
-        min: 0,
-        max: 3,
-      },
-    },
-    optional: true,
-  },
-  has_job: {
-    in: "body",
-    isIn: {
-      options: [["true", "false"]],
-      errorMessage: "Job status must be true or false",
-    },
-    toBoolean: true,
-  },
-  job: {
-    in: "body",
-    isString: true,
-    optional: true,
-    trim: true,
-  },
-  gov_facilities: {
-    in: "body",
-    isString: true,
-    optional: true,
-    trim: true,
-  },
-  diseases: {
-    in: "body",
-    isString: true,
-    optional: true,
-    trim: true,
-  },
-  treatment_his: {
-    in: "body",
-    // TODO: validate possible inputs here
-    isArray: {
-      options: {
-        min: 0,
-        max: 3,
-      },
-    },
-    optional: true,
-  },
-  last_clinic_visit: {
-    in: "body",
-    isString: true,
-    matches: {
-      options: [/\d{4}-\d{2}-\d{2}/], // regex to yyyy-mm-dd
-      errorMessage: "Last clinic date should be yyyy-mm-dd format",
-    },
-    optional: true,
-  },
-  informed_over_phone: {
-    in: "body",
-    isString: true,
-    matches: {
-      options: [/\d{4}-\d{2}-\d{2}/], // regex to yyyy-mm-dd
-      errorMessage: "Informed over phone date should be yyyy-mm-dd format",
-    },
-    optional: true,
-  },
-  home_visit: {
-    in: "body",
-    isString: true,
-    matches: {
-      options: [/\d{4}-\d{2}-\d{2}/], // regex to yyyy-mm-dd
-      errorMessage: "Home visit date should be yyyy-mm-dd format",
-    },
-    optional: true,
-  },
-  next_clinic_date: {
-    in: "body",
-    isString: true,
-    matches: {
-      options: [/\d{4}-\d{2}-\d{2}/], // regex to yyyy-mm-dd
-      errorMessage: "Next clinic date should be yyyy-mm-dd format",
-    },
-    optional: true,
-  },
-  hospital_admission: {
-    in: "body",
-    isString: true,
   },
 };
 

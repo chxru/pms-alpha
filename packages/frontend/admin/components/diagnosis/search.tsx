@@ -1,10 +1,3 @@
-// @ts-nocheck
-/*
-  React-table types are a total mess
-  Until they fixes types, let the ts-nocheck be there for the sake
-  of person who edit this file
-*/
-
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
   Container,
@@ -36,17 +29,21 @@ import {
   FiChevronsRight,
 } from "react-icons/fi";
 import { Column, usePagination, useTable } from "react-table";
+
 import { ApiRequest } from "@pms-alpha/common/util/request";
 import AuthContext from "@pms-alpha/common/contexts/auth-context";
 
-interface ColumnStruct {
-  name: string;
-  category: string;
-}
+import { API } from "@pms-alpha/types";
+
+type ColumnStruct = API.Diagnosis.Data;
 
 const SearchDiagnosis: React.FC = () => {
+  const auth = useContext(AuthContext);
+  const [data, setdata] = useState<API.Diagnosis.Data[]>([]);
+
   const columns = useMemo<Column<ColumnStruct>[]>(
     () => [
+      { Header: "id", accessor: "id" },
       { Header: "Name", accessor: "name" },
       { Header: "Category", accessor: "category" },
       {
@@ -65,8 +62,6 @@ const SearchDiagnosis: React.FC = () => {
     []
   );
 
-  const auth = useContext(AuthContext);
-  const [data, setdata] = useState<{ name: string; category: string }[]>([]);
   useEffect(() => {
     (async () => {
       try {
@@ -74,12 +69,7 @@ const SearchDiagnosis: React.FC = () => {
           success,
           data: results,
           err,
-        } = await ApiRequest<
-          {
-            name: string;
-            category: string;
-          }[]
-        >({
+        } = await ApiRequest<API.Diagnosis.Data[]>({
           path: "diagnosis",
           method: "GET",
           token: auth.token,
@@ -210,7 +200,7 @@ const SearchDiagnosis: React.FC = () => {
             min={1}
             max={pageOptions.length}
             onChange={(value) => {
-              const page = value ? value - 1 : 0;
+              const page = value ? parseInt(value) - 1 : 0;
               gotoPage(page);
             }}
             defaultValue={pageIndex + 1}

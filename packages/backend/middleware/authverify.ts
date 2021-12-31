@@ -17,6 +17,13 @@ const verifyToken = (
 
   const token = req.headers["authorization"];
 
+  // TODO: Remove this?
+  if (process.env.PRODUCTION == "false" && token === "POSTMAN") {
+    logger("POSTMAN Request", "info");
+    next();
+    return;
+  }
+
   if (!token) {
     logger(`Token is missing for request ${req.path}`);
     return res.sendStatus(403);

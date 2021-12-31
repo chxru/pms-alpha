@@ -1,3 +1,5 @@
+import { PGDB } from ".";
+
 export namespace API {
   /**
    * Default response format used in API
@@ -17,12 +19,8 @@ export namespace API {
      * @export
      * @interface UserData
      */
-    export interface UserData {
-      id: number;
-      fname: string;
-      lname: string;
-      username: string;
-    }
+    export interface UserData
+      extends Pick<PGDB.User.Data, "id" | "fname" | "lname" | "username"> {}
 
     /**
      * Return type when the backend successfully executed the
@@ -39,9 +37,15 @@ export namespace API {
     }
   }
 
-  export interface DiagnosisData {
-    category: string;
-    name: string;
+  export namespace Diagnosis {
+    export interface Data extends Omit<PGDB.Diagnosis.Data, "category"> {
+      category: string;
+    }
+
+    export interface NewDiagnosisForm {
+      category: number;
+      name: string;
+    }
   }
 
   export namespace Patient {
@@ -49,37 +53,13 @@ export namespace API {
      * Basic data gathered from the patient
      *
      * @export
-     * @interface BasicDetails
+     * @interface RegistrationForm
      */
-    export interface BasicDetails {
-      [key: string]: any;
-      firstname: string;
-      lastname: string;
-      dob?: Date;
-      gender: "male" | "female" | "other";
-      marital: "married" | "unmarried";
-      address: string;
-      grama_niladhari?: string;
-      divisional_sector?: string;
-      contact_number: number;
-      phi_tp?: number;
-      moh_tp?: number;
-      living_with: string;
-      lw_name?: string;
-      lw_address?: string;
-      lw_tp?: number;
-      edu_status?: string[];
-      has_job: boolean;
-      job?: string;
-      gov_facilities?: string;
-      diseases: string;
-      treatment_his?: string[];
-      last_clinic_visit?: Date;
-      informed_over_phone?: Date;
-      home_visit?: Date;
-      next_clinic_date?: Date;
-      hospital_admission: string;
-    }
+    export interface RegistrationForm
+      extends Omit<
+        PGDB.Patient.BasicDetails,
+        "current_bedticket" | "bedtickets"
+      > {}
 
     /**
      * Format what search request outputs
@@ -98,6 +78,23 @@ export namespace API {
       records: {
         type: string;
       }[];
+    }
+  }
+
+  export namespace Bedtickets {
+    export interface Attachment {
+      original_name: string;
+      current_name: string;
+      size: number;
+      mimetype: string;
+      created_at: Date;
+    }
+    export interface Entries
+      extends Omit<
+        PGDB.Bedtickets.Entries,
+        "entry_id" | "ticket_id" | "attachments"
+      > {
+      attachments?: Attachment[];
     }
   }
 }

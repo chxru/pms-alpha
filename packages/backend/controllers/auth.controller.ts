@@ -7,7 +7,7 @@ import { LoadDBKey } from "util/crypto";
 
 import { logger } from "@pms-alpha/shared";
 
-import type { PGDB } from "@pms-alpha/types";
+import type { API, PGDB } from "@pms-alpha/types";
 
 interface RegisterData {
   email: string;
@@ -38,18 +38,12 @@ const HandleRegister = async (
 
       // insert data into users.data
       const q1 = await trx.query(
-        "INSERT INTO users.data (email, fname, lname, username) VALUES ($1, $2, $3, $4) RETURNING id",
-        [data.email, data.fname, data.lname, data.username]
+        "INSERT INTO users.data (email, fname, lname, username, pwd) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+        [data.email, data.fname, data.lname, data.username, hashedPwd]
       );
 
       // update uid
       uid = q1.rows[0].id;
-
-      // insert data into users.auth
-      await trx.query(
-        "INSERT INTO users.auth (id, username, pwd) VALUES ($1, $2, $3)",
-        [uid, data.username, hashedPwd]
-      );
 
       // create encryption keys if its the very first user
       await SaveDBKey(data.password);
@@ -98,55 +92,48 @@ const HandleRegister = async (
  *
  * @param {string} username
  * @param {string} password
- * @return {*}  {(Promise<{
- *   user: Pick<PGDB.User.Data, "id" | "fname" | "lname" | "username">;
+ * @return {*}  {Promise<{
+ *   user: API.Auth.UserData;
  *   access_token: string;
  *   refresh_token: string;
- * }>)}
+ * }>}
  */
 const HandleLogin = async (
   username: string,
   password: string
 ): Promise<{
-  user: Pick<PGDB.User.Data, "id" | "fname" | "lname" | "username">;
+  user: API.Auth.UserData;
   access_token: string;
   refresh_token: string;
 }> => {
   // get user auth data
-  const userAuthQuery = await db.query(
-    "SELECT id, pwd FROM users.auth WHERE username=$1",
+  const userQuery = await db.query(
+    "SELECT id, fname, lname, username, pwd FROM users.data WHERE username=$1",
     [username]
   );
 
-  if (userAuthQuery.rowCount === 0) {
-    logger(`Username ${username} not found`, "info");
-    throw new Error("Username not correct");
-  }
-
-  const userAuthData: Pick<PGDB.User.Auth, "id" | "pwd"> =
-    userAuthQuery.rows[0];
-
-  const res = await ComparePwd(password, userAuthData.pwd);
-  if (!res) {
-    throw new Error("Wrong username/password");
-  }
-
-  // get user data
-  const userQuery = await db.query(
-    "SELECT id, fname, lname, username FROM users.data WHERE id=$1",
-    [userAuthData.id]
-  );
   if (userQuery.rowCount === 0) {
-    logger(
-      `Could not fetch row for ${username}, id=${userAuthData.id}`,
-      "error"
-    );
-    throw new Error("User data is missing in database, contact admin");
+    logger(`Username ${username} not found`, "info");
+    throw new Error("Username or password not correct");
   }
 
-  // grab user data from the query result
-  const user: Pick<PGDB.User.Data, "id" | "fname" | "lname" | "username"> =
-    userQuery.rows[0];
+  const user: Pick<
+    PGDB.User.Data,
+    "id" | "fname" | "lname" | "username" | "pwd"
+  > = userQuery.rows[0];
+
+  const res = await ComparePwd(password, user.pwd);
+  if (!res) {
+    throw new Error("Username or password not correct");
+  }
+
+  // create new user object
+  const final_user: API.Auth.UserData = {
+    id: user.id,
+    fname: user.fname,
+    lname: user.lname,
+    username: user.username,
+  };
 
   const access_token = await GenerateJWT(user.id, "access");
   const refresh_token = await GenerateJWT(user.id, "refresh");
@@ -160,7 +147,7 @@ const HandleLogin = async (
   );
 
   logger(`User ${user.username} logged in`, "success");
-  return { user, access_token, refresh_token };
+  return { user: final_user, access_token, refresh_token };
 };
 
 /**

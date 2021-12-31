@@ -1,19 +1,116 @@
+import { logger } from "@pms-alpha/shared";
 import { API } from "@pms-alpha/types";
 import db from "database/pg";
 
-const FetchAllDiagnosis = async (): Promise<API.DiagnosisData[]> => {
-  const fetchQuery = await db.query<API.DiagnosisData>(
-    "SELECT name, category FROM pms.diagnosis"
+import { ParseDiagnosisCSV } from "util/csv";
+
+const FetchAllDiagnosis = async (): Promise<API.Diagnosis.Data[]> => {
+  // fetch data
+  const q = await db.query<API.Diagnosis.Data>(
+    "SELECT diagnosis.data.id, diagnosis.data.name, diagnosis.categories.name as category FROM diagnosis.data INNER JOIN diagnosis.categories ON diagnosis.data.category = diagnosis.categories.id"
   );
 
-  return fetchQuery.rows;
+  return q.rows;
 };
 
-const InsertDiagnosis = async (data: API.DiagnosisData): Promise<void> => {
-  await db.query("INSERT INTO pms.diagnosis (name, category) VALUES ($1, $2)", [
-    data.name,
-    data.category,
-  ]);
+const InsertDiagnosis = async (
+  name: string,
+  category: number
+): Promise<void> => {
+  // await db.query(
+  //   "INSERT INTO diagnosis.data (category, name) VALUES ($1, $2)",
+  //   [category, name]
+  // );
+
+  const trx = await db.connect();
+  try {
+    await trx.query("BEGIN");
+
+    // insert category
+    trx.query(
+      "INSERT INTO diagnosis.categories (name) VALUES ($1) ON CONFLICT (name) DO NOTHING",
+      [category]
+    );
+
+    // insert data
+    trx.query(
+      "INSERT INTO diagnosis.data (name, category) VALUES ($1, (SELECT id FROM diagnosis.categories WHERE name=$2)) ON CONFLICT ON CONSTRAINT dd_cn_unique DO NOTHING",
+      [name, category]
+    );
+
+    // commiting
+    await trx.query("COMMIT");
+  } catch (error) {
+    await trx.query("ROLLBACK");
+
+    logger("Error occured while InsertDiagnosis transaction", "error");
+    throw error;
+  } finally {
+    trx.release();
+  }
 };
 
-export { FetchAllDiagnosis, InsertDiagnosis };
+const ImportDiagnosis = async (filename: string): Promise<void> => {
+  const { categories, records } = await ParseDiagnosisCSV(filename);
+
+  /*
+    Inserting diagnosis values seems bit tricky.
+    Postgres support bulk insert but node-postgres does not support it.
+    And I don't want to implement single row insertions because thats a wastage (imo).
+    Therefore, I'll use a helper function to do multiple inserts in a single query
+    https://github.com/brianc/node-postgres/issues/957#issuecomment-426852393
+
+    TODO:  research pg-promise
+  */
+
+  // expand(3) returns "($1), ($2), ($3)"
+  const expandCats = (rows: number) => {
+    let index = 1;
+    return Array(rows)
+      .fill(0)
+      .map(
+        () =>
+          `(${Array(1)
+            .fill(0)
+            .map(() => `$${index++}`)
+            .join(", ")})`
+      )
+      .join(", ");
+  };
+
+  // inserting categories
+  db.query(
+    `INSERT INTO diagnosis.categories (name) VALUES ${expandCats(
+      categories.size
+    )} ON CONFLICT (name) DO NOTHING`,
+    [...categories]
+  );
+
+  // expand(1) returns "($1, (SELECT id FROM diagnosis.categories WHERE name=$2) )"
+  const expandData = (rows: number) => {
+    let index = 1;
+    return Array(rows)
+      .fill(0)
+      .map(
+        () =>
+          `(${Array(2)
+            .fill(0)
+            .map(() =>
+              index % 2
+                ? `$${index++}`
+                : `(SELECT id FROM diagnosis.categories WHERE name=$${index++})`
+            )
+            .join(", ")})`
+      )
+      .join(", ");
+  };
+
+  db.query(
+    `INSERT INTO diagnosis.data (name, category) VALUES ${expandData(
+      records.length
+    )} ON CONFLICT ON CONSTRAINT dd_cn_unique DO NOTHING`,
+    [...records.flat()]
+  );
+};
+
+export { FetchAllDiagnosis, InsertDiagnosis, ImportDiagnosis };

@@ -41,7 +41,6 @@ const ProfileView: React.FC = ({}) => {
   );
 
   const [patient, setpatientData] = useState<PGDB.Patient.BasicDetails>();
-  const [age, setage] = useState<string>();
   const [creatingBD, setcreatingBD] = useState<boolean>(false);
 
   /**
@@ -50,12 +49,29 @@ const ProfileView: React.FC = ({}) => {
    * @param {string} string
    * @return {*}  {string}
    */
-  const FormatText = (string: string): string =>
-    string
-      .split(" ")
-      .map((m) => m[0].toUpperCase() + m.substr(1))
-      .join(" ");
+  const CapitalizeFL = (string?: string) =>
+    string ? string.charAt(0).toUpperCase() + string.slice(1) : string;
 
+  /**
+   * Calculate age
+   *
+   * @param {string} dob_string
+   * @return {*}  {number}
+   */
+  const AgeCal = (dob_string: string): number => {
+    const dob = new Date(dob_string);
+    const today = new Date();
+
+    const diff = Math.floor(today.getTime() - dob.getTime());
+    const years = Math.floor(diff / (1000 * 3600 * 24 * 365.25));
+    return years;
+  };
+
+  /**
+   * Fetch patient data from backend
+   *
+   * @return {*}
+   */
   const FetchPatientInfo = async () => {
     let { success, data, err } = await ApiRequest<PGDB.Patient.BasicDetails>({
       path: `patients/${id}/basic`,
@@ -84,34 +100,6 @@ const ProfileView: React.FC = ({}) => {
       // redirect back
       router.back();
       return;
-    }
-
-    // format the input
-    for (const key in data) {
-      if (Object.prototype.hasOwnProperty.call(data, key)) {
-        const element = data[key];
-        if (typeof element === "string") {
-          data[key] = FormatText(element);
-        }
-
-        if (key === "dob") {
-          if (!element) return;
-
-          // calculate age
-          // dob is saved in yyyy-mm-dd
-          const t = element
-            .toString()
-            .split("-")
-            .map((e: string) => parseInt(e));
-          const dob = new Date(t[0], t[1], t[2]);
-          const today = new Date();
-
-          const diff = Math.floor(today.getTime() - dob.getTime());
-          const years = Math.floor(diff / (1000 * 3600 * 24 * 365.25));
-
-          setage(`${years} years`);
-        }
-      }
     }
 
     setpatientData(data);
@@ -160,7 +148,7 @@ const ProfileView: React.FC = ({}) => {
     <>
       <Head>
         <title>
-          {patient?.firstname} {patient?.lastname}
+          {CapitalizeFL(patient?.fname)} {CapitalizeFL(patient?.lname)}
         </title>
         <meta name="description" content="Profile View" />
       </Head>
@@ -177,255 +165,102 @@ const ProfileView: React.FC = ({}) => {
             bg="white"
           >
             <Heading my="20px" size="md" fontWeight="semibold">
-              {patient?.firstname} {patient?.lastname}
+              {CapitalizeFL(patient?.fname)} {CapitalizeFL(patient?.lname)}
             </Heading>
 
-            <Accordion allowToggle allowMultiple>
-              <AccordionItem>
-                <AccordionButton>
-                  <Text>Personal details</Text>
-                  <AccordionIcon />
-                </AccordionButton>
+            <Heading
+              size="sm"
+              mx={3}
+              fontWeight="semibold"
+              my={2}
+              textColor="gray.700"
+            >
+              Basic Details
+            </Heading>
 
-                <AccordionPanel>
-                  {/* Basic Details */}
-                  <Heading
-                    size="sm"
-                    mx={3}
-                    fontWeight="semibold"
-                    my={2}
-                    textColor="gray.700"
-                  >
-                    Basic Details
-                  </Heading>
+            <Divider />
 
-                  <Divider />
+            <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} pb={4}>
+              {/* Gender */}
+              <Flex direction="column" ml={6} mt={4}>
+                <Text>Gender</Text>
+                <Text fontWeight="semibold" mb={2}>
+                  {CapitalizeFL(patient?.gender)}
+                </Text>
+              </Flex>
 
-                  <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} pb={4}>
-                    {/* Gender */}
-                    <Flex direction="column" ml={6} mt={4}>
-                      <Text>Gender</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.gender}
-                      </Text>
-                    </Flex>
+              {/* Birthday */}
+              <Flex direction="column" ml={6} mt={4}>
+                <Text>Birthday</Text>
+                <Text fontWeight="semibold" mb={2}>
+                  {patient?.dob}
+                </Text>
+              </Flex>
 
-                    {/* Birthday */}
-                    <Flex direction="column" ml={6} mt={4}>
-                      <Text>Birthday</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.dob}
-                      </Text>
-                    </Flex>
+              {/* Age */}
+              <Flex direction="column" ml={6} mt={4}>
+                <Text>Age</Text>
+                <Text fontWeight="semibold" mb={2}>
+                  {patient?.dob ? AgeCal(patient.dob) : "N/A"}
+                </Text>
+              </Flex>
+            </SimpleGrid>
 
-                    {/* Marital Status*/}
-                    <Flex direction="column" ml={6} mt={4} pr={2}>
-                      <Text>Marital Status</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.marital}
-                      </Text>
-                    </Flex>
+            {/* Guardian Details */}
+            <Heading
+              size="sm"
+              mx={3}
+              fontWeight="semibold"
+              my={2}
+              textColor="gray.700"
+            >
+              Guardian Details
+            </Heading>
+            <Divider />
 
-                    {/* Age */}
-                    <Flex direction="column" ml={6} mt={4}>
-                      <Text>Age</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {age}
-                      </Text>
-                    </Flex>
-                  </SimpleGrid>
+            <SimpleGrid columns={{ base: 2, md: 3, lg: 3 }} pb={4}>
+              <Flex direction="column" mx={6} mt={4}>
+                <Text>First Name</Text>
+                <Text fontWeight="semibold" mb={2}>
+                  {CapitalizeFL(patient?.guardian.fname)}
+                </Text>
+              </Flex>
 
-                  {/* Contact Details */}
-                  <Heading
-                    size="sm"
-                    mx={3}
-                    fontWeight="semibold"
-                    my={2}
-                    textColor="gray.700"
-                  >
-                    Contact Details
-                  </Heading>
-                  <Divider />
+              <Flex direction="column" mx={6} mt={4}>
+                <Text>Last Name</Text>
+                <Text fontWeight="semibold" mb={2}>
+                  {CapitalizeFL(patient?.guardian?.lname)}
+                </Text>
+              </Flex>
 
-                  <SimpleGrid columns={{ base: 2, md: 3, lg: 3 }} pb={4}>
-                    {/* Address */}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>Address</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.address}
-                      </Text>
-                    </Flex>
+              <Flex direction="column" mx={6} mt={4}>
+                <Text>NIC</Text>
+                <Text fontWeight="semibold" mb={2}>
+                  {patient?.guardian.nic}
+                </Text>
+              </Flex>
 
-                    {/* Grama Niladari */}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>GN Sector</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.grama_niladhari}
-                      </Text>
-                    </Flex>
+              <Flex direction="column" mx={6} mt={4}>
+                <Text>Address</Text>
+                <Text fontWeight="semibold" mb={2}>
+                  {CapitalizeFL(patient?.guardian.address)}
+                </Text>
+              </Flex>
 
-                    {/* DS Sector */}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>DS Sector</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.divisional_sector}
-                      </Text>
-                    </Flex>
+              <Flex direction="column" mx={6} mt={4}>
+                <Text>Mobile Number</Text>
+                <Text fontWeight="semibold" mb={2}>
+                  {patient?.guardian.mobile}
+                </Text>
+              </Flex>
 
-                    {/* Contact Details */}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>Mobile</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.contact_number}
-                      </Text>
-                    </Flex>
-
-                    {/* PHI */}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>PHI</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.phi_tp}
-                      </Text>
-                    </Flex>
-
-                    {/* MOH */}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>MOH</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.moh_tp}
-                      </Text>
-                    </Flex>
-                  </SimpleGrid>
-
-                  {/* Living With */}
-                  <Heading
-                    size="sm"
-                    mx={3}
-                    fontWeight="semibold"
-                    my={2}
-                    textColor="gray.700"
-                  >
-                    Relatives Details
-                    <Divider w="80%" />
-                  </Heading>
-                  <SimpleGrid columns={{ base: 2, md: 3, lg: 3 }} pb={4}>
-                    {/* Living With */}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>Living With</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.living_with}
-                      </Text>
-                    </Flex>
-
-                    {/* Other Person Name */}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>Name</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.lw_name}
-                      </Text>
-                    </Flex>
-
-                    {/* Other Person Address */}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>Address</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.lw_address}
-                      </Text>
-                    </Flex>
-
-                    {/* Other Person Mobile */}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>Mobile</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.lw_tp}
-                      </Text>
-                    </Flex>
-                  </SimpleGrid>
-
-                  {/* Other Details */}
-                  <Heading
-                    size="sm"
-                    mx={3}
-                    fontWeight="semibold"
-                    my={2}
-                    textColor="gray.700"
-                  >
-                    Other Details
-                  </Heading>
-                  <Divider />
-
-                  <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} pb={4}>
-                    {/* Edu Status */}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>Education</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.edu_status && patient?.edu_status.join(" ")}
-                      </Text>
-                    </Flex>
-
-                    {/* Job*/}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>Job</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.has_job ? patient.job : "Unemployeed"}
-                      </Text>
-                    </Flex>
-
-                    {/* Sahanadara */}
-                    <Flex direction="column" mx={6} mt={4}>
-                      <Text>GOV. Sahanadara</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.gov_facilities}
-                      </Text>
-                    </Flex>
-                  </SimpleGrid>
-                </AccordionPanel>
-              </AccordionItem>
-
-              <AccordionItem>
-                <AccordionButton>
-                  <Text>Medical Details</Text>
-                  <AccordionIcon />
-                </AccordionButton>
-
-                <AccordionPanel>
-                  <SimpleGrid columns={{ base: 2, md: 3, lg: 3 }}>
-                    {/* Disease */}
-                    <Flex direction="column" ml={6} mt={4}>
-                      <Text>Disease</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.diseases}
-                      </Text>
-                    </Flex>
-
-                    {/* Treatment */}
-                    <Flex direction="column" ml={6} mt={4}>
-                      <Text>Treatment History</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.treatment_his &&
-                          patient?.treatment_his.join(" ")}
-                      </Text>
-                    </Flex>
-
-                    {/* Last Clinc Visit*/}
-                    <Flex direction="column" ml={6} mt={4}>
-                      <Text>Last Clinc</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.last_clinic_visit}
-                      </Text>
-                    </Flex>
-
-                    {/* Date of informed Over phone */}
-                    <Flex direction="column" ml={6} mt={4}>
-                      <Text>Informed over Phone</Text>
-                      <Text fontWeight="semibold" mb={2}>
-                        {patient?.informed_over_phone}
-                      </Text>
-                    </Flex>
-                  </SimpleGrid>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
+              <Flex direction="column" mx={6} mt={4}>
+                <Text>Land Number</Text>
+                <Text fontWeight="semibold" mb={2}>
+                  {patient?.guardian?.tp}
+                </Text>
+              </Flex>
+            </SimpleGrid>
           </Container>
 
           <Container
