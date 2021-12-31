@@ -42,7 +42,7 @@ const HandleNewEntry = async (
 
     // insert entry to bedtickets.entries
     await trx.query<{ entry_id: number }>(
-      "INSERT INTO bedtickets.entries (category, note, diagnosis, attachments, ticket_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING entry_id",
+      "INSERT INTO bedtickets.entries (category, note, diagnosis, attachments, ticket_id) VALUES ($1, $2, $3, $4, $5) RETURNING entry_id",
       [data.category, data.note, data.diagnosis, files_string, bid]
     );
 
