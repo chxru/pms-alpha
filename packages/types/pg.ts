@@ -88,7 +88,6 @@ export namespace PGDB {
     export interface Entries {
       entry_id: number;
       category: "diagnosis" | "report" | "other";
-      topic?: string;
       diagnosis?: number;
       note?: string;
       attachments: string;

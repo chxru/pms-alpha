@@ -147,7 +147,6 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
         <Thead>
           <Tr>
             <Th></Th>
-            <Th>Type</Th>
             <Th>Notes</Th>
             <Th>Timestamp</Th>
             <Th></Th>
@@ -160,9 +159,12 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
             return (
               <Tr key={`${bid}-${i}`}>
                 <Td>
-                  <Badge>{e.category?.toUpperCase()}</Badge>
+                  <Badge>
+                    {e.category == "diagnosis"
+                      ? e.diagnosis
+                      : e.category?.toUpperCase()}
+                  </Badge>
                 </Td>
-                <Td>{e.topic || "N/A"}</Td>
                 <Td>{e.note || " "}</Td>
                 <Td>
                   {ConvertTimestamp(e.created_at).toLocaleDateString([], {

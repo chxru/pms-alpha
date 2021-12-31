@@ -31,7 +31,9 @@ const AttachmentDrawer: React.FC<DrawerProps> = ({ isOpen, onClose, data }) => {
 
         <DrawerBody>
           <Heading>
-            {data.topic} <Badge>{data.category}</Badge>
+            <Badge>
+              {data.category == "diagnosis" ? data.diagnosis : data.category}
+            </Badge>
           </Heading>
           <Text size="md">
             {ConvertTimestamp(data.created_at).toLocaleDateString([], {

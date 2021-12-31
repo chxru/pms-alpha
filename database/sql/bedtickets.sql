@@ -12,7 +12,6 @@ create table if not exists bedtickets.tickets(
 create table if not exists bedtickets.entries(
   entry_id integer primary key generated always as identity,
   category text not null,
-  topic text,
   diagnosis integer references diagnosis.data(id),
   note text,
   attachments text,

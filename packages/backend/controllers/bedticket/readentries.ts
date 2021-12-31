@@ -16,7 +16,7 @@ const HandleReadEntries = async (
   }
 
   const query = await db.query<QueryResult>(
-    "SELECT category, topic, note, diagnosis, attachments, created_at FROM bedtickets.entries WHERE ticket_id=$1",
+    "SELECT category, note, diagnosis, attachments, created_at FROM bedtickets.entries WHERE ticket_id=$1",
     [bid]
   );
 

@@ -128,9 +128,9 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
         return;
       }
       // TODO: unnecessary loop?
-      obj.topic =
-        diagnosisData?.find((d) => d.name == selectedDiagnose)?.id.toString() ||
-        obj.topic;
+      obj.diagnosis = diagnosisData?.find(
+        (d) => d.name == selectedDiagnose
+      )?.id;
     }
 
     const formData = new FormData();
@@ -141,7 +141,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
 
     formData.append("category", obj.category);
     if (obj.note) formData.append("note", obj.note);
-    if (obj.topic) formData.append("topic", obj.topic);
+    if (obj.diagnosis) formData.append("diagnosis", obj.diagnosis.toString());
 
     const { success, err } = await ApiRequest({
       path: `bedtickets/${bid}`,
