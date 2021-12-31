@@ -20,3 +20,15 @@ create table if not exists bedtickets.entries(
 );
 
 create index if not exists entries_idx_diagnosis on bedtickets.entries (diagnosis);
+
+CREATE VIEW bedtickets.entries_view AS
+SELECT
+  a.category,
+  name AS diagnosis,
+  note,
+  ticket_id,
+  created_at,
+  attachments
+FROM
+  bedtickets.entries a
+  LEFT JOIN diagnosis.data b ON diagnosis = id;
