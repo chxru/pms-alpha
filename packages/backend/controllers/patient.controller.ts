@@ -25,7 +25,7 @@ const HandlePatientBasicInfo = async (
     return { err: "No patient found" };
   }
 
-  const encrypted: PGDB.Patient.Encrypted = query.rows[0];
+  const encrypted: PGDB.Patient.Info = query.rows[0];
   const data = DecryptData<PGDB.Patient.BasicDetails>(encrypted.data);
   return { data };
 };

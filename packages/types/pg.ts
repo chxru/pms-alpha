@@ -1,5 +1,3 @@
-import type { API } from "./api";
-
 export namespace PGDB {
   export namespace User {
     export interface Data {
@@ -33,9 +31,15 @@ export namespace PGDB {
       uuid: string;
       full_name: string;
       data: string;
-      created_at: Date;
+      created_at: string;
     }
 
+    /**
+     * Data encrypted inside the Patient.Info.Data
+     *
+     * @export
+     * @interface BasicDetails
+     */
     export interface BasicDetails {
       fname: string;
       lname?: string;
@@ -50,32 +54,12 @@ export namespace PGDB {
         tp?: string;
         address?: string;
       };
-      current_bedticket?: number;
+      current_bedticket?: string;
       bedtickets: {
         admission_date: number;
         discharge_date?: number;
-        id: number;
+        id: string;
       }[];
-    }
-
-    export interface BedTicketEntry {
-      id: number;
-      category: "diagnosis" | "report" | "other";
-      type: string;
-      note: string;
-      attachments: {
-        originalName: string;
-        fileName: string;
-        size: number;
-        mimetype: string;
-      }[];
-      created_at: Date;
-    }
-
-    export interface Encrypted {
-      id: number;
-      data: string;
-      created_at: Date;
     }
   }
 
@@ -89,6 +73,27 @@ export namespace PGDB {
       id: number;
       category: number;
       name: string;
+    }
+  }
+
+  export namespace Bedtickets {
+    export interface Tickets {
+      ticket_id: string;
+      created_at: string;
+      discharged_at?: string;
+      created_by: number;
+      discharged_by?: number;
+    }
+
+    export interface Entries {
+      entry_id: number;
+      category: "diagnosis" | "report" | "other";
+      topic?: string;
+      diagnosis?: number;
+      note?: string;
+      attachments: string;
+      ticket_id: string;
+      created_at: string;
     }
   }
 }

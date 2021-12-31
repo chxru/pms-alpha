@@ -2,19 +2,20 @@ import db from "database/pg";
 import { DecryptData, EncryptData } from "util/crypto";
 
 import { logger } from "@pms-alpha/shared";
+import { CreateBedTicketID } from "util/nanoid";
 
-import type { PGDB } from "@pms-alpha/types";
+import type { API, PGDB } from "@pms-alpha/types";
 
 /**
  * Create new bed ticket
  *
- * @param {string} pid
- * @return {*}  {Promise<{ err?: string }>}
+ * @param {string} pid patient id
+ * @return {*}  {Promise<void>}
  */
-const HandleNewBedTicket = async (pid: string): Promise<{ err?: string }> => {
+const HandleNewBedTicket = async (pid: string): Promise<void> => {
   const id = parseInt(pid);
   if (isNaN(id)) {
-    return { err: "ID is not a number" };
+    throw new Error("PID is not a number");
   }
 
   const trx = await db.connect();
@@ -27,23 +28,26 @@ const HandleNewBedTicket = async (pid: string): Promise<{ err?: string }> => {
     ]);
 
     if (q1.rowCount === 0) {
-      return { err: "User ID not found" };
+      throw new Error("PID not found");
     }
 
     // decrypting data
     const decrypted = DecryptData<PGDB.Patient.BasicDetails>(q1.rows[0].data);
 
+    // prevent creating new bed tickets when one is currently active
     if (decrypted.current_bedticket) {
-      return { err: "User already has an active bed ticket" };
+      throw new Error("User already has an active bed ticket");
     }
 
-    // save bed ticket in database
-    const q2 = await trx.query(
-      "INSERT INTO patients.bedtickets DEFAULT VALUES RETURNING id "
-    );
+    // create new bedticket id
+    const bid = await CreateBedTicketID();
 
-    // storing bed ticket
-    const bid: number = q2.rows[0].id;
+    // create new bed ticket in database
+    // TODO: Insert user id for this query
+    await trx.query(
+      "INSERT INTO bedtickets.tickets (ticket_id, created_by) VALUES ($1, $2)",
+      [bid, 1]
+    );
 
     // updating patient document
     decrypted.current_bedticket = bid;
@@ -75,76 +79,50 @@ const HandleNewBedTicket = async (pid: string): Promise<{ err?: string }> => {
   } finally {
     trx.release();
   }
-  return { err: undefined };
 };
 
 /**
  * Add new entry to bed ticket table
  *
- * @param {string} bid
- * @param {PGDB.Patient.BedTicketEntry} data
- * @return {*}  {Promise<{ err?: string }>}
+ * @param {string} bid bed ticket id
+ * @param {PGDB.Bedtickets.Entries} data
+ * @return {*}  {Promise<void>}
  */
 const HandleNewEntry = async (
   bid: string,
-  data: PGDB.Patient.BedTicketEntry,
+  data: PGDB.Bedtickets.Entries,
   files:
     | Express.Multer.File[]
     | {
         [fieldname: string]: Express.Multer.File[];
       }
     | undefined
-): Promise<{ err?: string }> => {
+): Promise<void> => {
+  // start transaction
   const trx = await db.connect();
   try {
     await trx.query("BEGIN");
 
-    const q1 = await trx.query(
-      "SELECT records FROM patients.bedtickets WHERE id=$1",
-      [bid]
-    );
-
-    if (q1.rowCount === 0) {
-      return { err: "Bed Ticket ID not found" };
-    }
-
-    const records = q1.rows[0].records;
-
-    // decrypting data
-    const decrypted =
-      records === null
-        ? [] // in fresh bed tickets records is null
-        : DecryptData<PGDB.Patient.BedTicketEntry[]>(records);
-
-    // adding attachment data
-    data.attachments = [];
-    // only supports "array of files"
+    // strigify files
+    const temp_files: API.Bedtickets.Attachment[] = [];
     if (Array.isArray(files)) {
-      files.forEach((f) => {
-        data.attachments.push({
-          fileName: f.filename,
-          originalName: f.originalname,
-          size: f.size,
-          mimetype: f.mimetype,
+      for (const file of files) {
+        temp_files.push({
+          original_name: file.originalname,
+          current_name: file.filename,
+          size: file.size,
+          mimetype: file.mimetype,
+          created_at: new Date(),
         });
-      });
+      }
     }
+    const files_string = JSON.stringify(temp_files);
 
-    // insert new entry to saved array
-    decrypted.unshift({
-      ...data,
-      created_at: new Date(),
-      id: decrypted.length + 1,
-    });
-
-    // encrypting again
-    const encrypted = EncryptData(JSON.stringify(decrypted));
-
-    // updating database
-    await trx.query("UPDATE patients.bedtickets SET records=$1 WHERE id=$2", [
-      encrypted,
-      bid,
-    ]);
+    // insert entry to bedtickets.entries
+    await trx.query<{ entry_id: number }>(
+      "INSERT INTO bedtickets.entries (category, topic, note, diagnosis, attachments, ticket_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING entry_id",
+      [data.category, data.topic, data.note, data.diagnosis, files_string, bid]
+    );
 
     // commiting
     await trx.query("COMMIT");
@@ -156,8 +134,6 @@ const HandleNewEntry = async (
   } finally {
     trx.release();
   }
-
-  return { err: undefined };
 };
 
 /**
@@ -168,32 +144,25 @@ const HandleNewEntry = async (
  */
 const HandleReadEntries = async (
   bid: string
-): Promise<{ data?: PGDB.Patient.BedTicketEntry[]; err?: string }> => {
-  try {
-    const query = await db.query(
-      "SELECT records FROM patients.bedtickets WHERE id=$1",
-      [bid]
-    );
-
-    if (query.rowCount === 0) {
-      return { err: "Bed Ticket ID not found" };
-    }
-
-    const records = query.rows[0].records;
-
-    // decrypting data
-    const decrypted =
-      records === null
-        ? [] // in fresh bed tickets records is null
-        : DecryptData<PGDB.Patient.BedTicketEntry[]>(records);
-
-    return { data: decrypted };
-  } catch (error) {
-    logger("Error occured while HandleNewEntry transaction", "error");
-    console.log(error);
-
-    return { err: "Error occured while fetching new entries" };
+): Promise<{ data: API.Bedtickets.Entries[] }> => {
+  interface QueryResult extends Omit<API.Bedtickets.Entries, "attachments"> {
+    attachments: string;
   }
+
+  const query = await db.query<QueryResult>(
+    "SELECT category, topic, note, diagnosis, attachments, created_at FROM bedtickets.entries WHERE ticket_id=$1",
+    [bid]
+  );
+
+  const data: API.Bedtickets.Entries[] = [];
+  for (const e of query.rows) {
+    data.push({
+      ...e,
+      attachments: JSON.parse(e.attachments),
+    });
+  }
+
+  return { data };
 };
 
 /**
@@ -202,7 +171,7 @@ const HandleReadEntries = async (
  * @param {string} pid Patient ID
  * @return {*}  {Promise<{ err?: string }>}
  */
-const HandleDischarge = async (pid: string): Promise<{ err?: string }> => {
+const HandleDischarge = async (pid: string): Promise<void> => {
   /*
     1. Fetch general information of patient, decrypt it
     2. Update current_bedticket to undefined
@@ -221,17 +190,18 @@ const HandleDischarge = async (pid: string): Promise<{ err?: string }> => {
     ]);
 
     if (q1.rowCount === 0) {
-      return { err: "User ID not found" };
+      throw new Error("User ID not found");
     }
 
     // decrypting data
     const decrypted = DecryptData<PGDB.Patient.BasicDetails>(q1.rows[0].data);
 
     if (!decrypted.current_bedticket) {
-      return { err: "User doesn't have an active bed ticket" };
+      throw new Error("User doesn't have an active bed ticket");
     }
 
     // set current bedticket undefined
+    const bid = decrypted.current_bedticket;
     decrypted.current_bedticket = undefined;
 
     // filter the entry with bid, add discharge timestamp
@@ -254,6 +224,13 @@ const HandleDischarge = async (pid: string): Promise<{ err?: string }> => {
       pid,
     ]);
 
+    // updating discharge date on bedtickets.ticket
+    // TODO: Add user id
+    await trx.query(
+      "UPDATE bedtickets.tickets SET discharged_at = now(), discharged_by = 1 WHERE ticket_id=$1",
+      [bid]
+    );
+
     // commiting
     await trx.query("COMMIT");
   } catch (error) {
@@ -265,7 +242,6 @@ const HandleDischarge = async (pid: string): Promise<{ err?: string }> => {
   } finally {
     trx.release();
   }
-  return { err: undefined };
 };
 
 export {

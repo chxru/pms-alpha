@@ -80,4 +80,21 @@ export namespace API {
       }[];
     }
   }
+
+  export namespace Bedtickets {
+    export interface Attachment {
+      original_name: string;
+      current_name: string;
+      size: number;
+      mimetype: string;
+      created_at: Date;
+    }
+    export interface Entries
+      extends Omit<
+        PGDB.Bedtickets.Entries,
+        "entry_id" | "ticket_id" | "attachments"
+      > {
+      attachments?: Attachment[];
+    }
+  }
 }

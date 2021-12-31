@@ -14,7 +14,7 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FiExternalLink } from "react-icons/fi";
+import { FiExternalLink, FiFile } from "react-icons/fi";
 
 import NewRecord from "components/bedticket/new";
 import AttachmentDrawer from "components/bedticket/drawer";
@@ -23,8 +23,9 @@ import AuthContext from "@pms-alpha/common/contexts/auth-context";
 import NotifyContext from "@pms-alpha/common/contexts/notify-context";
 
 import { ApiRequest } from "@pms-alpha/common/util/request";
+import { ConvertTimestamp } from "@pms-alpha/common/util/time";
 
-import { PGDB } from "@pms-alpha/types";
+import { API, PGDB } from "@pms-alpha/types";
 
 interface bedticketProps {
   bid: number;
@@ -35,16 +36,14 @@ interface bedticketProps {
 }
 
 const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
-  const [entries, setentries] = useState<PGDB.Patient.BedTicketEntry[]>([]);
+  const [entries, setentries] = useState<API.Bedtickets.Entries[]>([]);
   const [selectedEntry, setselectedEntry] = useState<number>(0);
 
   const auth = useContext(AuthContext);
   const notify = useContext(NotifyContext);
 
   const FetchEntries = async () => {
-    const { success, err, data } = await ApiRequest<
-      PGDB.Patient.BedTicketEntry[]
-    >({
+    const { success, err, data } = await ApiRequest<API.Bedtickets.Entries[]>({
       path: `bedtickets/${bid}`,
       method: "GET",
       token: auth.token,
@@ -70,9 +69,6 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
       return;
     }
 
-    // update data timestamp
-    data.map((d) => (d.created_at = new Date(d.created_at)));
-
     // update state
     setentries(data);
   };
@@ -88,9 +84,7 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
       return;
     }
 
-    const { success, err, data } = await ApiRequest<
-      PGDB.Patient.BedTicketEntry[]
-    >({
+    const { success, err } = await ApiRequest({
       path: `bedtickets/close/${pid}`,
       method: "POST",
       token: auth.token,
@@ -100,15 +94,6 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
       notify.NewAlert({
         msg: "Discharging failed",
         description: err,
-        status: "error",
-      });
-
-      return;
-    }
-
-    if (!data) {
-      notify.NewAlert({
-        msg: "Request didn't came with expected response",
         status: "error",
       });
 
@@ -166,31 +151,45 @@ const BedTicket: React.FC<bedticketProps> = ({ bid, pid, state }) => {
             <Th>Notes</Th>
             <Th>Timestamp</Th>
             <Th></Th>
+            <Th></Th>
           </Tr>
         </Thead>
 
         <Tbody>
           {entries.map((e, i) => {
             return (
-              <Tr key={`${bid}-${e.id}`}>
+              <Tr key={`${bid}-${i}`}>
                 <Td>
                   <Badge>{e.category?.toUpperCase()}</Badge>
                 </Td>
-                <Td>{e.type || "N/A"}</Td>
+                <Td>{e.topic || "N/A"}</Td>
                 <Td>{e.note || " "}</Td>
                 <Td>
-                  {e.created_at.toLocaleDateString([], {
+                  {ConvertTimestamp(e.created_at).toLocaleDateString([], {
                     year: "2-digit",
                     month: "2-digit",
                     day: "2-digit",
                   }) +
                     " " +
-                    e.created_at.toLocaleTimeString([], {
+                    ConvertTimestamp(e.created_at).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
                       hour12: false,
                     }) +
                     "h"}
+                </Td>
+                <Td>
+                  <Tooltip
+                    label={(e.attachments?.length || "0") + " attachments"}
+                  >
+                    <IconButton
+                      variant="ghost"
+                      aria-label="View attachments"
+                      colorScheme="teal"
+                      disabled={!e.attachments?.length}
+                      icon={<FiFile />}
+                    />
+                  </Tooltip>
                 </Td>
                 <Td>
                   <ButtonGroup>

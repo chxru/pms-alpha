@@ -29,7 +29,7 @@ import NotifyContext from "@pms-alpha/common/contexts/notify-context";
 
 import { ApiRequest } from "@pms-alpha/common/util/request";
 
-import type { API, PGDB } from "@pms-alpha/types";
+import type { API } from "@pms-alpha/types";
 import {
   AutoComplete,
   AutoCompleteGroup,
@@ -60,7 +60,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Omit<PGDB.Patient.BedTicketEntry, "created_at">>();
+  } = useForm<Omit<API.Bedtickets.Entries, "created_at">>();
 
   const [acceptedFiles, setacceptedFiles] = useState<File[]>([]);
   const onDropAccepted = (file: File[]) => {
@@ -116,7 +116,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
     setdiagnosisData(data);
   };
 
-  const OnSubmit = async (value: PGDB.Patient.BedTicketEntry) => {
+  const OnSubmit = async (value: API.Bedtickets.Entries) => {
     let obj = value;
     if (value.category === "diagnosis") {
       if (!selectedDiagnose) {
@@ -128,9 +128,9 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
         return;
       }
       // TODO: unnecessary loop?
-      obj.type =
+      obj.topic =
         diagnosisData?.find((d) => d.name == selectedDiagnose)?.id.toString() ||
-        obj.type;
+        obj.topic;
     }
 
     const formData = new FormData();
@@ -139,9 +139,9 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
       formData.append("files", file);
     }
 
-    formData.append("category", value.category);
-    formData.append("note", value.note);
-    formData.append("type", obj.type);
+    formData.append("category", obj.category);
+    if (obj.note) formData.append("note", obj.note);
+    if (obj.topic) formData.append("topic", obj.topic);
 
     const { success, err } = await ApiRequest({
       path: `bedtickets/${bid}`,
@@ -202,7 +202,7 @@ const NewRecord: React.FC<newProps> = ({ isOpen, onClose, bid, refresh }) => {
                 <option value="report">Report</option>
                 <option value="other">Other</option>
               </Select>
-              {errors.type && (
+              {errors.category && (
                 <FormHelperText>This field is required</FormHelperText>
               )}
             </FormControl>

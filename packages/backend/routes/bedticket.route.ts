@@ -36,8 +36,6 @@ router.post(
   "/new/:id",
   checkSchema(new_bedticket_schemea),
   async (req: Request, res: Response<API.Response>) => {
-    logger(`/bedticket/new/${req.params.id}`);
-
     // schema validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -51,12 +49,7 @@ router.post(
     }
 
     try {
-      const { err } = await HandleNewBedTicket(req.params.id);
-
-      if (err) {
-        res.status(400).json({ success: false, err });
-        return;
-      }
+      await HandleNewBedTicket(req.params.id);
 
       logger("New bed ticket added");
       res.status(200).json({ success: true });
@@ -73,8 +66,6 @@ router.post(
   "/close/:id",
   checkSchema(close_bedticket_schema),
   async (req: Request, res: Response<API.Response>) => {
-    logger(`/bedticket/close/${req.params.id}`);
-
     // schema validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -88,12 +79,7 @@ router.post(
     }
 
     try {
-      const { err } = await HandleDischarge(req.params.id);
-
-      if (err) {
-        res.status(400).json({ success: false, err });
-        return;
-      }
+      await HandleDischarge(req.params.id);
 
       logger("Ned ticket discharged");
       res.status(200).json({ success: true });
@@ -111,8 +97,6 @@ router.post(
   upload.array("files"),
   checkSchema(new_entry_schema),
   async (req: Request, res: Response<API.Response>) => {
-    logger(`/bedticket/${req.params.id}`);
-
     // schema validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -126,12 +110,7 @@ router.post(
     }
 
     try {
-      const { err } = await HandleNewEntry(req.params.id, req.body, req.files);
-
-      if (err) {
-        res.status(400).json({ success: false, err });
-        return;
-      }
+      await HandleNewEntry(req.params.id, req.body, req.files);
 
       logger("New bed ticket entry added");
       res.status(200).json({ success: true });
@@ -148,8 +127,6 @@ router.get(
   "/:id",
   checkSchema(read_entry_schema),
   async (req: Request, res: Response<API.Response>) => {
-    logger(`/bedticket/${req.params.id} GET`);
-
     // schema validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -163,12 +140,7 @@ router.get(
     }
 
     try {
-      const { data, err } = await HandleReadEntries(req.params.id);
-
-      if (err) {
-        res.status(400).json({ success: false, err });
-        return;
-      }
+      const { data } = await HandleReadEntries(req.params.id);
 
       res.status(200).json({ success: true, data });
     } catch (error) {

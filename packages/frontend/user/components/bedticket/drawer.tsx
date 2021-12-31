@@ -12,12 +12,14 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import { PGDB } from "@pms-alpha/types";
+import { API } from "@pms-alpha/types";
+
+import { ConvertTimestamp } from "@pms-alpha/common/util/time";
 
 interface DrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  data: PGDB.Patient.BedTicketEntry;
+  data: API.Bedtickets.Entries;
 }
 
 const AttachmentDrawer: React.FC<DrawerProps> = ({ isOpen, onClose, data }) => {
@@ -29,14 +31,14 @@ const AttachmentDrawer: React.FC<DrawerProps> = ({ isOpen, onClose, data }) => {
 
         <DrawerBody>
           <Heading>
-            {data.type} <Badge>{data.category}</Badge>
+            {data.topic} <Badge>{data.category}</Badge>
           </Heading>
           <Text size="md">
-            {data.created_at.toLocaleDateString([], {
+            {ConvertTimestamp(data.created_at).toLocaleDateString([], {
               dateStyle: "full",
             }) +
               " " +
-              data.created_at.toLocaleTimeString([], {
+              ConvertTimestamp(data.created_at).toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
                 hour12: true,
@@ -50,15 +52,16 @@ const AttachmentDrawer: React.FC<DrawerProps> = ({ isOpen, onClose, data }) => {
           <Divider marginY={4} />
 
           <Flex direction="column">
-            {data.attachments.map((photo) => (
-              <Image
-                key={photo.fileName}
-                src={`http://localhost:3448/files/${photo.fileName}`}
-                width="100%"
-                height={250}
-                alt="Attachment"
-              />
-            ))}
+            {data.attachments &&
+              data.attachments.map((photo: API.Bedtickets.Attachment) => (
+                <Image
+                  key={photo.current_name}
+                  src={`http://localhost:3448/files/${photo.current_name}`}
+                  width="100%"
+                  height={250}
+                  alt="Attachment"
+                />
+              ))}
           </Flex>
         </DrawerBody>
       </DrawerContent>
