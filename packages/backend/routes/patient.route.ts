@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { checkSchema, validationResult } from "express-validator";
+import { checkSchema } from "express-validator";
 
 import {
   new_patient_schema,
@@ -11,6 +11,8 @@ import {
   SearchPatientByName,
 } from "controllers/patient.controller";
 
+import { ValidateRequest } from "util/requestvalidate";
+
 import { logger } from "@pms-alpha/shared";
 
 import type { API } from "@pms-alpha/types";
@@ -19,8 +21,6 @@ const router = Router();
 
 router.get("/:id/basic", async (req, res: Response<API.Response>) => {
   const pid = req.params.id;
-  logger(`/patient/${pid}/basic`);
-
   try {
     const { err, data } = await HandlePatientBasicInfo(pid);
 
@@ -40,21 +40,8 @@ router.get("/:id/basic", async (req, res: Response<API.Response>) => {
 router.post(
   "/add",
   checkSchema(new_patient_schema),
+  ValidateRequest,
   async (req: Request, res: Response<API.Response>) => {
-    logger("/patient/add");
-
-    // schema validation
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // concat array of errors to one string
-      const err = errors
-        .array()
-        .map((i) => `${i.param}: ${i.msg}`)
-        .join("\n");
-      logger("New patient form schema validation failed", "info");
-      return res.status(400).json({ success: false, err });
-    }
-
     try {
       const id = await HandleNewPatient(req.body);
 
@@ -71,21 +58,8 @@ router.post(
 router.post(
   "/search",
   checkSchema(search_patient_schema),
+  ValidateRequest,
   async (req: Request, res: Response<API.Response>) => {
-    logger("/patient/search");
-
-    // schema validation
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // concat array of errors to one string
-      const err = errors
-        .array()
-        .map((i) => `${i.param}: ${i.msg}`)
-        .join("\n");
-      logger("New patient form schema validation failed", "info");
-      return res.status(400).json({ success: false, err });
-    }
-
     try {
       const results = await SearchPatientByName(req.body.search);
       res.status(200).json({ success: true, data: results });

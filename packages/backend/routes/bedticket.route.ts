@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { checkSchema, validationResult } from "express-validator";
+import { checkSchema } from "express-validator";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import { extname } from "path";
@@ -16,6 +16,8 @@ import {
   new_entry_schema,
   read_entry_schema,
 } from "routes/schemas/bedticket.schema";
+
+import { ValidateRequest } from "util/requestvalidate";
 
 import { logger } from "@pms-alpha/shared";
 
@@ -35,19 +37,8 @@ const upload = multer({ storage });
 router.post(
   "/new/:id",
   checkSchema(new_bedticket_schemea),
+  ValidateRequest,
   async (req: Request, res: Response<API.Response>) => {
-    // schema validation
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // concat array of errors to one string
-      const err = errors
-        .array()
-        .map((i) => `${i.param}: ${i.msg}`)
-        .join("\n");
-      logger("New patient form schema validation failed", "info");
-      return res.status(400).json({ success: false, err });
-    }
-
     try {
       await HandleNewBedTicket(req.params.id);
 
@@ -65,19 +56,8 @@ router.post(
 router.post(
   "/close/:id",
   checkSchema(close_bedticket_schema),
+  ValidateRequest,
   async (req: Request, res: Response<API.Response>) => {
-    // schema validation
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // concat array of errors to one string
-      const err = errors
-        .array()
-        .map((i) => `${i.param}: ${i.msg}`)
-        .join("\n");
-      logger("Patient discharge form schema validation failed", "info");
-      return res.status(400).json({ success: false, err });
-    }
-
     try {
       await HandleDischarge(req.params.id);
 
@@ -96,19 +76,8 @@ router.post(
   "/:id",
   upload.array("files"),
   checkSchema(new_entry_schema),
+  ValidateRequest,
   async (req: Request, res: Response<API.Response>) => {
-    // schema validation
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // concat array of errors to one string
-      const err = errors
-        .array()
-        .map((i) => `${i.param}: ${i.msg}`)
-        .join("\n");
-      logger("New patient form schema validation failed", "info");
-      return res.status(400).json({ success: false, err });
-    }
-
     try {
       await HandleNewEntry(req.params.id, req.body, req.files);
 
@@ -126,19 +95,8 @@ router.post(
 router.get(
   "/:id",
   checkSchema(read_entry_schema),
+  ValidateRequest,
   async (req: Request, res: Response<API.Response>) => {
-    // schema validation
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // concat array of errors to one string
-      const err = errors
-        .array()
-        .map((i) => `${i.param}: ${i.msg}`)
-        .join("\n");
-      logger("New patient form schema validation failed", "info");
-      return res.status(400).json({ success: false, err });
-    }
-
     try {
       const { data } = await HandleReadEntries(req.params.id);
 

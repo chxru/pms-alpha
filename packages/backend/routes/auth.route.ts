@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { checkSchema, validationResult } from "express-validator";
+import { checkSchema } from "express-validator";
 
 import {
   HandleLogin,
@@ -8,6 +8,8 @@ import {
   HandleUsersCount,
 } from "controllers/auth.controller";
 import { signin_schema, signup_schema } from "routes/schemas/auth.schema";
+
+import { ValidateRequest } from "util/requestvalidate";
 
 import { logger } from "@pms-alpha/shared";
 
@@ -19,21 +21,8 @@ const router = Router();
 router.post(
   "/login",
   checkSchema(signin_schema),
+  ValidateRequest,
   async (req: Request, res: Response<API.Response<API.Auth.LoginResponse>>) => {
-    logger("/auth/login");
-
-    // schema validation
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // concat array of errors to one string
-      const err = errors
-        .array()
-        .map((i) => `${i.param}: ${i.msg}`)
-        .join("\n");
-      logger("Login schema validation failed", "info");
-      return res.status(400).json({ success: false, err });
-    }
-
     try {
       const { user, access_token, refresh_token } = await HandleLogin(
         req.body.username,
@@ -60,14 +49,8 @@ router.post(
 router.post(
   "/create",
   checkSchema(signup_schema),
+  ValidateRequest,
   async (req: Request, res: Response<API.Response>) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res
-        .status(400)
-        .json({ success: false, err: errors.array().join("\n") });
-    }
-
     try {
       const { access_token, refresh_token } = await HandleRegister(req.body);
 
@@ -97,8 +80,6 @@ router.post(
       API.Response<{ access_token: string; user: API.Auth.UserData }>
     >
   ) => {
-    logger("/auth/refresh");
-
     // 403 if token not found
     const token = req.body.refresh_token;
     if (!token) {
@@ -139,8 +120,6 @@ router.post(
 );
 
 router.get("/count", async (req, res) => {
-  logger("GET /auth/count");
-
   try {
     const count = await HandleUsersCount();
     res.send(count);

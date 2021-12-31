@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { checkSchema, validationResult } from "express-validator";
+import { checkSchema } from "express-validator";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 
@@ -9,6 +9,8 @@ import {
   InsertDiagnosis,
 } from "controllers/diagnosis.controller";
 import { new_diagnosis_schema } from "./schemas/diagnosis.schema";
+
+import { ValidateRequest } from "util/requestvalidate";
 
 import { logger } from "@pms-alpha/shared";
 
@@ -41,22 +43,8 @@ router.get(
 router.post(
   "/",
   checkSchema(new_diagnosis_schema),
-  async (
-    req: Request<API.Diagnosis.NewDiagnosisForm>,
-    res: Response<API.Response>
-  ) => {
-    // schema validation
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // concat array of errors to one string
-      const err = errors
-        .array()
-        .map((i) => `${i.param}: ${i.msg}`)
-        .join("\n");
-      logger("New patient form schema validation failed", "info");
-      return res.status(400).json({ success: false, err });
-    }
-
+  ValidateRequest,
+  async (req: Request, res: Response<API.Response>) => {
     try {
       await InsertDiagnosis(req.body.name, req.body.category);
       res.status(200).json({ success: true });
