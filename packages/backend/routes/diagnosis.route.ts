@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { checkSchema } from "express-validator";
 import multer from "multer";
-import { v4 as uuidv4 } from "uuid";
+import { extname } from "path";
 
 import {
   FetchAllDiagnosis,
@@ -10,6 +10,7 @@ import {
 } from "controllers/diagnosis.controller";
 import { new_diagnosis_schema } from "./schemas/diagnosis.schema";
 
+import { CreateFileName } from "util/nanoid";
 import { ValidateRequest } from "util/requestvalidate";
 
 import { logger } from "@pms-alpha/shared";
@@ -18,8 +19,17 @@ import type { API } from "@pms-alpha/types";
 
 const storage = multer.diskStorage({
   destination: "../../uploads/diag/",
-  filename: (_req, _file, cb) => {
-    cb(null, uuidv4() + ".csv");
+  filename: async (_req, file, cb) => {
+    try {
+      const id = await CreateFileName();
+      cb(null, id + extname(file.originalname));
+    } catch (error) {
+      logger(
+        `Error occured while generating nano id for file ${file.filename}`,
+        "error"
+      );
+      cb(null, file.originalname);
+    }
   },
 });
 

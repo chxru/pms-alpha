@@ -1,4 +1,4 @@
-import { customAlphabet } from "nanoid";
+import { customAlphabet, nanoid } from "nanoid";
 
 /**
  * Create ID for bedticket.
@@ -16,4 +16,9 @@ const CreateBedTicketID = async (): Promise<string> => {
   return id;
 };
 
-export { CreateBedTicketID };
+const CreateFileName = async (): Promise<string> => {
+  const id = await nanoid();
+  return id;
+};
+
+export { CreateBedTicketID, CreateFileName };

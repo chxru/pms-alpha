@@ -1,7 +1,6 @@
 import { Router, Request, Response } from "express";
 import { checkSchema } from "express-validator";
 import multer from "multer";
-import { v4 as uuidv4 } from "uuid";
 import { extname } from "path";
 
 import {
@@ -17,6 +16,7 @@ import {
   read_entry_schema,
 } from "routes/schemas/bedticket.schema";
 
+import { CreateFileName } from "util/nanoid";
 import { ValidateRequest } from "util/requestvalidate";
 
 import { logger } from "@pms-alpha/shared";
@@ -25,8 +25,17 @@ import type { API } from "@pms-alpha/types";
 
 const storage = multer.diskStorage({
   destination: "../../uploads/",
-  filename: (_req, file, cb) => {
-    cb(null, uuidv4() + extname(file.originalname));
+  filename: async (_req, file, cb) => {
+    try {
+      const id = await CreateFileName();
+      cb(null, id + extname(file.originalname));
+    } catch (error) {
+      logger(
+        `Error occured while generating nano id for file ${file.filename}`,
+        "error"
+      );
+      cb(null, file.originalname);
+    }
   },
 });
 
