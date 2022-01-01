@@ -27,7 +27,6 @@ export namespace PGDB {
 
   export namespace Patient {
     export interface Info {
-      id: number;
       uuid: string;
       full_name: string;
       data: string;

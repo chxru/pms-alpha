@@ -124,14 +124,14 @@ const Search: NextPage = () => {
             </Thead>
             <Tbody>
               {results.map((r) => (
-                <Tr key={r.id}>
-                  <Td>{r.id}</Td>
+                <Tr key={r.uuid}>
+                  <Td>{r.uuid}</Td>
                   <Td>{r.full_name}</Td>
                   <Td>
                     <Button
                       colorScheme="teal"
                       onClick={() => {
-                        router.push(`/patient/${r.id}`);
+                        router.push(`/patient/${r.uuid}`);
                       }}
                     >
                       View

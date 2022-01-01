@@ -28,8 +28,8 @@ import { ConvertTimestamp } from "@pms-alpha/common/util/time";
 import { API, PGDB } from "@pms-alpha/types";
 
 interface bedticketProps {
-  bid: number;
-  pid: number;
+  bid: string;
+  pid: string;
   state?: React.Dispatch<
     React.SetStateAction<PGDB.Patient.BasicDetails | undefined> // state is only passing in active bed ticket
   >;

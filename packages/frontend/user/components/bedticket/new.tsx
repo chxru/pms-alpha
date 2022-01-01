@@ -42,7 +42,7 @@ import {
 interface newProps {
   isOpen: boolean;
   onClose: () => void;
-  bid?: number;
+  bid: string;
   refresh: () => Promise<void>;
 }
 

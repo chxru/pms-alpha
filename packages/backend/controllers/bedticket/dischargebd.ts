@@ -25,7 +25,7 @@ const HandleDischarge = async (pid: string): Promise<void> => {
     await trx.query("BEGIN");
 
     // fetch patient data
-    const q1 = await trx.query("SELECT data FROM patients.info WHERE id=$1", [
+    const q1 = await trx.query("SELECT data FROM patients.info WHERE uuid=$1", [
       pid,
     ]);
 
@@ -59,7 +59,7 @@ const HandleDischarge = async (pid: string): Promise<void> => {
     const encrypted = EncryptData(JSON.stringify(decrypted));
 
     // updating database
-    await trx.query("UPDATE patients.info SET data=$1 WHERE id=$2", [
+    await trx.query("UPDATE patients.info SET data=$1 WHERE uuid=$2", [
       encrypted,
       pid,
     ]);

@@ -39,7 +39,7 @@ const AddPatient: React.FC = ({}) => {
       delete values.guardian.tp;
     }
 
-    const { success, data, err } = await ApiRequest<{ id: number }>({
+    const { success, data, err } = await ApiRequest<{ uuid: string }>({
       path: "patients/add",
       method: "POST",
       obj: values,

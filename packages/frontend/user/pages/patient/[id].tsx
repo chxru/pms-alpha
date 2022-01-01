@@ -34,11 +34,8 @@ const ProfileView: React.FC = ({}) => {
   const auth = useContext(AuthContext);
   const notify = useContext(NotifyContext);
 
-  // types are stupid here
-  const id = parseInt(
-    (Array.isArray(router.query.id) ? router.query.id[0] : router.query.id) ||
-      "0"
-  );
+  // TODO: set router query id type to string
+  const id = router.query.id;
 
   const [patient, setpatientData] = useState<PGDB.Patient.BasicDetails>();
   const [creatingBD, setcreatingBD] = useState<boolean>(false);
@@ -287,7 +284,7 @@ const ProfileView: React.FC = ({}) => {
                   {patient?.current_bedticket ? (
                     <BedTicket
                       bid={patient.current_bedticket}
-                      pid={id}
+                      pid={id?.toString() || ""}
                       state={setpatientData}
                     />
                   ) : (
@@ -330,7 +327,10 @@ const ProfileView: React.FC = ({}) => {
                                   </AccordionButton>
                                   <AccordionPanel>
                                     {isExpanded ? (
-                                      <BedTicket bid={h.id} pid={id} />
+                                      <BedTicket
+                                        bid={h.id}
+                                        pid={id?.toString() || ""}
+                                      />
                                     ) : (
                                       <Text>Loading</Text>
                                     )}

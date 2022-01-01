@@ -67,10 +67,8 @@ export namespace API {
      * @export
      * @interface SearchDetails
      */
-    export interface SearchDetails {
-      id: number;
-      full_name: string;
-    }
+    export interface SearchDetails
+      extends Pick<PGDB.Patient.Info, "uuid" | "full_name"> {}
 
     export interface BedTicketDetails {
       adimission_date: string;
