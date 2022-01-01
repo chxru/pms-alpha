@@ -16,5 +16,6 @@
     "admin": "yarn --cwd packages/frontend/admin dev",
     "backend": "yarn --cwd packages/backend dev",
     "user": "yarn --cwd packages/frontend/user dev"
-  }
+  },
+  "packageManager": "yarn@3.1.1"
 }
