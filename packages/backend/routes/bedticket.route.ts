@@ -8,16 +8,16 @@ import {
   HandleNewBedTicket,
   HandleNewEntry,
   HandleReadEntries,
-} from "controllers/bedticket.controller";
+} from "@pms-alpha/server/controllers/bedticket.controller";
 import {
   close_bedticket_schema,
   new_bedticket_schemea,
   new_entry_schema,
   read_entry_schema,
-} from "routes/schemas/bedticket.schema";
+} from "@pms-alpha/server/routes/schemas/bedticket.schema";
 
-import { CreateFileName } from "util/nanoid";
-import { ValidateRequest } from "util/requestvalidate";
+import { CreateFileName } from "@pms-alpha/server/util/nanoid";
+import { ValidateRequest } from "@pms-alpha/server/util/requestvalidate";
 
 import { logger } from "@pms-alpha/shared";
 

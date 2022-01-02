@@ -1,5 +1,5 @@
 import express from "express";
-import { VerifyJWT } from "util/jwt";
+import { VerifyJWT } from "@pms-alpha/server/util/jwt";
 
 import { logger } from "@pms-alpha/shared";
 

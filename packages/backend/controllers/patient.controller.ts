@@ -1,6 +1,6 @@
-import db from "database/pg";
-import { DecryptData, EncryptData } from "util/crypto";
-import { CreatePatientID } from "util/nanoid";
+import db from "@pms-alpha/server/database/pg";
+import { DecryptData, EncryptData } from "@pms-alpha/server/util/crypto";
+import { CreatePatientID } from "@pms-alpha/server/util/nanoid";
 
 import { logger } from "@pms-alpha/shared";
 

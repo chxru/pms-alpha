@@ -1,4 +1,4 @@
-import db from "database/pg";
+import db from "@pms-alpha/server/database/pg";
 import { logger } from "@pms-alpha/shared";
 
 import type { API, PGDB } from "@pms-alpha/types";

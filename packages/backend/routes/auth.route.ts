@@ -6,10 +6,13 @@ import {
   HandleRefreshToken,
   HandleRegister,
   HandleUsersCount,
-} from "controllers/auth.controller";
-import { signin_schema, signup_schema } from "routes/schemas/auth.schema";
+} from "@pms-alpha/server/controllers/auth.controller";
+import {
+  signin_schema,
+  signup_schema,
+} from "@pms-alpha/server/routes/schemas/auth.schema";
 
-import { ValidateRequest } from "util/requestvalidate";
+import { ValidateRequest } from "@pms-alpha/server/util/requestvalidate";
 
 import { logger } from "@pms-alpha/shared";
 
