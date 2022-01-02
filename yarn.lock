@@ -1615,7 +1615,20 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pms-alpha/common@workspace:packages/frontend/core"
   dependencies:
+    "@chakra-ui/react": ^1.6.7
+    "@emotion/react": ^11
+    "@emotion/styled": ^11
+    "@pms-alpha/types": 0.1.0
     chalk: ^4.1.2
+    cookie: ^0.4.1
+    framer-motion: ^4
+    jsonwebtoken: ^8.5.1
+    next: 11.1.2
+    node-fetch: ^3.0.0
+    react: 17.0.2
+    react-dom: 17.0.2
+    react-hook-form: ^7.14.2
+    react-icons: ^4.2.0
   languageName: unknown
   linkType: soft
 
