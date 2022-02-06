@@ -13,9 +13,9 @@
     "packages/types"
   ],
   "scripts": {
-    "admin": "yarn --cwd packages/frontend/admin dev",
-    "backend": "yarn --cwd packages/backend dev",
-    "user": "yarn --cwd packages/frontend/user dev"
+    "admin": "yarn workspace @pms-alpha/admin run dev",
+    "backend": "yarn workspace @pms-alpha/server run dev",
+    "user": "yarn workspace @pms-alpha/frontend run dev"
   },
   "packageManager": "yarn@3.1.1"
 }
