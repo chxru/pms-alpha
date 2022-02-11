@@ -21,7 +21,7 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 
-import BedTicket from "components/bedticket/view";
+import BedTicket from "@pms-alpha/frontend/components/bedticket/view";
 
 import { ApiRequest } from "@pms-alpha/common/util/request";
 import AuthContext from "@pms-alpha/common/contexts/auth-context";

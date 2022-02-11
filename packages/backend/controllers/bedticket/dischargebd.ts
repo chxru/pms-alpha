@@ -1,5 +1,5 @@
-import db from "database/pg";
-import { DecryptData, EncryptData } from "util/crypto";
+import db from "@pms-alpha/server/database/pg";
+import { DecryptData, EncryptData } from "@pms-alpha/server/util/crypto";
 
 import { logger } from "@pms-alpha/shared";
 

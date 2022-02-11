@@ -4,14 +4,14 @@ import { checkSchema } from "express-validator";
 import {
   new_patient_schema,
   search_patient_schema,
-} from "routes/schemas/patient.schema";
+} from "@pms-alpha/server/routes/schemas/patient.schema";
 import {
   HandleNewPatient,
   HandlePatientBasicInfo,
   SearchPatientByName,
-} from "controllers/patient.controller";
+} from "@pms-alpha/server/controllers/patient.controller";
 
-import { ValidateRequest } from "util/requestvalidate";
+import { ValidateRequest } from "@pms-alpha/server/util/requestvalidate";
 
 import { logger } from "@pms-alpha/shared";
 

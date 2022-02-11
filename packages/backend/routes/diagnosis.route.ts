@@ -7,11 +7,11 @@ import {
   FetchAllDiagnosis,
   ImportDiagnosis,
   InsertDiagnosis,
-} from "controllers/diagnosis.controller";
+} from "@pms-alpha/server/controllers/diagnosis.controller";
 import { new_diagnosis_schema } from "./schemas/diagnosis.schema";
 
-import { CreateFileName } from "util/nanoid";
-import { ValidateRequest } from "util/requestvalidate";
+import { CreateFileName } from "@pms-alpha/server/util/nanoid";
+import { ValidateRequest } from "@pms-alpha/server/util/requestvalidate";
 
 import { logger } from "@pms-alpha/shared";
 

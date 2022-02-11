@@ -1,9 +1,9 @@
 import React from "react";
 import Head from "next/head";
 
-import NewDiagnosisForm from "components/diagnosis/new";
-import SearchDiagnosis from "components/diagnosis/search";
-import ImportDiagnosis from "components/diagnosis/import";
+import NewDiagnosisForm from "@pms-alpha/admin/components/diagnosis/new";
+import SearchDiagnosis from "@pms-alpha/admin/components/diagnosis/search";
+import ImportDiagnosis from "@pms-alpha/admin/components/diagnosis/import";
 
 import type { NextPage } from "next";
 

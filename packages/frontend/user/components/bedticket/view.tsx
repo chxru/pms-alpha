@@ -16,8 +16,8 @@ import {
 } from "@chakra-ui/react";
 import { FiExternalLink, FiFile } from "react-icons/fi";
 
-import NewRecord from "components/bedticket/new";
-import AttachmentDrawer from "components/bedticket/drawer";
+import NewRecord from "@pms-alpha/frontend/components/bedticket/new";
+import AttachmentDrawer from "@pms-alpha/frontend/components/bedticket/drawer";
 
 import AuthContext from "@pms-alpha/common/contexts/auth-context";
 import NotifyContext from "@pms-alpha/common/contexts/notify-context";

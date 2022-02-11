@@ -1,8 +1,8 @@
+import db from "@pms-alpha/server/database/pg";
+import { ParseDiagnosisCSV } from "@pms-alpha/server/util/csv";
+
 import { logger } from "@pms-alpha/shared";
 import { API } from "@pms-alpha/types";
-import db from "database/pg";
-
-import { ParseDiagnosisCSV } from "util/csv";
 
 const FetchAllDiagnosis = async (): Promise<API.Diagnosis.Data[]> => {
   // fetch data

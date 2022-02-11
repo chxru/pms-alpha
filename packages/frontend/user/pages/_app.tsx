@@ -1,3 +1,4 @@
+import { ChakraProvider } from "@chakra-ui/react";
 import MyApp from "@pms-alpha/common/pages/_app";
 import MetaContext from "@pms-alpha/common/contexts/meta-context";
 
@@ -11,9 +12,11 @@ const App = ({ Component, pageProps }: AppProps) => {
   ];
 
   return (
-    <MetaContext.Provider value={{ instance: "user", routes }}>
-      <MyApp pageProps={pageProps} Component={Component} />
-    </MetaContext.Provider>
+    <ChakraProvider>
+      <MetaContext.Provider value={{ instance: "user", routes }}>
+        <MyApp pageProps={pageProps} Component={Component} />
+      </MetaContext.Provider>
+    </ChakraProvider>
   );
 };
 

@@ -3,15 +3,15 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import path from "path";
 
-import { verifyToken } from "middleware/authverify";
+import { verifyToken } from "@pms-alpha/server/middleware/authverify";
 
-import userRoutes from "routes/auth.route";
-import patientRoutes from "routes/patient.route";
-import bedticketRoutes from "routes/bedticket.route";
-import diagnosisRoutes from "routes/diagnosis.route";
+import userRoutes from "@pms-alpha/server/routes/auth.route";
+import patientRoutes from "@pms-alpha/server/routes/patient.route";
+import bedticketRoutes from "@pms-alpha/server/routes/bedticket.route";
+import diagnosisRoutes from "@pms-alpha/server/routes/diagnosis.route";
 
-import pg from "database/pg";
-import { LoadDBKey } from "util/crypto";
+import pg from "@pms-alpha/server/database/pg";
+import { LoadDBKey } from "@pms-alpha/server/util/crypto";
 
 import { logger } from "@pms-alpha/shared";
 
