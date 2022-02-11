@@ -19,7 +19,9 @@
     "react-icons": "^4.2.0"
   },
   "devDependencies": {
+    "@types/cookie": "^0.4.1",
     "@types/history": "^5.0.0",
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.15",
     "@types/react": "^17.0.39",
     "@types/react-router": "^5.1.18",
